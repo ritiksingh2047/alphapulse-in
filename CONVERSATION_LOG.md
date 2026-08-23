@@ -152,6 +152,15 @@ git push -u origin main --tags
   * Cleaned up the header by removing cramped ticker pills.
   * Ordered `<main>` with Row 2 KPI Cards followed immediately by Row 3 Navigation Tabs.
   * Verified layout rendering and tab transitions via browser automation.
+
+---
+
+### ⚡ Milestone 12: Data Pipeline Re-hydration & Interactivity Fix
+* **User Report:** Data rows were missing and tab buttons were not responding after the 3-row layout restructuring.
+* **Root Cause & Resolution:**
+  1. When header index badges were relocated, initial `renderOverviewKPIs()` threw a `TypeError` on missing header elements, halting subsequent fetch pipelines. Added safe null guards.
+  2. Resolved `DOMContentLoaded` timing race condition by checking `document.readyState === "loading"` before attaching or executing `initApp()`.
+  3. Updated signal count synchronization so Row 2 cards display `60 Buys | 40 Exits` and badges reflect real counts (`60 Value Accumulation`, `40 Profit Booking`, `30 RisiAsset Holdings`).
 ---
 
 ## 3. Quick Runbook & Operations

@@ -24,7 +24,7 @@ const state = {
 };
 
 // Initialize Application
-document.addEventListener("DOMContentLoaded", async () => {
+async function initApp() {
   initTheme();
   lucide.createIcons();
   setupTabs();
@@ -36,7 +36,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   await fetchUniverse();
   await refreshDashboardData();
   await loadChartData(state.selectedChartSymbol, state.chartRange);
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}
 
 // -------------------------------------------------------------------
 // Theme Switcher Controller (Dark / Light Mode)
@@ -397,6 +403,7 @@ async function refreshDashboardData() {
       state.buySignals = jsonSig.data.filter(s => s.signal_type === "BUY_SETUP");
       state.exitSignals = jsonSig.data.filter(s => s.signal_type === "EXIT_SETUP");
       
+      renderOverviewKPIs();
       renderBuySignalsTable();
       renderExitSignalsTable();
       renderTelegramPreview();
@@ -828,16 +835,22 @@ function renderOverviewKPIs() {
   const bnLTP = snap.banknifty_ltp || 57761.95;
   const bnChg = snap.banknifty_change_pct || 0.46;
 
-  // Header
-  document.getElementById("headerNiftyPrice").textContent = formatINR(niftyLTP);
+  // Header Index Badges (if present)
+  const elHNP = document.getElementById("headerNiftyPrice");
   const elHNC = document.getElementById("headerNiftyChange");
-  elHNC.textContent = `${niftyChg >= 0 ? "+" : ""}${niftyChg.toFixed(2)}%`;
-  elHNC.className = `text-xs font-semibold px-1.5 py-0.5 rounded ${niftyChg >= 0 ? "text-emerald-400 bg-emerald-500/10" : "text-rose-400 bg-rose-500/10"}`;
+  if (elHNP) elHNP.textContent = formatINR(niftyLTP);
+  if (elHNC) {
+    elHNC.textContent = `${niftyChg >= 0 ? "+" : ""}${niftyChg.toFixed(2)}%`;
+    elHNC.className = `text-xs font-semibold px-1.5 py-0.5 rounded ${niftyChg >= 0 ? "text-emerald-400 bg-emerald-500/10" : "text-rose-400 bg-rose-500/10"}`;
+  }
 
-  document.getElementById("headerBankNiftyPrice").textContent = formatINR(bnLTP);
+  const elHBNP = document.getElementById("headerBankNiftyPrice");
   const elHBNC = document.getElementById("headerBankNiftyChange");
-  elHBNC.textContent = `${bnChg >= 0 ? "+" : ""}${bnChg.toFixed(2)}%`;
-  elHBNC.className = `text-xs font-semibold px-1.5 py-0.5 rounded ${bnChg >= 0 ? "text-emerald-400 bg-emerald-500/10" : "text-rose-400 bg-rose-500/10"}`;
+  if (elHBNP) elHBNP.textContent = formatINR(bnLTP);
+  if (elHBNC) {
+    elHBNC.textContent = `${bnChg >= 0 ? "+" : ""}${bnChg.toFixed(2)}%`;
+    elHBNC.className = `text-xs font-semibold px-1.5 py-0.5 rounded ${bnChg >= 0 ? "text-emerald-400 bg-emerald-500/10" : "text-rose-400 bg-rose-500/10"}`;
+  }
 
   const elAdv = document.getElementById("headerAdvances");
   const elDec = document.getElementById("headerDeclines");
