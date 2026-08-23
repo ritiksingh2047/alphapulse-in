@@ -161,6 +161,15 @@ git push -u origin main --tags
   1. When header index badges were relocated, initial `renderOverviewKPIs()` threw a `TypeError` on missing header elements, halting subsequent fetch pipelines. Added safe null guards.
   2. Resolved `DOMContentLoaded` timing race condition by checking `document.readyState === "loading"` before attaching or executing `initApp()`.
   3. Updated signal count synchronization so Row 2 cards display `60 Buys | 40 Exits` and badges reflect real counts (`60 Value Accumulation`, `40 Profit Booking`, `30 RisiAsset Holdings`).
+
+---
+
+### 🗑️ Milestone 13: Removal of Sector Heatmap
+* **User Directive:** Remove the Sector Heatmap tab and its section from the dashboard navigation to streamline the interface.
+* **Implementation:**
+  * Removed the `Sector Heatmap` navigation button from the Row 3 tab bar.
+  * Removed `<section id="tab-sectors">` from `index.html`.
+  * Verified that all remaining 7 tabs (`RisiAsset Portfolio`, `Value Accumulation`, `Profit Booking`, `Charting Studio`, `Risk & Position Sizing`, `Telegram Console`, `Scan Logs`) render and navigate cleanly.
 ---
 
 ## 3. Quick Runbook & Operations
