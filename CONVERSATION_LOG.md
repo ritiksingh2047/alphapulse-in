@@ -2,27 +2,22 @@
 
 ---
 
-## 1. Git Account Configuration
+## 1. Git & GitHub Account Configuration
 
-Currently, Git is configured locally for this project repository with the following identity:
+Git is configured for this project repository with your personal GitHub identity:
 
-* **User Name:** `Ritik Singh`
-* **Email Address:** `singh@alphapulse.local`
+* **GitHub Profile:** [https://github.com/ritiksingh2047](https://github.com/ritiksingh2047)
+* **User Name:** `ritiksingh2047`
+* **Email Address:** `ritiksingh2047@users.noreply.github.com`
 * **Config Scope:** Local (`.git/config`)
-* **Global Config:** No global `.gitconfig` was set on this workstation (`C:\Users\singh\.gitconfig`).
-
-### To Change / Connect Your Personal GitHub Account:
-If you would like your commits linked to your personal GitHub account (e.g., for pushing to GitHub), run:
+### Remote Repository Connection:
+To push this local repository directly to your GitHub profile, create a new repository on GitHub (e.g., `alphapulse-in`) and run:
 ```bash
-git config user.name "Your Name"
-git config user.email "your-github-email@example.com"
+git remote add origin https://github.com/ritiksingh2047/alphapulse-in.git
+git branch -M main
+git push -u origin main --tags
 ```
-Or set it globally for all projects on your laptop:
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your-github-email@example.com"
-```
-
+*(Note: When prompted for password, provide your GitHub Personal Access Token (PAT) with `repo` permissions).*
 ---
 
 ## 2. Chronological Conversation & Milestone History
