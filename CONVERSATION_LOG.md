@@ -91,6 +91,17 @@ git push -u origin main --tags
   * Committed 27 files (`Commit SHA: d8d244c`).
   * Tagged releases: **`v1`** and **`v1.0`**.
 
+
+---
+
+### 🚀 Milestone 6: GitHub Cloud Synchronization & Account Linking
+* **User Directive:** Link personal GitHub account (`ritiksingh2047`) and publish all version history and release tags.
+* **Actions Executed:**
+  * Configured author identity: `ritiksingh2047 <singhritik7464@gmail.com>`.
+  * Rewrote all commits and release tags with proper author metadata.
+  * Configured remote origin: `https://github.com/ritiksingh2047/alphapulse-in.git`.
+  * Pushed `main` branch and release tags (`v1`, `v1.0`) to GitHub.
+  * Verified remote synchronization via `git ls-remote origin`.
 ---
 
 ## 3. Quick Runbook & Operations
