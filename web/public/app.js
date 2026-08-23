@@ -5,6 +5,7 @@
 
 // Application State
 const state = {
+  theme: localStorage.getItem("alphapulse-theme") || "dark",
   overview: null,
   buySignals: [],
   exitSignals: [],
@@ -24,6 +25,7 @@ const state = {
 
 // Initialize Application
 document.addEventListener("DOMContentLoaded", async () => {
+  initTheme();
   lucide.createIcons();
   setupTabs();
   setupEventListeners();
@@ -35,6 +37,57 @@ document.addEventListener("DOMContentLoaded", async () => {
   await refreshDashboardData();
   await loadChartData(state.selectedChartSymbol, state.chartRange);
 });
+
+// -------------------------------------------------------------------
+// Theme Switcher Controller (Dark / Light Mode)
+// -------------------------------------------------------------------
+function initTheme() {
+  const saved = localStorage.getItem("alphapulse-theme") || "dark";
+  applyTheme(saved);
+}
+
+function applyTheme(theme) {
+  state.theme = theme;
+  localStorage.setItem("alphapulse-theme", theme);
+  const icon = document.getElementById("themeIcon");
+
+  if (theme === "light") {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
+    document.body.classList.remove("dark");
+    document.body.classList.add("light");
+    if (icon) {
+      icon.setAttribute("data-lucide", "sun");
+      icon.parentElement?.setAttribute("title", "Switch to Dark Mode");
+    }
+  } else {
+    document.documentElement.classList.remove("light");
+    document.documentElement.classList.add("dark");
+    document.body.classList.remove("light");
+    document.body.classList.add("dark");
+    if (icon) {
+      icon.setAttribute("data-lucide", "moon");
+      icon.parentElement?.setAttribute("title", "Switch to Light Mode");
+    }
+  }
+
+  lucide.createIcons();
+
+  // Refresh active charts if instantiated
+  if (state.priceChartInstance && state.selectedChartSymbol) {
+    loadChartData(state.selectedChartSymbol, state.chartRange);
+  }
+  if (state.risiPortfolio) {
+    renderRisiCharts();
+  }
+}
+
+function toggleTheme() {
+  const next = state.theme === "light" ? "dark" : "light";
+  applyTheme(next);
+}
+
+window.toggleTheme = toggleTheme;
 
 // -------------------------------------------------------------------
 // Clock & Market Status
@@ -578,6 +631,15 @@ function renderRisiCharts() {
   const holdings = p.holdings || [];
   const allocation = p.allocation || [];
 
+  // Theme colors for Chart
+  const isLight = state.theme === "light";
+  const chartBorderColor = isLight ? "#FFFFFF" : "#121826";
+  const chartTooltipBg = isLight ? "#FFFFFF" : "#121826";
+  const chartTooltipBorder = isLight ? "#CBD5E1" : "#1F293D";
+  const chartTooltipTitle = isLight ? "#0F172A" : "#F3F4F6";
+  const chartGridColor = isLight ? "rgba(203, 213, 225, 0.6)" : "rgba(31, 41, 61, 0.4)";
+  const chartTickColor = isLight ? "#64748B" : "#9CA3AF";
+
   // Chart 1: Allocation Doughnut
   const ctxAlloc = document.getElementById("canvasRisiAllocation")?.getContext("2d");
   if (ctxAlloc) {
@@ -590,7 +652,7 @@ function renderRisiCharts() {
         datasets: [{
           data: allocation.map(a => a.value),
           backgroundColor: ["#10B981", "#F59E0B", "#3B82F6"],
-          borderColor: "#121826",
+          borderColor: chartBorderColor,
           borderWidth: 2,
           hoverOffset: 4
         }]
@@ -602,9 +664,11 @@ function renderRisiCharts() {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: "#121826",
-            borderColor: "#1F293D",
+            backgroundColor: chartTooltipBg,
+            borderColor: chartTooltipBorder,
             borderWidth: 1,
+            titleColor: chartTooltipTitle,
+            bodyColor: chartTooltipTitle,
             callbacks: {
               label: (ctx) => `${ctx.label}: ₹${ctx.parsed.toLocaleString("en-IN")} (${allocation[ctx.dataIndex]?.percentage}%)`
             }
@@ -643,9 +707,11 @@ function renderRisiCharts() {
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: "#121826",
-            borderColor: "#1F293D",
+            backgroundColor: chartTooltipBg,
+            borderColor: chartTooltipBorder,
             borderWidth: 1,
+            titleColor: chartTooltipTitle,
+            bodyColor: chartTooltipTitle,
             callbacks: {
               label: (ctx) => `Return: ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}% (${formatINR(perfData[ctx.dataIndex]?.unrealised_pnl)})`
             }
@@ -654,13 +720,13 @@ function renderRisiCharts() {
         scales: {
           x: {
             grid: { display: false },
-            ticks: { color: "#9CA3AF", font: { family: "JetBrains Mono", size: 10 } }
+            ticks: { color: chartTickColor, font: { family: "JetBrains Mono", size: 10 } }
           },
           y: {
             position: "right",
-            grid: { color: "rgba(31, 41, 61, 0.4)" },
+            grid: { color: chartGridColor },
             ticks: {
-              color: "#9CA3AF",
+              color: chartTickColor,
               font: { family: "JetBrains Mono", size: 10 },
               callback: (v) => `${v}%`
             }
@@ -1106,9 +1172,11 @@ async function loadChartData(symbol, range = "1y") {
         plugins: {
           legend: { display: userHolding ? true : false, labels: { color: "#9CA3AF", font: { family: "JetBrains Mono", size: 10 } } },
           tooltip: {
-            backgroundColor: "#121826",
-            borderColor: "#1F293D",
+            backgroundColor: isLight ? "#FFFFFF" : "#121826",
+            borderColor: isLight ? "#CBD5E1" : "#1F293D",
             borderWidth: 1,
+            titleColor: isLight ? "#0F172A" : "#F3F4F6",
+            bodyColor: isLight ? "#0F172A" : "#F3F4F6",
             titleFont: { family: "JetBrains Mono" },
             bodyFont: { family: "JetBrains Mono" },
             callbacks: {
@@ -1118,14 +1186,14 @@ async function loadChartData(symbol, range = "1y") {
         },
         scales: {
           x: {
-            grid: { color: "rgba(31, 41, 61, 0.4)" },
-            ticks: { color: "#6B7280", font: { family: "JetBrains Mono", size: 10 }, maxTicksLimit: 8 }
+            grid: { color: isLight ? "rgba(203, 213, 225, 0.6)" : "rgba(31, 41, 61, 0.4)" },
+            ticks: { color: isLight ? "#64748B" : "#6B7280", font: { family: "JetBrains Mono", size: 10 }, maxTicksLimit: 8 }
           },
           y: {
             position: "right",
-            grid: { color: "rgba(31, 41, 61, 0.4)" },
+            grid: { color: isLight ? "rgba(203, 213, 225, 0.6)" : "rgba(31, 41, 61, 0.4)" },
             ticks: {
-              color: "#9CA3AF",
+              color: isLight ? "#64748B" : "#9CA3AF",
               font: { family: "JetBrains Mono", size: 10 },
               callback: (val) => `₹${val}`
             }

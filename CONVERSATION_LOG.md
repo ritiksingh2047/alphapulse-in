@@ -102,6 +102,16 @@ git push -u origin main --tags
   * Configured remote origin: `https://github.com/ritiksingh2047/alphapulse-in.git`.
   * Pushed `main` branch and release tags (`v1`, `v1.0`) to GitHub.
   * Verified remote synchronization via `git ls-remote origin`.
+
+---
+
+### 🌓 Milestone 7: Dark / Light Mode Theme Toggle
+* **User Directive:** Add a dark/light mode toggle button in the top navigation header for customer navigation.
+* **Implementation:**
+  * Added high-contrast Institutional Light Theme CSS palette (slate `#F8FAFC` background, pure white `#FFFFFF` cards, `#E2E8F0` borders, slate typography, and vibrant signal badges).
+  * Added persistent theme state controller via `localStorage.getItem("alphapulse-theme")`.
+  * Added header theme switcher button (`#btnThemeToggle`) with animated Lucide Moon/Sun icons.
+  * Adapted Chart.js technical indicators and allocation doughnut/performance charts to re-render with dynamic grid and tooltip palettes upon theme toggling.
 ---
 
 ## 3. Quick Runbook & Operations
