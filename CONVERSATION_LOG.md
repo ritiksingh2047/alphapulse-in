@@ -190,6 +190,15 @@ git push -u origin main --tags
   * Converted the Telegram broadcast alert preview and markdown copy console into a dedicated modal (`#telegramModal`) accessible from the header.
   * Removed the `Telegram Console` tab from the Row 3 navigation bar, leaving the 5 focused primary analytical engines.
   * Verified modal opening, formatted chat bubble rendering, markdown copy feedback, and modal dismiss handling.
+
+---
+
+### 📈 Milestone 16: Simplified "Charting" Tab & Technical Studio Fix
+* **User Directive:** Shorten the tab name to a concise single-word label and diagnose why charts were not rendering.
+* **Root Cause & Resolution:**
+  1. Renamed the navigation tab to **`📈 Charting`** to keep the tab strip clean and punchy.
+  2. Fixed an unhandled `ReferenceError: isLight is not defined` inside `loadChartData()` that was blocking Chart.js initialization on stock selection.
+  3. Verified interactive multi-indicator price chart (251 historical days, 20/50/200 EMAs) and RSI(14) oscillator chart rendering across all universe stocks.
 ---
 
 ## 3. Quick Runbook & Operations

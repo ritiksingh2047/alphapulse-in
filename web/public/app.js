@@ -1231,10 +1231,9 @@ async function loadChartData(symbol, range = "1y") {
     const res = await fetch(`/api/chart/${encodeURIComponent(symbol)}?range=${range}`);
     const json = await res.json();
     if (json.status !== "success" || !json.series) return;
-
     const series = json.series;
     const meta = json.meta || {};
-
+    const isLight = state.theme === "light";
     // Update stock header in Chart tab
     const stockObj = state.universe.find(u => u.symbol === symbol);
     document.getElementById("chartStockName").textContent = stockObj ? stockObj.name : symbol;
@@ -1409,8 +1408,8 @@ async function loadChartData(symbol, range = "1y") {
             position: "right",
             min: 10,
             max: 90,
-            grid: { color: "rgba(31, 41, 61, 0.4)" },
-            ticks: { color: "#6B7280", font: { family: "JetBrains Mono", size: 9 }, stepSize: 20 }
+            grid: { color: isLight ? "rgba(203, 213, 225, 0.6)" : "rgba(31, 41, 61, 0.4)" },
+            ticks: { color: isLight ? "#64748B" : "#6B7280", font: { family: "JetBrains Mono", size: 9 }, stepSize: 20 }
           }
         }
       }
