@@ -217,6 +217,15 @@ git push -u origin main --tags
   * `themeToggle: PASSED` (Dark / Light modes switch and persist).
   * `risiFilters: PASSED` (ATH / ATL radar filters sort holdings accurately).
   * `chartingEngine: PASSED` (251-day technical charts render EMAs and RSI oscillators).
+
+---
+
+### 🎨 Milestone 18: Full-Width Equal Grid Navigation & Custom Light Palette (#d8eff2)
+* **User Directive:** Ensure all 5 navigation buttons in Row 3 stretch equally across the full container width with no empty trailing space, and update the light theme interface background to hex code `#d8eff2`.
+* **Implementation:**
+  * Replaced the flex wrapper with `grid grid-cols-2 sm:grid-cols-5 gap-1.5 sm:gap-2 w-full`, allocating an exact 20% equal width to each button with 0px leftover space.
+  * Applied hex code `#d8eff2` to the Light Mode body background with harmonious `#cbe7ec` dark container accents and pure white cards with `#c0dfe6` borders.
+  * Verified in browser: `buttonWidths: [234px, 234px, 234px, 234px, 234px]` and `lightBgColor: "rgb(216, 239, 242)"`.
 ---
 
 ## 3. Quick Runbook & Operations
