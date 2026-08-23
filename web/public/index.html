@@ -158,109 +158,42 @@
             <p class="text-[11px] text-gray-400 font-medium whitespace-nowrap hidden sm:block">Institutional Indian Equities Intelligence (NSE / BSE)</p>
           </div>
         </div>
-
-        <!-- Live Index Badges (Nifty 50 & Bank Nifty) -->
-        <div class="hidden lg:flex items-center space-x-2.5 lg:space-x-3 font-mono text-sm">
-          <!-- Nifty 50 -->
-          <div class="bg-brand-dark/80 px-3 py-1.5 rounded-lg border border-brand-border flex items-center space-x-2 shadow-sm">
-            <span class="text-xs text-gray-400 font-sans font-medium">NIFTY 50</span>
-            <span id="headerNiftyPrice" class="font-bold text-white font-mono">24,252.00</span>
-            <span id="headerNiftyChange" class="text-xs font-semibold text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded">-0.15%</span>
-          </div>
-
-          <!-- Bank Nifty -->
-          <div class="bg-brand-dark/80 px-3 py-1.5 rounded-lg border border-brand-border flex items-center space-x-2 shadow-sm">
-            <span class="text-xs text-gray-400 font-sans font-medium">BANK NIFTY</span>
-            <span id="headerBankNiftyPrice" class="font-bold text-white font-mono">57,761.95</span>
-            <span id="headerBankNiftyChange" class="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">+0.46%</span>
-          </div>
-        </div>
-
-        <!-- Header Controls -->
-        <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-          <button id="btnTriggerScan" class="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-semibold shadow-md shadow-emerald-950/50 transition duration-150 cursor-pointer" title="Run Live Market Scan">
-            <i data-lucide="refresh-cw" id="scanIcon" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-            <span class="hidden xl:inline">Run Market Scan</span>
-            <span class="inline xl:hidden">Scan</span>
+        <!-- Header Controls (Right) -->
+        <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+          <button id="btnTriggerScan" class="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-3 sm:px-4 py-2 rounded-lg text-xs font-semibold shadow-md shadow-emerald-950/50 transition duration-150 cursor-pointer" title="Run Live Market Scan">
+            <i data-lucide="refresh-cw" id="scanIcon" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Run Market Scan</span>
+            <span class="inline sm:hidden">Scan</span>
           </button>
 
           <!-- Phone Access Button -->
-          <button id="btnMobileConnect" class="flex items-center space-x-1 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm cursor-pointer" title="Open on Mobile / Phone">
-            <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
-            <span class="hidden 2xl:inline">Phone Access</span>
+          <button id="btnMobileConnect" class="flex items-center space-x-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-3 py-2 rounded-lg text-xs font-semibold transition shadow-sm cursor-pointer" title="Open on Mobile / Phone">
+            <i data-lucide="smartphone" class="w-4 h-4"></i>
+            <span class="hidden md:inline">Phone Access</span>
           </button>
 
           <!-- Dark / Light Theme Toggle Button -->
-          <button id="btnThemeToggle" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-dark hover:bg-brand-border/80 border border-brand-border text-amber-400 hover:text-amber-300 transition shadow-sm cursor-pointer" title="Toggle Light / Dark Mode">
-            <i data-lucide="moon" id="themeIcon" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <button id="btnThemeToggle" class="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-dark hover:bg-brand-border/80 border border-brand-border text-amber-400 hover:text-amber-300 transition shadow-sm cursor-pointer" title="Toggle Light / Dark Mode">
+            <i data-lucide="moon" id="themeIcon" class="w-4 h-4"></i>
           </button>
           
-          <div class="hidden sm:flex items-center space-x-1.5 sm:space-x-2 bg-brand-dark border border-brand-border px-2 sm:px-2.5 py-1.5 rounded-lg text-xs">
+          <div class="flex items-center space-x-2 bg-brand-dark border border-brand-border px-3 py-2 rounded-lg text-xs font-mono">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-gray-300 font-mono text-[11px] sm:text-xs" id="marketClock">09:15:00 IST</span>
+            <span class="text-gray-300 font-medium" id="marketClock">09:15:00 IST</span>
           </div>
         </div>
       </div>
     </div>
   </header>
-  <div class="w-full bg-brand-dark border-b border-brand-border">
-    <div class="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-      <nav class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2.5 custom-scrollbar" aria-label="Tabs">
-        
-        <!-- RisiAsset Personal Portfolio Tab -->
-        <button data-tab="tab-risiasset" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition">
-          <i data-lucide="briefcase" class="w-4 h-4 text-amber-400"></i>
-          <span>RisiAsset Portfolio</span>
-          <span id="badgeRisiCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300 font-mono">30</span>
-        </button>
-
-        <button data-tab="tab-buy-setups" class="nav-tab active flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold border border-transparent transition text-emerald-400 bg-emerald-500/10 border-emerald-500/30">
-          <i data-lucide="trending-up" class="w-4 h-4"></i>
-          <span>Value Accumulation (52W Low)</span>
-          <span id="badgeBuyCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300">12</span>
-        </button>
-
-        <button data-tab="tab-exit-setups" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition">
-          <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-          <span>Profit Booking (52W High)</span>
-          <span id="badgeExitCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300">8</span>
-        </button>
-
-        <button data-tab="tab-charting" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition">
-          <i data-lucide="candlestick-chart" class="w-4 h-4"></i>
-          <span>Charting & Technical Studio</span>
-        </button>
-
-        <button data-tab="tab-sectors" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition">
-          <i data-lucide="layout-grid" class="w-4 h-4"></i>
-          <span>Sector Heatmap</span>
-        </button>
-
-        <button data-tab="tab-risk-simulator" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition">
-          <i data-lucide="calculator" class="w-4 h-4"></i>
-          <span>Risk & Position Sizing</span>
-        </button>
-
-        <button data-tab="tab-telegram" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition">
-          <i data-lucide="send" class="w-4 h-4"></i>
-          <span>Telegram Console</span>
-        </button>
-
-        <button data-tab="tab-history" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition">
-          <i data-lucide="history" class="w-4 h-4"></i>
-          <span>Scan Logs</span>
-        </button>
-
-      </nav>
-    </div>
-  </div>
 
   <!-- ================================================================= -->
   <!-- MAIN CONTENT CONTAINER -->
   <!-- ================================================================= -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 space-y-5">
 
-    <!-- KPI Metric Cards Ribbon -->
+    <!-- ============================================================= -->
+    <!-- ROW 2: MARKET OVERVIEW & BENCHMARK KPI CARDS RIBBON           -->
+    <!-- ============================================================= -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       
       <!-- Card 1: Nifty 50 -->
@@ -325,6 +258,59 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- ROW 3: MAIN NAVIGATION TABS BAR                               -->
+    <!-- ============================================================= -->
+    <div class="w-full bg-brand-card border border-brand-border rounded-xl p-1.5 shadow-sm">
+      <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto custom-scrollbar" aria-label="Tabs">
+        
+        <!-- RisiAsset Personal Portfolio Tab -->
+        <button data-tab="tab-risiasset" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition whitespace-nowrap">
+          <i data-lucide="briefcase" class="w-4 h-4 text-amber-400"></i>
+          <span>RisiAsset Portfolio</span>
+          <span id="badgeRisiCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300 font-mono">30</span>
+        </button>
+
+        <button data-tab="tab-buy-setups" class="nav-tab active flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold border border-transparent transition text-emerald-400 bg-emerald-500/10 border-emerald-500/30 whitespace-nowrap">
+          <i data-lucide="trending-up" class="w-4 h-4"></i>
+          <span>Value Accumulation (52W Low)</span>
+          <span id="badgeBuyCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300">12</span>
+        </button>
+
+        <button data-tab="tab-exit-setups" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+          <span>Profit Booking (52W High)</span>
+          <span id="badgeExitCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300">8</span>
+        </button>
+
+        <button data-tab="tab-charting" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="candlestick-chart" class="w-4 h-4"></i>
+          <span>Charting & Technical Studio</span>
+        </button>
+
+        <button data-tab="tab-sectors" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <span>Sector Heatmap</span>
+        </button>
+
+        <button data-tab="tab-risk-simulator" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="calculator" class="w-4 h-4"></i>
+          <span>Risk & Position Sizing</span>
+        </button>
+
+        <button data-tab="tab-telegram" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="send" class="w-4 h-4"></i>
+          <span>Telegram Console</span>
+        </button>
+
+        <button data-tab="tab-history" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+          <i data-lucide="history" class="w-4 h-4"></i>
+          <span>Scan Logs</span>
+        </button>
+
+      </nav>
     </div>
 
     <!-- ============================================================= -->

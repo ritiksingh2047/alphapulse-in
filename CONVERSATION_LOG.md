@@ -139,6 +139,19 @@ git push -u origin main --tags
   * Removed the Breadth pill from the top navigation bar to simplify the interface.
   * Perfectly balanced the header across three visual anchors: Brand Logo on the left, Nifty 50 and Bank Nifty live index badges in the center, and action controls (Scan, Phone Access, Theme Toggle, Live Clock) on the right.
   * Adjusted responsive breakpoints and padding so that `scrollWidth === clientWidth` (0px overflow, zero horizontal scrolling) across Mobile (390px), Tablet (768px), and Desktop (1280px).
+
+---
+
+### 🏛️ Milestone 11: 3-Row Clean Hierarchy Restructuring
+* **User Directive:** Restructure top layout into 3 clean, dedicated rows:
+  * **Row 1 (Header):** Brand Name/Logo on left, Action Controls (*Run Market Scan*, *Phone Access*, *Dark/Light Theme Toggle*, *Market Clock*) on right.
+  * **Row 2 (Market Overview):** 4 Benchmark & Signal KPI Cards (*Nifty 50 Index*, *Bank Nifty Index*, *Market Breadth*, *Active Radar Setups*).
+  * **Row 3 (Navigation Bar):** Main Navigation Tabs Bar (*RisiAsset Portfolio*, *Value Accumulation*, *Profit Booking*, *Charting Studio*, *Sector Heatmap*, *Risk Sizing*, *Telegram*, *Scan Logs*).
+  * **Below Row 3:** Active Tab Content Sections.
+* **Implementation:**
+  * Cleaned up the header by removing cramped ticker pills.
+  * Ordered `<main>` with Row 2 KPI Cards followed immediately by Row 3 Navigation Tabs.
+  * Verified layout rendering and tab transitions via browser automation.
 ---
 
 ## 3. Quick Runbook & Operations
