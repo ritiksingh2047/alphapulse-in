@@ -130,6 +130,15 @@ git push -u origin main --tags
   1. The modal container was previously nested inside a specific tab `<section>`, causing it to inherit `.hidden` whenever other navigation tabs were active. Relocated `#mobileModal` to the root `<body>` level so it is universally accessible from any tab.
   2. Resolved a duplicate event trigger between inline `onclick` attributes and `addEventListener`.
   3. Fixed a variable scoping collision in `app.js` and added backdrop-click and ESC key dismiss handlers.
+
+---
+
+### 📐 Milestone 10: Breadth Removal & Header Precision Alignment
+* **User Directive:** Remove the technical Market Breadth indicator from the top header and align the header layout perfectly with interface height and width.
+* **Implementation:**
+  * Removed the Breadth pill from the top navigation bar to simplify the interface.
+  * Perfectly balanced the header across three visual anchors: Brand Logo on the left, Nifty 50 and Bank Nifty live index badges in the center, and action controls (Scan, Phone Access, Theme Toggle, Live Clock) on the right.
+  * Adjusted responsive breakpoints and padding so that `scrollWidth === clientWidth` (0px overflow, zero horizontal scrolling) across Mobile (390px), Tablet (768px), and Desktop (1280px).
 ---
 
 ## 3. Quick Runbook & Operations

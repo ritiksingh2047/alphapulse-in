@@ -839,9 +839,10 @@ function renderOverviewKPIs() {
   elHBNC.textContent = `${bnChg >= 0 ? "+" : ""}${bnChg.toFixed(2)}%`;
   elHBNC.className = `text-xs font-semibold px-1.5 py-0.5 rounded ${bnChg >= 0 ? "text-emerald-400 bg-emerald-500/10" : "text-rose-400 bg-rose-500/10"}`;
 
-  document.getElementById("headerAdvances").textContent = `${snap.advances || 33} ▲`;
-  document.getElementById("headerDeclines").textContent = `${snap.declines || 26} ▼`;
-
+  const elAdv = document.getElementById("headerAdvances");
+  const elDec = document.getElementById("headerDeclines");
+  if (elAdv) elAdv.textContent = `${snap.advances || 33} ▲`;
+  if (elDec) elDec.textContent = `${snap.declines || 26} ▼`;
   // Cards
   document.getElementById("cardNiftyLTP").textContent = formatINR(niftyLTP);
   document.getElementById("cardNiftyDelta").innerHTML = `
