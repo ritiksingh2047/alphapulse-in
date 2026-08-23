@@ -199,6 +199,24 @@ git push -u origin main --tags
   1. Renamed the navigation tab to **`📈 Charting`** to keep the tab strip clean and punchy.
   2. Fixed an unhandled `ReferenceError: isLight is not defined` inside `loadChartData()` that was blocking Chart.js initialization on stock selection.
   3. Verified interactive multi-indicator price chart (251 historical days, 20/50/200 EMAs) and RSI(14) oscillator chart rendering across all universe stocks.
+
+---
+
+### 🎯 Milestone 17: Concise 1-2 Word Navigation & End-to-End Button Validation
+* **User Directive:** Shorten all 5 navigation tabs to 1-2 word labels so all tabs fit on a single row without horizontal scrolling, and validate the functionality of every button.
+* **Updated 5-Module Navigation Strip:**
+  1. **`💼 RisiAsset (30)`**
+  2. **`🟢 52W Lows (60)`**
+  3. **`🔴 52W Highs (40)`**
+  4. **`📈 Charting`**
+  5. **`🧮 Risk Sizing`**
+* **Automated Button & Layout Validation Report:**
+  * `navSingleRowFit: true` (Total tab strip width fits on a single line with 0px horizontal scroll).
+  * `tabSwitchResults: 5/5 PASSED` (All 5 tabs switch views cleanly).
+  * `headerModals: 3/3 PASSED` (`Phone`, `Telegram`, and `Scan Logs` modals open and dismiss properly).
+  * `themeToggle: PASSED` (Dark / Light modes switch and persist).
+  * `risiFilters: PASSED` (ATH / ATL radar filters sort holdings accurately).
+  * `chartingEngine: PASSED` (251-day technical charts render EMAs and RSI oscillators).
 ---
 
 ## 3. Quick Runbook & Operations

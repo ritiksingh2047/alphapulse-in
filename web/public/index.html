@@ -281,36 +281,38 @@
     <div class="w-full bg-brand-card border border-brand-border rounded-xl p-1.5 shadow-sm">
       <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto custom-scrollbar" aria-label="Tabs">
         
-        <!-- RisiAsset Personal Portfolio Tab -->
-        <button data-tab="tab-risiasset" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition whitespace-nowrap">
+        <!-- Tab 1: RisiAsset Portfolio -->
+        <button data-tab="tab-risiasset" class="nav-tab flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition whitespace-nowrap cursor-pointer">
           <i data-lucide="briefcase" class="w-4 h-4 text-amber-400"></i>
-          <span>RisiAsset Portfolio</span>
-          <span id="badgeRisiCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300 font-mono">30</span>
+          <span>RisiAsset</span>
+          <span id="badgeRisiCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300 font-mono">30</span>
         </button>
 
-        <button data-tab="tab-buy-setups" class="nav-tab active flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold border border-transparent transition text-emerald-400 bg-emerald-500/10 border-emerald-500/30 whitespace-nowrap">
+        <!-- Tab 2: 52W Lows Value Accumulation -->
+        <button data-tab="tab-buy-setups" class="nav-tab active flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold border border-transparent transition text-emerald-400 bg-emerald-500/10 border-emerald-500/30 whitespace-nowrap cursor-pointer">
           <i data-lucide="trending-up" class="w-4 h-4"></i>
-          <span>Value Accumulation (52W Low)</span>
-          <span id="badgeBuyCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300">12</span>
+          <span>52W Lows</span>
+          <span id="badgeBuyCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300">60</span>
         </button>
 
-        <button data-tab="tab-exit-setups" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+        <!-- Tab 3: 52W Highs Profit Booking -->
+        <button data-tab="tab-exit-setups" class="nav-tab flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer">
           <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-          <span>Profit Booking (52W High)</span>
-          <span id="badgeExitCount" class="ml-1.5 px-2 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300">8</span>
+          <span>52W Highs</span>
+          <span id="badgeExitCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300">40</span>
         </button>
 
-        <button data-tab="tab-charting" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+        <!-- Tab 4: Technical Charting -->
+        <button data-tab="tab-charting" class="nav-tab flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer">
           <i data-lucide="candlestick-chart" class="w-4 h-4"></i>
           <span>Charting</span>
         </button>
 
-
-        <button data-tab="tab-risk-simulator" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
+        <!-- Tab 5: Risk & Position Sizing -->
+        <button data-tab="tab-risk-simulator" class="nav-tab flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer">
           <i data-lucide="calculator" class="w-4 h-4"></i>
-          <span>Risk & Position Sizing</span>
+          <span>Risk Sizing</span>
         </button>
-
 
 
       </nav>
