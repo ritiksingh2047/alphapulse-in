@@ -226,6 +226,19 @@ git push -u origin main --tags
   * Replaced the flex wrapper with `grid grid-cols-2 sm:grid-cols-5 gap-1.5 sm:gap-2 w-full`, allocating an exact 20% equal width to each button with 0px leftover space.
   * Applied hex code `#d8eff2` to the Light Mode body background with harmonious `#cbe7ec` dark container accents and pure white cards with `#c0dfe6` borders.
   * Verified in browser: `buttonWidths: [234px, 234px, 234px, 234px, 234px]` and `lightBgColor: "rgb(216, 239, 242)"`.
+
+---
+
+### 🏷️ Milestone 19: Official Version 1.1 (v1.1) Release & Git Tagging
+* **User Directive:** Save the current enhanced build as **v1.1** and update the dashboard brand badge to **`v1.1`**.
+* **Version 1.1 Enhancements Consolidated:**
+  1. Clean 3-Row Layout Hierarchy (Row 1 Header $\rightarrow$ Row 2 Market Cards $\rightarrow$ Row 3 Navigation Tabs).
+  2. Full-Width Equal Grid Navigation (all 5 buttons span 20% width with 0px margin gap).
+  3. Single/Two-Word Concise Tab Labels (`RisiAsset`, `52W Lows`, `52W Highs`, `Charting`, `Risk Sizing`).
+  4. Custom `#d8eff2` Soft Ice-Cyan Light Theme Palette.
+  5. Unified Mobile & Broadcast Hubs (Header Split-Buttons for `[ Scan | Logs ]` and `[ Phone | Telegram ]`).
+  6. Technical Multi-Indicator Charting Engine Fix.
+* **Git Tag:** **`v1.1`** and **`v1.1.0`**.
 ---
 
 ## 3. Quick Runbook & Operations
