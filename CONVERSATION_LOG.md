@@ -180,6 +180,16 @@ git push -u origin main --tags
   * Converted the scan telemetry table into a dedicated modal (`#scanLogsModal`) accessible from the header.
   * Removed the `Scan Logs` tab from the Row 3 navigation bar, leaving the 6 primary modules uncluttered.
   * Verified modal display, execution log population (8 logs), and dismiss actions (Close button, backdrop click, Escape key).
+
+---
+
+### 💬 Milestone 15: Unified Mobile & Telegram Broadcast Header Hub
+* **User Directive:** Merge the Telegram Console with the Phone Access button in the top navigation bar.
+* **Implementation:**
+  * Created an indigo split-button group in Row 1: **`[ 📱 Phone | 💬 Telegram ]`**.
+  * Converted the Telegram broadcast alert preview and markdown copy console into a dedicated modal (`#telegramModal`) accessible from the header.
+  * Removed the `Telegram Console` tab from the Row 3 navigation bar, leaving the 5 focused primary analytical engines.
+  * Verified modal opening, formatted chat bubble rendering, markdown copy feedback, and modal dismiss handling.
 ---
 
 ## 3. Quick Runbook & Operations

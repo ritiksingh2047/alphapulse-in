@@ -174,11 +174,18 @@
             </button>
           </div>
 
-          <!-- Phone Access Button -->
-          <button id="btnMobileConnect" class="flex items-center space-x-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-3 py-2 rounded-lg text-xs font-semibold transition shadow-sm cursor-pointer" title="Open on Mobile / Phone">
-            <i data-lucide="smartphone" class="w-4 h-4"></i>
-            <span class="hidden md:inline">Phone Access</span>
-          </button>
+          <!-- Phone Access & Telegram Alerts Button Group -->
+          <div class="flex items-center rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 p-0.5 shadow-md shadow-blue-950/50">
+            <button id="btnMobileConnect" class="flex items-center space-x-1 hover:bg-white/10 text-white px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold transition duration-150 cursor-pointer" title="Open on Mobile / Phone via Wi-Fi">
+              <i data-lucide="smartphone" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+              <span class="hidden sm:inline">Phone</span>
+            </button>
+            <div class="h-4 w-px bg-white/20 my-auto"></div>
+            <button id="btnOpenTelegramModal" class="flex items-center space-x-1 hover:bg-white/10 text-blue-100 hover:text-white px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition duration-150 cursor-pointer" title="View Telegram 09:15 AM Opening Bell Broadcast Alerts">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              <span class="hidden md:inline">Telegram</span>
+            </button>
+          </div>
 
           <!-- Dark / Light Theme Toggle Button -->
           <button id="btnThemeToggle" class="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-dark hover:bg-brand-border/80 border border-brand-border text-amber-400 hover:text-amber-300 transition shadow-sm cursor-pointer" title="Toggle Light / Dark Mode">
@@ -304,10 +311,6 @@
           <span>Risk & Position Sizing</span>
         </button>
 
-        <button data-tab="tab-telegram" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
-          <i data-lucide="send" class="w-4 h-4"></i>
-          <span>Telegram Console</span>
-        </button>
 
 
       </nav>
@@ -841,29 +844,6 @@
     </section>
 
     <!-- ============================================================= -->
-    <!-- TAB 6: TELEGRAM BROADCAST CONSOLE -->
-    <!-- ============================================================= -->
-    <section id="tab-telegram" class="tab-content hidden space-y-4">
-      
-      <div class="bg-brand-card p-4 rounded-xl border border-brand-border flex items-center justify-between">
-        <div>
-          <h2 class="text-base font-bold text-white tracking-tight">Telegram Alert Console (Section 4 Format)</h2>
-          <p class="text-xs text-gray-400">Live preview of automated broadcast alerts dispatched at 09:15 AM IST opening bell</p>
-        </div>
-        <div class="flex space-x-2">
-          <button id="btnCopyTelegram" class="flex items-center space-x-1.5 bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 px-3.5 py-1.5 rounded-lg text-xs font-medium transition">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            <span>Copy Markdown</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Chat Bubble Preview -->
-      <div class="max-w-3xl mx-auto bg-[#182533] p-6 rounded-2xl border border-brand-border/60 shadow-2xl font-mono text-xs text-gray-100 whitespace-pre-wrap leading-relaxed custom-scrollbar" id="telegramPreviewBox">
-        <!-- Rendered via JS -->
-      </div>
-
-    </section>
 
 
 
@@ -922,6 +902,40 @@
     </div>
   </div>
 
+  <!-- ================================================================= -->
+  <!-- TELEGRAM BROADCAST CONSOLE MODAL -->
+  <!-- ================================================================= -->
+  <div id="telegramModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
+      
+      <button id="btnCloseTelegramModal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition cursor-pointer" title="Close">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center justify-between border-b border-brand-border/60 pb-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-bold">
+            <i data-lucide="send" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Telegram Broadcast Console</h3>
+            <p class="text-xs text-gray-400">Automated 09:15 AM IST opening bell market scan alert format</p>
+          </div>
+        </div>
+
+        <button id="btnCopyTelegram" class="flex items-center space-x-1.5 bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 px-3.5 py-1.5 rounded-lg text-xs font-medium transition mr-8 cursor-pointer">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span>Copy Markdown</span>
+        </button>
+      </div>
+
+      <!-- Chat Bubble Preview -->
+      <div class="bg-[#182533] p-5 rounded-xl border border-brand-border/60 shadow-inner font-mono text-xs text-gray-100 whitespace-pre-wrap leading-relaxed overflow-y-auto custom-scrollbar flex-1" id="telegramPreviewBox">
+        <!-- Rendered via JS -->
+      </div>
+
+    </div>
+  </div>
   <!-- Frontend Engine -->
   <!-- ================================================================= -->
   <!-- MARKET SCAN LOGS & TELEMETRY MODAL -->

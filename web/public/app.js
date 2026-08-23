@@ -146,7 +146,15 @@ function toggleScanLogsModal() {
   lucide.createIcons();
 }
 
+function toggleTelegramModal() {
+  const modal = document.getElementById("telegramModal");
+  if (!modal) return;
+  modal.classList.toggle("hidden");
+  lucide.createIcons();
+}
+
 window.toggleScanLogsModal = toggleScanLogsModal;
+window.toggleTelegramModal = toggleTelegramModal;
 // -------------------------------------------------------------------
 // Clock & Market Status
 // -------------------------------------------------------------------
@@ -267,6 +275,25 @@ function setupEventListeners() {
       }
     });
   }
+  // Telegram Modal Controller
+  const btnTg = document.getElementById("btnOpenTelegramModal");
+  if (btnTg) {
+    btnTg.addEventListener("click", toggleTelegramModal);
+  }
+
+  const btnCloseTg = document.getElementById("btnCloseTelegramModal");
+  if (btnCloseTg) {
+    btnCloseTg.addEventListener("click", toggleTelegramModal);
+  }
+
+  const telegramModal = document.getElementById("telegramModal");
+  if (telegramModal) {
+    telegramModal.addEventListener("click", (e) => {
+      if (e.target === telegramModal) {
+        toggleTelegramModal();
+      }
+    });
+  }
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
@@ -277,6 +304,10 @@ function setupEventListeners() {
       const slm = document.getElementById("scanLogsModal");
       if (slm && !slm.classList.contains("hidden")) {
         slm.classList.add("hidden");
+      }
+      const tgm = document.getElementById("telegramModal");
+      if (tgm && !tgm.classList.contains("hidden")) {
+        tgm.classList.add("hidden");
       }
     }
   });
