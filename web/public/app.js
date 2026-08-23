@@ -137,6 +137,17 @@ window.toggleMobileModal = toggleMobileModal;
 window.copyMobileUrl = copyMobileUrl;
 
 // -------------------------------------------------------------------
+// Market Scan Logs Modal Controller
+// -------------------------------------------------------------------
+function toggleScanLogsModal() {
+  const modal = document.getElementById("scanLogsModal");
+  if (!modal) return;
+  modal.classList.toggle("hidden");
+  lucide.createIcons();
+}
+
+window.toggleScanLogsModal = toggleScanLogsModal;
+// -------------------------------------------------------------------
 // Clock & Market Status
 // -------------------------------------------------------------------
 function updateClock() {
@@ -237,12 +248,35 @@ function setupEventListeners() {
       }
     });
   }
+  // Scan Logs Button & Modal
+  const btnLogs = document.getElementById("btnOpenScanLogs");
+  if (btnLogs) {
+    btnLogs.addEventListener("click", toggleScanLogsModal);
+  }
+
+  const btnCloseLogs = document.getElementById("btnCloseScanLogsModal");
+  if (btnCloseLogs) {
+    btnCloseLogs.addEventListener("click", toggleScanLogsModal);
+  }
+
+  const scanLogsModal = document.getElementById("scanLogsModal");
+  if (scanLogsModal) {
+    scanLogsModal.addEventListener("click", (e) => {
+      if (e.target === scanLogsModal) {
+        toggleScanLogsModal();
+      }
+    });
+  }
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       const m = document.getElementById("mobileModal");
       if (m && !m.classList.contains("hidden")) {
         m.classList.add("hidden");
+      }
+      const slm = document.getElementById("scanLogsModal");
+      if (slm && !slm.classList.contains("hidden")) {
+        slm.classList.add("hidden");
       }
     }
   });

@@ -170,6 +170,16 @@ git push -u origin main --tags
   * Removed the `Sector Heatmap` navigation button from the Row 3 tab bar.
   * Removed `<section id="tab-sectors">` from `index.html`.
   * Verified that all remaining 7 tabs (`RisiAsset Portfolio`, `Value Accumulation`, `Profit Booking`, `Charting Studio`, `Risk & Position Sizing`, `Telegram Console`, `Scan Logs`) render and navigate cleanly.
+
+---
+
+### 🔄 Milestone 14: Unified Scan & Telemetry Header Controller
+* **User Directive:** Merge Scan Logs with the Run Market Scan button at the top header and remove the redundant tab from the navigation bar.
+* **Implementation:**
+  * Created an emerald split-button group in Row 1: **`[ 🔄 Run Market Scan | 📜 Logs ]`**.
+  * Converted the scan telemetry table into a dedicated modal (`#scanLogsModal`) accessible from the header.
+  * Removed the `Scan Logs` tab from the Row 3 navigation bar, leaving the 6 primary modules uncluttered.
+  * Verified modal display, execution log population (8 logs), and dismiss actions (Close button, backdrop click, Escape key).
 ---
 
 ## 3. Quick Runbook & Operations

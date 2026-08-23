@@ -160,11 +160,19 @@
         </div>
         <!-- Header Controls (Right) -->
         <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
-          <button id="btnTriggerScan" class="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-3 sm:px-4 py-2 rounded-lg text-xs font-semibold shadow-md shadow-emerald-950/50 transition duration-150 cursor-pointer" title="Run Live Market Scan">
-            <i data-lucide="refresh-cw" id="scanIcon" class="w-4 h-4"></i>
-            <span class="hidden sm:inline">Run Market Scan</span>
-            <span class="inline sm:hidden">Scan</span>
-          </button>
+          <!-- Run Market Scan & Scan Logs Button Group -->
+          <div class="flex items-center rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 p-0.5 shadow-md shadow-emerald-950/50">
+            <button id="btnTriggerScan" class="flex items-center space-x-1.5 hover:from-emerald-500 hover:to-teal-500 text-white px-2.5 sm:px-3.5 py-1.5 rounded-md text-xs font-semibold transition duration-150 cursor-pointer" title="Run Live 09:15 AM Market Scan">
+              <i data-lucide="refresh-cw" id="scanIcon" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+              <span class="hidden sm:inline">Run Market Scan</span>
+              <span class="inline sm:hidden">Scan</span>
+            </button>
+            <div class="h-4 w-px bg-white/20 my-auto"></div>
+            <button id="btnOpenScanLogs" class="flex items-center space-x-1 hover:bg-white/10 text-emerald-100 hover:text-white px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition duration-150 cursor-pointer" title="View Market Scan Execution Logs & Telemetry">
+              <i data-lucide="history" class="w-3.5 h-3.5"></i>
+              <span class="hidden md:inline">Logs</span>
+            </button>
+          </div>
 
           <!-- Phone Access Button -->
           <button id="btnMobileConnect" class="flex items-center space-x-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-3 py-2 rounded-lg text-xs font-semibold transition shadow-sm cursor-pointer" title="Open on Mobile / Phone">
@@ -301,10 +309,6 @@
           <span>Telegram Console</span>
         </button>
 
-        <button data-tab="tab-history" class="nav-tab flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap">
-          <i data-lucide="history" class="w-4 h-4"></i>
-          <span>Scan Logs</span>
-        </button>
 
       </nav>
     </div>
@@ -861,31 +865,7 @@
 
     </section>
 
-    <!-- ============================================================= -->
-    <!-- TAB 7: SCAN LOGS & HISTORY -->
-    <!-- ============================================================= -->
-    <section id="tab-history" class="tab-content hidden space-y-4">
-      <div class="bg-brand-card p-4 rounded-xl border border-brand-border">
-        <h2 class="text-base font-bold text-white tracking-tight">Market Scan History & Execution Telemetry</h2>
-      </div>
 
-      <div class="bg-brand-card rounded-xl border border-brand-border overflow-hidden">
-        <table class="w-full text-left text-xs font-mono">
-          <thead class="bg-brand-dark/90 text-gray-400 uppercase tracking-wider border-b border-brand-border">
-            <tr>
-              <th class="py-3 px-4">Execution Time</th>
-              <th class="py-3 px-4">Scan Type</th>
-              <th class="py-3 px-4 text-center">Universe Scanned</th>
-              <th class="py-3 px-4 text-center">Signals Generated</th>
-              <th class="py-3 px-4 text-right">Duration</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-brand-border" id="tbodyScanLogs">
-            <!-- Rendered via JS -->
-          </tbody>
-        </table>
-      </div>
-    </section>
 
   </main>
 
@@ -943,6 +923,45 @@
   </div>
 
   <!-- Frontend Engine -->
+  <!-- ================================================================= -->
+  <!-- MARKET SCAN LOGS & TELEMETRY MODAL -->
+  <!-- ================================================================= -->
+  <div id="scanLogsModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
+      
+      <button id="btnCloseScanLogsModal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition cursor-pointer" title="Close">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
+          <i data-lucide="history" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white">Market Scan Telemetry & History</h3>
+          <p class="text-xs text-gray-400">Execution logs and signal generation audits from automated scans</p>
+        </div>
+      </div>
+
+      <div class="bg-brand-dark rounded-xl border border-brand-border overflow-hidden flex-1 overflow-y-auto custom-scrollbar">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="bg-brand-border/40 text-gray-400 uppercase tracking-wider border-b border-brand-border sticky top-0 bg-brand-dark z-10">
+            <tr>
+              <th class="py-3 px-4">Execution Time</th>
+              <th class="py-3 px-4">Scan Type</th>
+              <th class="py-3 px-4 text-center">Universe Scanned</th>
+              <th class="py-3 px-4 text-center">Signals Generated</th>
+              <th class="py-3 px-4 text-right">Duration</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-brand-border" id="tbodyScanLogs">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
   <script src="/app.js"></script>
 </body>
 </html>
