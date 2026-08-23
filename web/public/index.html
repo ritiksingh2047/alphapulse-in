@@ -136,27 +136,26 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col custom-scrollbar">
+<body class="min-h-screen flex flex-col custom-scrollbar overflow-x-hidden">
 
   <!-- ================================================================= -->
   <!-- TOP INSTITUTIONAL HEADER & TICKER BAR -->
   <!-- ================================================================= -->
   <header class="bg-brand-card border-b border-brand-border sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 gap-1.5 sm:gap-2">
         
         <!-- Logo & Branding -->
-        <div class="flex items-center space-x-3 shrink-0">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 flex items-center justify-center font-bold text-white shadow-lg shadow-emerald-950/50 border border-emerald-300/30 shrink-0">
-            <i data-lucide="zap" class="w-5 h-5 text-white fill-white/20"></i>
+        <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 flex items-center justify-center font-bold text-white shadow-lg shadow-emerald-950/50 border border-emerald-300/30 shrink-0">
+            <i data-lucide="zap" class="w-4 h-4 sm:w-5 sm:h-5 text-white fill-white/20"></i>
           </div>
           <div class="min-w-0">
-            <div class="flex items-center space-x-2">
-              <span class="font-black text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent whitespace-nowrap">ALPHAPULSE-IN</span>
-              <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded uppercase shrink-0">QUANT v2.4</span>
+            <div class="flex items-center space-x-1 sm:space-x-2">
+              <span class="font-black text-sm sm:text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent whitespace-nowrap">ALPHAPULSE-IN</span>
+              <span class="hidden xs:inline-block sm:inline-block px-1.5 py-0.5 text-[9px] sm:text-[10px] font-mono font-bold tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded uppercase shrink-0">QUANT v2.4</span>
             </div>
             <p class="text-[11px] text-gray-400 font-medium whitespace-nowrap hidden sm:block">Institutional Indian Equities Intelligence (NSE / BSE)</p>
-            <p class="text-[10px] text-gray-400 font-medium whitespace-nowrap sm:hidden">NSE/BSE Institutional Intelligence</p>
           </div>
         </div>
 
@@ -185,36 +184,30 @@
           </div>
         </div>
 
-        <!-- Controls & RisiAsset Quick Switcher -->
-        <div class="flex items-center space-x-3">
-          <!-- RisiAsset Portfolio Header Pill -->
-          <div class="hidden lg:flex items-center space-x-2 bg-gradient-to-r from-amber-500/10 via-amber-600/10 to-amber-700/10 border border-amber-500/30 px-3 py-1.5 rounded-lg text-xs cursor-pointer hover:border-amber-400 hover:bg-amber-500/20 transition shadow-sm" onclick="document.querySelector('[data-tab=\'tab-risiasset\']').click()" title="View RisiAsset Personal Portfolio">
-            <i data-lucide="briefcase" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span class="text-amber-300 font-semibold font-sans">RisiAsset:</span>
-            <span class="font-mono text-white font-bold" id="headerRisiVal">₹1,57,090</span>
-            <span class="font-mono text-rose-400 text-[11px] font-bold bg-rose-500/10 px-1 py-0.2 rounded" id="headerRisiPnl">-4.8%</span>
-          </div>
-          <button id="btnTriggerScan" class="flex items-center space-x-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-2 rounded-lg text-xs font-semibold shadow-md shadow-emerald-950/50 transition duration-150">
-            <i data-lucide="refresh-cw" id="scanIcon" class="w-4 h-4"></i>
-            <span>Run Market Scan</span>
+        <!-- Header Controls -->
+        <div class="flex items-center space-x-1 sm:space-x-2.5 shrink-0">
+          <button id="btnTriggerScan" class="flex items-center space-x-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-semibold shadow-md shadow-emerald-950/50 transition duration-150" title="Run Live Market Scan">
+            <i data-lucide="refresh-cw" id="scanIcon" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+            <span class="hidden md:inline">Run Market Scan</span>
+            <span class="hidden sm:inline md:hidden">Scan</span>
           </button>
+
           <!-- Phone Access Button -->
-          <button id="btnMobileConnect" onclick="toggleMobileModal()" class="flex items-center space-x-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm" title="Open on Mobile / Phone">
+          <button id="btnMobileConnect" onclick="toggleMobileModal()" class="flex items-center space-x-1 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm" title="Open on Mobile / Phone">
             <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">Phone Access</span>
+            <span class="hidden lg:inline">Phone Access</span>
           </button>
 
           <!-- Dark / Light Theme Toggle Button -->
-          <button id="btnThemeToggle" onclick="toggleTheme()" class="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-dark hover:bg-brand-border/80 border border-brand-border text-amber-400 hover:text-amber-300 transition shadow-sm" title="Toggle Light / Dark Mode">
-            <i data-lucide="moon" id="themeIcon" class="w-4 h-4"></i>
+          <button id="btnThemeToggle" onclick="toggleTheme()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-dark hover:bg-brand-border/80 border border-brand-border text-amber-400 hover:text-amber-300 transition shadow-sm" title="Toggle Light / Dark Mode">
+            <i data-lucide="moon" id="themeIcon" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
           </button>
           
-          <div class="flex items-center space-x-2 bg-brand-dark border border-brand-border px-3 py-1.5 rounded-lg text-xs">
+          <div class="hidden sm:flex items-center space-x-2 bg-brand-dark border border-brand-border px-2.5 sm:px-3 py-1.5 rounded-lg text-xs">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span class="text-gray-300 font-mono" id="marketClock">09:15:00 IST</span>
           </div>
         </div>
-
       </div>
     </div>
   </header>

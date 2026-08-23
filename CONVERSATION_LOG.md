@@ -112,6 +112,15 @@ git push -u origin main --tags
   * Added persistent theme state controller via `localStorage.getItem("alphapulse-theme")`.
   * Added header theme switcher button (`#btnThemeToggle`) with animated Lucide Moon/Sun icons.
   * Adapted Chart.js technical indicators and allocation doughnut/performance charts to re-render with dynamic grid and tooltip palettes upon theme toggling.
+
+---
+
+### 🔒 Milestone 8: Personal Portfolio Privacy & Zero-Scroll Layout
+* **User Directive:** Remove private portfolio metrics (`₹1.57L`, `-4.80%`) from the public top header and eliminate horizontal scrolling across mobile and desktop.
+* **Implementation:**
+  * Removed the personal balance and return pill from the public global navigation header.
+  * Confined all personal holdings, balances, and allocations exclusively to the dedicated `💼 RisiAsset Portfolio` tab.
+  * Added `overflow-x-hidden` and responsive mobile header layouts so page width precisely matches viewport width (`scrollWidth === clientWidth`, 0px horizontal overflow).
 ---
 
 ## 3. Quick Runbook & Operations
