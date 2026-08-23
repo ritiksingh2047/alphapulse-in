@@ -8,7 +8,7 @@ Git is configured for this project repository with your personal GitHub identity
 
 * **GitHub Profile:** [https://github.com/ritiksingh2047](https://github.com/ritiksingh2047)
 * **User Name:** `ritiksingh2047`
-* **Email Address:** `ritiksingh2047@users.noreply.github.com`
+* **Email Address:** `singhritik7464@gmail.com`
 * **Config Scope:** Local (`.git/config`)
 ### Remote Repository Connection:
 To push this local repository directly to your GitHub profile, create a new repository on GitHub (e.g., `alphapulse-in`) and run:
