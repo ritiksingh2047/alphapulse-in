@@ -193,16 +193,15 @@
           </button>
 
           <!-- Phone Access Button -->
-          <button id="btnMobileConnect" onclick="toggleMobileModal()" class="flex items-center space-x-1 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm" title="Open on Mobile / Phone">
+          <button id="btnMobileConnect" class="flex items-center space-x-1 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm cursor-pointer" title="Open on Mobile / Phone">
             <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
             <span class="hidden lg:inline">Phone Access</span>
           </button>
 
           <!-- Dark / Light Theme Toggle Button -->
-          <button id="btnThemeToggle" onclick="toggleTheme()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-dark hover:bg-brand-border/80 border border-brand-border text-amber-400 hover:text-amber-300 transition shadow-sm" title="Toggle Light / Dark Mode">
+          <button id="btnThemeToggle" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-dark hover:bg-brand-border/80 border border-brand-border text-amber-400 hover:text-amber-300 transition shadow-sm cursor-pointer" title="Toggle Light / Dark Mode">
             <i data-lucide="moon" id="themeIcon" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
           </button>
-          
           <div class="hidden sm:flex items-center space-x-2 bg-brand-dark border border-brand-border px-2.5 sm:px-3 py-1.5 rounded-lg text-xs">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span class="text-gray-300 font-mono" id="marketClock">09:15:00 IST</span>
@@ -736,64 +735,7 @@
 
         </div>
 
-  <!-- ================================================================= -->
-  <!-- MOBILE PHONE ACCESS MODAL -->
-  <!-- ================================================================= -->
-  <div id="mobileModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
-      
-      <button onclick="toggleMobileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
 
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-bold">
-          <i data-lucide="smartphone" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h3 class="text-base font-bold text-white">Open on Mobile / Tablet</h3>
-          <p class="text-xs text-gray-400">Scan QR Code or visit URL on same Wi-Fi network</p>
-        </div>
-      </div>
-
-      <!-- QR Code Container -->
-      <div class="bg-white p-4 rounded-xl flex items-center justify-center mx-auto w-48 h-48 shadow-lg">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://192.168.0.104:3000" alt="Mobile Dashboard QR Code" class="w-full h-full object-contain">
-      </div>
-
-      <!-- URL Copy Box -->
-      <div class="space-y-1.5">
-        <label class="text-xs font-semibold text-gray-300">Direct Mobile URL (Tap to Copy):</label>
-        <div class="flex items-center space-x-2 bg-brand-dark p-2 rounded-lg border border-brand-border font-mono text-xs text-blue-400">
-          <input type="text" id="mobileUrlInput" readonly value="http://192.168.0.104:3000" class="bg-transparent flex-1 focus:outline-none text-white font-bold">
-          <button onclick="copyMobileUrl()" class="px-2.5 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded text-xs font-sans transition flex items-center space-x-1">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            <span id="copyMobileText">Copy</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="bg-brand-dark/60 p-3 rounded-lg border border-brand-border/60 text-[11px] text-gray-400 space-y-1">
-        <p>💡 <strong class="text-gray-300">Requirement:</strong> Phone must be connected to the same Wi-Fi network (<strong class="text-emerald-400">192.168.0.x</strong>).</p>
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-    function toggleMobileModal() {
-      const m = document.getElementById('mobileModal');
-      if (m) m.classList.toggle('hidden');
-    }
-    function copyMobileUrl() {
-      const input = document.getElementById('mobileUrlInput');
-      navigator.clipboard.writeText(input.value).then(() => {
-        const txt = document.getElementById('copyMobileText');
-        txt.textContent = 'Copied!';
-        setTimeout(() => { txt.textContent = 'Copy'; }, 2000);
-      });
-    }
-  </script>
       </div>
 
     </section>
@@ -1004,6 +946,49 @@
       <p class="mt-2 sm:mt-0 font-mono">Data: Yahoo Finance Realtime | AlphaPulse-IN Quantitative Engine</p>
     </div>
   </footer>
+  <!-- ================================================================= -->
+  <!-- MOBILE PHONE ACCESS MODAL -->
+  <!-- ================================================================= -->
+  <div id="mobileModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl relative" onclick="event.stopPropagation()">
+      
+      <button id="btnCloseMobileModal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition cursor-pointer" title="Close">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 font-bold">
+          <i data-lucide="smartphone" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white">Open on Mobile / Tablet</h3>
+          <p class="text-xs text-gray-400">Scan QR Code or visit URL on same Wi-Fi network</p>
+        </div>
+      </div>
+
+      <!-- QR Code Container -->
+      <div class="bg-white p-4 rounded-xl flex items-center justify-center mx-auto w-48 h-48 shadow-lg">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://192.168.0.104:3000" alt="Mobile Dashboard QR Code" class="w-full h-full object-contain">
+      </div>
+
+      <!-- URL Copy Box -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-semibold text-gray-300">Direct Mobile URL (Tap to Copy):</label>
+        <div class="flex items-center space-x-2 bg-brand-dark p-2 rounded-lg border border-brand-border font-mono text-xs text-blue-400">
+          <input type="text" id="mobileUrlInput" readonly value="http://192.168.0.104:3000" class="bg-transparent flex-1 focus:outline-none text-white font-bold">
+          <button id="btnCopyMobileUrl" class="px-2.5 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded text-xs font-sans transition flex items-center space-x-1 cursor-pointer">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span id="copyMobileText">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-brand-dark/60 p-3 rounded-lg border border-brand-border/60 text-[11px] text-gray-400 space-y-1">
+        <p>💡 <strong class="text-gray-300">Requirement:</strong> Phone must be connected to the same Wi-Fi network (<strong class="text-emerald-400">192.168.0.x</strong>).</p>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Frontend Engine -->
   <script src="/app.js"></script>

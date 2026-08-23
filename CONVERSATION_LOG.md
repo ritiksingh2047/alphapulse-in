@@ -121,6 +121,15 @@ git push -u origin main --tags
   * Removed the personal balance and return pill from the public global navigation header.
   * Confined all personal holdings, balances, and allocations exclusively to the dedicated `💼 RisiAsset Portfolio` tab.
   * Added `overflow-x-hidden` and responsive mobile header layouts so page width precisely matches viewport width (`scrollWidth === clientWidth`, 0px horizontal overflow).
+
+---
+
+### 📱 Milestone 9: Phone Access Modal Global Fix
+* **User Report:** Phone Access button in top header was not responding on click.
+* **Root Cause & Resolution:**
+  1. The modal container was previously nested inside a specific tab `<section>`, causing it to inherit `.hidden` whenever other navigation tabs were active. Relocated `#mobileModal` to the root `<body>` level so it is universally accessible from any tab.
+  2. Resolved a duplicate event trigger between inline `onclick` attributes and `addEventListener`.
+  3. Fixed a variable scoping collision in `app.js` and added backdrop-click and ESC key dismiss handlers.
 ---
 
 ## 3. Quick Runbook & Operations

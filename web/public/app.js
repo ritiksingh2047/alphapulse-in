@@ -87,7 +87,48 @@ function toggleTheme() {
   applyTheme(next);
 }
 
+// -------------------------------------------------------------------
+// Mobile Phone Access Modal Controller
+// -------------------------------------------------------------------
+function toggleMobileModal() {
+  const modal = document.getElementById("mobileModal");
+  if (!modal) return;
+  modal.classList.toggle("hidden");
+  lucide.createIcons();
+}
+
+function copyMobileUrl() {
+  const input = document.getElementById("mobileUrlInput");
+  if (!input) return;
+  
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(input.value).then(() => {
+      showCopiedFeedback();
+    }).catch(() => {
+      fallbackCopy(input);
+    });
+  } else {
+    fallbackCopy(input);
+  }
+}
+
+function fallbackCopy(input) {
+  input.select();
+  document.execCommand("copy");
+  showCopiedFeedback();
+}
+
+function showCopiedFeedback() {
+  const txt = document.getElementById("copyMobileText");
+  if (txt) {
+    txt.textContent = "Copied!";
+    setTimeout(() => { txt.textContent = "Copy"; }, 2000);
+  }
+}
+
 window.toggleTheme = toggleTheme;
+window.toggleMobileModal = toggleMobileModal;
+window.copyMobileUrl = copyMobileUrl;
 
 // -------------------------------------------------------------------
 // Clock & Market Status
@@ -161,6 +202,44 @@ function setupEventListeners() {
     btnScan.addEventListener("click", triggerLiveScan);
   }
 
+  // Theme Switcher Button
+  const btnTheme = document.getElementById("btnThemeToggle");
+  if (btnTheme) {
+    btnTheme.addEventListener("click", toggleTheme);
+  }
+
+  // Mobile Phone Access Button & Modal
+  const btnMobile = document.getElementById("btnMobileConnect");
+  if (btnMobile) {
+    btnMobile.addEventListener("click", toggleMobileModal);
+  }
+
+  const btnCloseModal = document.getElementById("btnCloseMobileModal");
+  if (btnCloseModal) {
+    btnCloseModal.addEventListener("click", toggleMobileModal);
+  }
+  const btnCopyMobile = document.getElementById("btnCopyMobileUrl");
+  if (btnCopyMobile) {
+    btnCopyMobile.addEventListener("click", copyMobileUrl);
+  }
+
+  const mobileModal = document.getElementById("mobileModal");
+  if (mobileModal) {
+    mobileModal.addEventListener("click", (e) => {
+      if (e.target === mobileModal) {
+        toggleMobileModal();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      const m = document.getElementById("mobileModal");
+      if (m && !m.classList.contains("hidden")) {
+        m.classList.add("hidden");
+      }
+    }
+  });
   // RisiAsset Filter Buttons
   const risiFilterBtns = document.querySelectorAll(".btn-risi-filter");
   risiFilterBtns.forEach(btn => {
@@ -258,16 +337,16 @@ function setupEventListeners() {
   if (inputSimSL) inputSimSL.addEventListener("input", updateSimulator);
 
   // Copy Telegram Markdown
-  const btnCopy = document.getElementById("btnCopyTelegram");
-  if (btnCopy) {
-    btnCopy.addEventListener("click", () => {
+  const btnCopyTg = document.getElementById("btnCopyTelegram");
+  if (btnCopyTg) {
+    btnCopyTg.addEventListener("click", () => {
       const text = document.getElementById("telegramPreviewBox").textContent;
       navigator.clipboard.writeText(text).then(() => {
-        const original = btnCopy.innerHTML;
-        btnCopy.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span class="text-emerald-400">Copied!</span>`;
+        const original = btnCopyTg.innerHTML;
+        btnCopyTg.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span class="text-emerald-400">Copied!</span>`;
         lucide.createIcons();
         setTimeout(() => {
-          btnCopy.innerHTML = original;
+          btnCopyTg.innerHTML = original;
           lucide.createIcons();
         }, 2000);
       });
