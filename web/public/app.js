@@ -401,15 +401,18 @@ function setupEventListeners() {
   // Search & Filters for Buys
   const inputSearchBuys = document.getElementById("inputSearchBuys");
   const selectSectorBuys = document.getElementById("selectSectorBuys");
+  const selectCapBuys = document.getElementById("selectCapBuys");
   if (inputSearchBuys) inputSearchBuys.addEventListener("input", renderBuySignalsTable);
   if (selectSectorBuys) selectSectorBuys.addEventListener("change", renderBuySignalsTable);
+  if (selectCapBuys) selectCapBuys.addEventListener("change", renderBuySignalsTable);
 
   // Search & Filters for Exits
   const inputSearchExits = document.getElementById("inputSearchExits");
   const selectSectorExits = document.getElementById("selectSectorExits");
+  const selectCapExits = document.getElementById("selectCapExits");
   if (inputSearchExits) inputSearchExits.addEventListener("input", renderExitSignalsTable);
   if (selectSectorExits) selectSectorExits.addEventListener("change", renderExitSignalsTable);
-
+  if (selectCapExits) selectCapExits.addEventListener("change", renderExitSignalsTable);
   // Chart Symbol Selector
   const selectChartSymbol = document.getElementById("selectChartSymbol");
   if (selectChartSymbol) {
@@ -1031,13 +1034,14 @@ function renderBuySignalsTable() {
 
   const search = (document.getElementById("inputSearchBuys")?.value || "").toLowerCase();
   const sector = document.getElementById("selectSectorBuys")?.value || "ALL";
+  const cap = document.getElementById("selectCapBuys")?.value || "ALL";
 
   const filtered = state.buySignals.filter(s => {
     const matchSearch = s.symbol.toLowerCase().includes(search) || (s.company_name || "").toLowerCase().includes(search);
     const matchSector = sector === "ALL" || s.sector === sector;
-    return matchSearch && matchSector;
+    const matchCap = cap === "ALL" || (s.cap || "").toLowerCase() === cap.toLowerCase();
+    return matchSearch && matchSector && matchCap;
   });
-
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
@@ -1116,13 +1120,14 @@ function renderExitSignalsTable() {
 
   const search = (document.getElementById("inputSearchExits")?.value || "").toLowerCase();
   const sector = document.getElementById("selectSectorExits")?.value || "ALL";
+  const cap = document.getElementById("selectCapExits")?.value || "ALL";
 
   const filtered = state.exitSignals.filter(s => {
     const matchSearch = s.symbol.toLowerCase().includes(search) || (s.company_name || "").toLowerCase().includes(search);
     const matchSector = sector === "ALL" || s.sector === sector;
-    return matchSearch && matchSector;
+    const matchCap = cap === "ALL" || (s.cap || "").toLowerCase() === cap.toLowerCase();
+    return matchSearch && matchSector && matchCap;
   });
-
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>

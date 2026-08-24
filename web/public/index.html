@@ -515,12 +515,18 @@
             <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400"></i>
             <input type="text" id="inputSearchBuys" placeholder="Search symbol or name..." class="bg-brand-dark border border-brand-border rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500">
           </div>
+          <!-- Market Cap Segment Filter -->
+          <select id="selectCapBuys" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
+            <option value="ALL">All Market Caps</option>
+            <option value="Largecap">Large Cap (Nifty 100)</option>
+            <option value="Midcap">Mid Cap (Midcap 150)</option>
+            <option value="Smallcap">Small Cap (Smallcap 250)</option>
+          </select>
           
           <!-- Sector Filter -->
-          <select id="selectSectorBuys" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-emerald-500">
+          <select id="selectSectorBuys" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
             <option value="ALL">All Sectors</option>
           </select>
-
           <!-- Export CSV -->
           <button id="btnExportBuys" class="flex items-center space-x-1.5 bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 px-3 py-1.5 rounded-lg text-xs font-medium transition">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
@@ -574,11 +580,17 @@
             <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400"></i>
             <input type="text" id="inputSearchExits" placeholder="Search symbol or name..." class="bg-brand-dark border border-brand-border rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-rose-500">
           </div>
+          <!-- Market Cap Segment Filter -->
+          <select id="selectCapExits" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-rose-500 cursor-pointer">
+            <option value="ALL">All Market Caps</option>
+            <option value="Largecap">Large Cap (Nifty 100)</option>
+            <option value="Midcap">Mid Cap (Midcap 150)</option>
+            <option value="Smallcap">Small Cap (Smallcap 250)</option>
+          </select>
           
-          <select id="selectSectorExits" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-rose-500">
+          <select id="selectSectorExits" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-rose-500 cursor-pointer">
             <option value="ALL">All Sectors</option>
           </select>
-
           <button id="btnExportExits" class="flex items-center space-x-1.5 bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 px-3 py-1.5 rounded-lg text-xs font-medium transition">
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
             <span>Export CSV</span>
