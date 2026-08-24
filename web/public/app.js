@@ -1283,6 +1283,34 @@ async function loadChartData(symbol, range = "1y") {
     document.getElementById("csT1").textContent = formatINR(ltp * 1.15);
     document.getElementById("csT2").textContent = formatINR(ltp * 1.30);
 
+    // Compute Buyhatke Recommendation Score
+    const rangePct = (high52 - low52) > 0 ? Math.min(100, Math.max(0, Math.round(((ltp - low52) / (high52 - low52)) * 100))) : 50;
+    let discountScore = Math.min(35, Math.max(5, Math.round((100 - rangePct) * 0.35)));
+    let moatScore = 24;
+    if (["RELIANCE", "TCS", "HDFCBANK", "INFY", "ITC", "TATAMOTORS", "LT"].includes(symbol)) moatScore = 28;
+    else if (["OLAELEC", "GREENPOWER", "GTLINFRA", "RTNINDIA"].includes(symbol)) moatScore = 10;
+    const lastRSI = series[series.length - 1]?.rsi14 || 50;
+    let rsiScore = 15;
+    if (lastRSI <= 38) rsiScore = 20;
+    else if (lastRSI >= 72) rsiScore = 5;
+    
+    const totalScore = Math.min(98, Math.max(12, discountScore + moatScore + rsiScore + 2)); // +2 is default tfBonus
+    
+    const elVerdict = document.getElementById("csAdvisorVerdict");
+    const elScore = document.getElementById("csAdvisorScore");
+    if (elVerdict && elScore) {
+      elScore.textContent = `Score: ${totalScore} / 100`;
+      if (totalScore >= 70) {
+        elVerdict.textContent = "Go Ahead & Buy";
+        elVerdict.className = "text-lg font-extrabold text-emerald-400 font-sans";
+      } else if (totalScore >= 45) {
+        elVerdict.textContent = "Wait for Dip";
+        elVerdict.className = "text-lg font-extrabold text-amber-400 font-sans";
+      } else {
+        elVerdict.textContent = "Avoid / Overbought";
+        elVerdict.className = "text-lg font-extrabold text-rose-400 font-sans";
+      }
+    }
     // Build Chart.js Datasets
     const labels = series.map(s => s.date);
     const closePrices = series.map(s => s.close);

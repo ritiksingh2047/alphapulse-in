@@ -808,6 +808,18 @@
               <span class="text-emerald-400 font-bold" id="csROCE">21.0%</span>
             </div>
           </div>
+          <!-- Quick Advisor Rating -->
+          <div class="bg-brand-dark p-3.5 rounded-xl border border-brand-border space-y-2 text-xs text-center" id="csAdvisorContainer">
+            <p class="font-bold text-gray-400 font-sans uppercase tracking-wider text-[10px]">Instant Verdict</p>
+            <div id="csAdvisorVerdict" class="text-lg font-bold font-sans">
+               <!-- To be populated via JS -->
+            </div>
+            <div id="csAdvisorScore" class="text-[10px] text-gray-500 font-mono"></div>
+            <button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock(state.selectedChartSymbol);" class="mt-2 w-full py-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition text-xs font-semibold cursor-pointer flex items-center justify-center space-x-1.5">
+              <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+              <span>View Detailed Analysis</span>
+            </button>
+          </div>
 
           <!-- Trade Execution Box -->
           <div class="bg-brand-dark p-3.5 rounded-xl border border-brand-border space-y-2 text-xs">
