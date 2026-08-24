@@ -597,12 +597,26 @@ with tab_advisor:
         else:
             with st.spinner(f"Analyzing {advisor_ticker}.NS..."):
                 import yfinance as yf
-                ticker_str = advisor_ticker if advisor_ticker.endswith(".NS") else f"{advisor_ticker}.NS"
-                tkr = yf.Ticker(ticker_str)
-                info = tkr.info
+                import requests
                 
-                if "currentPrice" not in info:
-                    st.error(f"Could not fetch data for {ticker_str}. Please check the symbol.")
+                # Create a custom session to spoof a real browser and avoid Cloud IP bans
+                session = requests.Session()
+                session.headers.update({
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                })
+                
+                ticker_str = advisor_ticker if advisor_ticker.endswith(".NS") else f"{advisor_ticker}.NS"
+                tkr = yf.Ticker(ticker_str, session=session)
+                
+                try:
+                    info = tkr.info
+                except Exception as e:
+                    st.error(f"Yahoo Finance rate limit hit or invalid ticker '{ticker_str}'. Please verify the symbol or try again in a minute.")
+                    info = None
+                
+                if info is None or "currentPrice" not in info:
+                    if info is not None:
+                        st.error(f"Could not fetch data for {ticker_str}. It might be delisted or misspelled (e.g., use OLAELEC for Ola Electric).")
                 else:
                     ltp = info.get("currentPrice", 0)
                     low_52 = info.get("fiftyTwoWeekLow", 1)
