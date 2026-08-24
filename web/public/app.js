@@ -738,7 +738,7 @@ function renderRisiHoldingsTable() {
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="8" class="py-8 text-center text-gray-500 font-sans">
+        <td colspan="9" class="py-8 text-center text-gray-500 font-sans">
           <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-gray-600"></i>
           No holdings matching current radar filter.
         </td>
@@ -763,7 +763,15 @@ function renderRisiHoldingsTable() {
     } else {
       radarBadge = `<span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[11px] bg-blue-500/10 text-blue-300 border border-blue-500/20">⚖️ Balanced</span>`;
     }
-
+    
+    let buyhatkeVerdict = "";
+    if (h.radar_type === "ATH_PROFIT_RADAR" || h.action_code === "SPECULATIVE_RISK") {
+      buyhatkeVerdict = `<span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Avoid / Book Profits</span>`;
+    } else if (h.action_code === "ACCUMULATE_DIP") {
+      buyhatkeVerdict = `<span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Go Ahead & Buy</span>`;
+    } else {
+      buyhatkeVerdict = `<span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Wait for Dip</span>`;
+    }
     const sectorTag = h.sector ? `(${h.sector})` : (h.category ? `(${h.category})` : '');
     const sectorBadge = sectorTag ? `<span class="inline-block whitespace-nowrap px-1.5 py-0.5 text-[10px] rounded bg-brand-dark/90 text-gray-400 border border-brand-border font-sans font-medium">${sectorTag}</span>` : '';
 
@@ -777,23 +785,26 @@ function renderRisiHoldingsTable() {
           </div>
           <div class="text-[11px] text-gray-400 group-hover:text-amber-300 transition truncate max-w-[190px] mt-0.5">${h.name}</div>
         </td>
-        <td class="py-3.5 px-4 text-right text-gray-300">${formatINR(h.avg_buy_price)}</td>
-        <td class="py-3.5 px-4 text-right font-bold text-white">${formatINR(h.closing_price)}</td>
-        <td class="py-3.5 px-4 text-right text-gray-400">${formatINR(h.buy_value)}</td>
-        <td class="py-3.5 px-4 text-right font-bold text-white">${formatINR(h.closing_value)}</td>
-        <td class="py-3.5 px-4 text-right">
+        <td class="py-3.5 px-2 text-right text-gray-300">${formatINR(h.avg_buy_price)}</td>
+        <td class="py-3.5 px-2 text-right font-bold text-white">${formatINR(h.closing_price)}</td>
+        <td class="py-3.5 px-2 text-right text-gray-400">${formatINR(h.buy_value)}</td>
+        <td class="py-3.5 px-2 text-right font-bold text-white">${formatINR(h.closing_value)}</td>
+        <td class="py-3.5 px-2 text-right">
           <div class="font-bold ${pnlClass}">${pnlSign}${formatINR(h.unrealised_pnl)}</div>
           <div class="text-[11px] ${pnlClass}">(${pnlSign}${h.pnl_pct.toFixed(2)}%)</div>
         </td>
-        <td class="py-3.5 px-4 text-center">
+        <td class="py-3.5 px-2 text-center">
           ${radarBadge}
         </td>
-        <td class="py-3.5 px-4">
+        <td class="py-3.5 px-2">
           <span class="inline-block whitespace-nowrap px-2.5 py-1 rounded text-xs border ${h.action_badge}">
             ${h.action_label}
           </span>
           ${h.trailing_sl ? `<div class="text-[10px] text-gray-400 mt-1 font-mono">Trail SL: <strong class="text-rose-400">${formatINR(h.trailing_sl)}</strong></div>` : ''}
           ${h.target_price ? `<div class="text-[10px] text-gray-400 mt-1 font-mono">Target: <strong class="text-emerald-400">${formatINR(h.target_price)}</strong></div>` : ''}
+        </td>
+        <td class="py-3.5 px-4 text-center font-sans">
+          ${buyhatkeVerdict}
         </td>
       </tr>
     `;
