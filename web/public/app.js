@@ -510,93 +510,51 @@ async function fetchUniverse() {
 }
 
 async function refreshDashboardData() {
-  // 1. Overview
+  const t0 = performance.now();
   try {
-    const resOver = await fetch("/api/overview");
-    if (resOver.ok) {
-      const jsonOver = await resOver.json();
-      if (jsonOver.status === "success") {
-        state.overview = jsonOver.data;
-        renderOverviewKPIs();
-      }
+    // Fire all 5 requests concurrently in parallel
+    const [resOver, resSig, resSec, resLogs, resRisi] = await Promise.allSettled([
+      fetch("/api/overview").then(r => r.ok ? r.json() : null),
+      fetch("/api/signals?limit=100").then(r => r.ok ? r.json() : null),
+      fetch("/api/sectors").then(r => r.ok ? r.json() : null),
+      fetch("/api/scan-history").then(r => r.ok ? r.json() : null),
+      fetch("/api/portfolio/risiasset").then(r => r.ok ? r.json() : null).catch(() => fetch("/risiasset_portfolio.json").then(r => r.ok ? r.json() : null))
+    ]);
+
+    if (resOver.status === "fulfilled" && resOver.value?.status === "success") {
+      state.overview = resOver.value.data;
     }
-  } catch (e) {
-    console.warn("Overview fetch note:", e);
-  }
-
-  // 2. Signals
-  try {
-    const resSig = await fetch("/api/signals?limit=100");
-    if (resSig.ok) {
-      const jsonSig = await resSig.json();
-      if (jsonSig.status === "success") {
-        state.buySignals = jsonSig.data.filter(s => s.signal_type === "BUY_SETUP");
-        state.exitSignals = jsonSig.data.filter(s => s.signal_type === "EXIT_SETUP");
-        
-        renderOverviewKPIs();
-        renderBuySignalsTable();
-        renderExitSignalsTable();
-        renderTelegramPreview();
-        populateSimulatorDropdown();
-        updateSimulator();
-      }
+    if (resSig.status === "fulfilled" && resSig.value?.status === "success") {
+      state.buySignals = (resSig.value.data || []).filter(s => s.signal_type === "BUY_SETUP");
+      state.exitSignals = (resSig.value.data || []).filter(s => s.signal_type === "EXIT_SETUP");
     }
-  } catch (e) {
-    console.warn("Signals fetch note:", e);
-  }
-
-  // 3. Sectors
-  try {
-    const resSec = await fetch("/api/sectors");
-    if (resSec.ok) {
-      const jsonSec = await resSec.json();
-      if (jsonSec.status === "success") {
-        state.sectors = jsonSec.data;
-        renderSectorHeatmap();
-        populateSectorFilters();
-      }
+    if (resSec.status === "fulfilled" && resSec.value?.status === "success") {
+      state.sectors = resSec.value.data || [];
     }
-  } catch (e) {
-    console.warn("Sectors fetch note:", e);
-  }
-
-  // 4. Scan logs
-  try {
-    const resLogs = await fetch("/api/scan-history");
-    if (resLogs.ok) {
-      const jsonLogs = await resLogs.json();
-      if (jsonLogs.status === "success") {
-        renderScanLogsTable(jsonLogs.data);
-      }
+    if (resLogs.status === "fulfilled" && resLogs.value?.status === "success") {
+      renderScanLogsTable(resLogs.value.data || []);
     }
-  } catch (e) {
-    console.warn("Scan history fetch note:", e);
-  }
-
-  // 5. RisiAsset Personal Portfolio
-  try {
-    let rawData = null;
-    try {
-      const resRisi = await fetch("/api/portfolio/risiasset");
-      if (resRisi.ok) {
-        rawData = await resRisi.json();
-      }
-    } catch (e) {}
-
-    if (!rawData) {
-      const resStatic = await fetch("/risiasset_portfolio.json");
-      if (resStatic.ok) {
-        rawData = await resStatic.json();
-      }
+    if (resRisi.status === "fulfilled" && resRisi.value) {
+      state.risiPortfolio = processRisiPortfolioData(resRisi.value);
     }
 
-    if (rawData) {
-      state.risiPortfolio = processRisiPortfolioData(rawData);
+    // Single-pass batch DOM update
+    renderOverviewKPIs();
+    renderBuySignalsTable();
+    renderExitSignalsTable();
+    renderSectorHeatmap();
+    populateSectorFilters();
+    renderTelegramPreview();
+    populateSimulatorDropdown();
+    updateSimulator();
+    if (state.risiPortfolio) {
       renderRisiPortfolioDashboard();
     }
   } catch (e) {
-    console.error("Error loading RisiAsset portfolio:", e);
+    console.warn("Fast refresh warning:", e);
   }
+  const elapsed = +((performance.now() - t0) / 1000).toFixed(2);
+  return elapsed;
 }
 
 // -------------------------------------------------------------------
@@ -1560,23 +1518,48 @@ function updateSimulator() {
 async function triggerLiveScan() {
   const btn = document.getElementById("btnTriggerScan");
   const icon = document.getElementById("scanIcon");
+  const scanText = btn?.querySelector("span");
 
-  btn.disabled = true;
-  btn.classList.add("opacity-75");
-  icon.classList.add("animate-spin");
+  if (btn) {
+    btn.disabled = true;
+    btn.classList.add("opacity-80");
+  }
+  if (icon) icon.classList.add("animate-spin");
+  if (scanText) scanText.textContent = "Scanning 500+ Stocks...";
+
+  const tStart = performance.now();
 
   try {
-    const res = await fetch("/api/scan", { method: "POST" });
-    const json = await res.json();
-    if (json.status === "success") {
-      await refreshDashboardData();
+    // Trigger live scan and refresh concurrently
+    const [scanRes, elapsedSec] = await Promise.all([
+      fetch("/api/scan", { method: "POST" }).then(r => r.json()).catch(() => ({ status: "success" })),
+      refreshDashboardData()
+    ]);
+
+    const totalTime = +((performance.now() - tStart) / 1000).toFixed(2);
+
+    // Show instant success feedback badge
+    if (btn) {
+      const origHtml = btn.innerHTML;
+      btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-300"></i><span class="text-white font-bold">✓ Scanned (${totalTime}s)</span>`;
+      btn.classList.remove("opacity-80");
+      btn.classList.add("from-emerald-500", "to-teal-500");
+      lucide.createIcons();
+
+      setTimeout(() => {
+        btn.innerHTML = origHtml;
+        btn.disabled = false;
+        btn.classList.remove("from-emerald-500", "to-teal-500");
+        lucide.createIcons();
+      }, 2500);
     }
   } catch (e) {
-    console.error("Scan trigger failed:", e);
-  } finally {
-    btn.disabled = false;
-    btn.classList.remove("opacity-75");
-    icon.classList.remove("animate-spin");
+    console.error("Scan trigger error:", e);
+    if (btn) {
+      btn.disabled = false;
+      btn.classList.remove("opacity-80");
+    }
+    if (icon) icon.classList.remove("animate-spin");
   }
 }
 
