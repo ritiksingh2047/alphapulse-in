@@ -54,6 +54,7 @@ function Send-FastResponse($stream, [byte[]]$bodyBytes, [string]$contentType = "
     $headerStr = "HTTP/1.1 $statusCode $statusText`r`n" +
                  "Content-Type: $contentType`r`n" +
                  "Content-Length: $($bodyBytes.Length)`r`n" +
+                 "Cache-Control: no-cache, no-store, must-revalidate`r`n" +
                  "Access-Control-Allow-Origin: *`r`n" +
                  "Access-Control-Allow-Methods: GET, POST, OPTIONS`r`n" +
                  "Access-Control-Allow-Headers: Content-Type`r`n" +

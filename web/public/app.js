@@ -72,6 +72,39 @@ window.switchTab = function(targetId) {
   }
 };
 
+window.toggleTheme = function() {
+  const isLight = document.documentElement.classList.contains("light");
+  const next = isLight ? "dark" : "light";
+  if (next === "light") {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
+    document.body.classList.remove("dark");
+    document.body.classList.add("light");
+  } else {
+    document.documentElement.classList.remove("light");
+    document.documentElement.classList.add("dark");
+    document.body.classList.remove("light");
+    document.body.classList.add("dark");
+  }
+  localStorage.setItem("alphapulse-theme", next);
+  state.theme = next;
+  const icon = document.getElementById("themeIcon");
+  if (icon) {
+    icon.setAttribute("data-lucide", next === "light" ? "sun" : "moon");
+    icon.parentElement?.setAttribute("title", next === "light" ? "Switch to Dark Mode" : "Switch to Light Mode");
+    lucide.createIcons();
+  }
+  if (state.priceChartInstance && state.selectedChartSymbol) {
+    loadChartData(state.selectedChartSymbol, state.chartRange);
+  }
+  if (state.risiPortfolio) {
+    renderRisiCharts();
+  }
+  if (state.advisorSymbol) {
+    drawSpeedometerGauge(state.advisorGaugeScore || 75);
+  }
+};
+
 window.filterRisiHoldings = function(filterType) {
   state.risiActiveFilter = filterType;
   const btns = document.querySelectorAll(".btn-risi-filter");
@@ -151,12 +184,16 @@ function applyTheme(theme) {
   if (state.risiPortfolio) {
     renderRisiCharts();
   }
+  if (state.advisorSymbol) {
+    drawSpeedometerGauge(state.advisorGaugeScore || 75);
+  }
 }
-
-function toggleTheme() {
-  const next = state.theme === "light" ? "dark" : "light";
+window.toggleTheme = function() {
+  const isLight = document.documentElement.classList.contains("light");
+  const next = isLight ? "dark" : "light";
   applyTheme(next);
-}
+};
+window.applyTheme = applyTheme;
 
 // -------------------------------------------------------------------
 // Mobile Phone Access Modal Controller
