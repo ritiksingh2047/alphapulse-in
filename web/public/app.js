@@ -755,17 +755,17 @@ function renderRisiHoldingsTable() {
 
     let radarBadge = "";
     if (h.radar_type === "ATH_PROFIT_RADAR") {
-      radarBadge = `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">🔴 ATH Radar</span>`;
+      radarBadge = `<span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[11px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">🔴 ATH Radar</span>`;
     } else if (h.action_code === "ACCUMULATE_DIP") {
-      radarBadge = `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">🟢 ATL Value</span>`;
+      radarBadge = `<span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">🟢 ATL Value</span>`;
     } else if (h.action_code === "SPECULATIVE_RISK") {
-      radarBadge = `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-500/10 text-red-400 border border-red-500/30">⚠️ ATL Caution</span>`;
+      radarBadge = `<span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[11px] font-bold bg-red-500/10 text-red-400 border border-red-500/30">⚠️ ATL Caution</span>`;
     } else {
-      radarBadge = `<span class="px-2 py-0.5 rounded text-[11px] bg-blue-500/10 text-blue-300 border border-blue-500/20">⚖️ Balanced</span>`;
+      radarBadge = `<span class="inline-block whitespace-nowrap px-2 py-0.5 rounded text-[11px] bg-blue-500/10 text-blue-300 border border-blue-500/20">⚖️ Balanced</span>`;
     }
 
     const sectorTag = h.sector ? `(${h.sector})` : (h.category ? `(${h.category})` : '');
-    const sectorBadge = sectorTag ? `<span class="px-1.5 py-0.5 text-[10px] rounded bg-brand-dark/90 text-gray-400 border border-brand-border font-sans font-medium">${sectorTag}</span>` : '';
+    const sectorBadge = sectorTag ? `<span class="inline-block whitespace-nowrap px-1.5 py-0.5 text-[10px] rounded bg-brand-dark/90 text-gray-400 border border-brand-border font-sans font-medium">${sectorTag}</span>` : '';
 
     return `
       <tr class="hover:bg-brand-border/30 transition">
@@ -790,7 +790,7 @@ function renderRisiHoldingsTable() {
           ${radarBadge}
         </td>
         <td class="py-3.5 px-4">
-          <span class="px-2.5 py-1 rounded text-xs border ${h.action_badge}">
+          <span class="inline-block whitespace-nowrap px-2.5 py-1 rounded text-xs border ${h.action_badge}">
             ${h.action_label}
           </span>
           ${h.trailing_sl ? `<div class="text-[10px] text-gray-400 mt-1 font-mono">Trail SL: <strong class="text-rose-400">${formatINR(h.trailing_sl)}</strong></div>` : ''}
