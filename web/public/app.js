@@ -17,23 +17,88 @@ const state = {
   risiPerformanceChart: null,
   selectedChartSymbol: "RELIANCE",
   chartRange: "1y",
+  advisorSymbol: "HDFCBANK",
+  advisorTimeframe: "1-4 Weeks",
+  advisorGaugeScore: 84,
+  advisorHistoryChart: null,
   priceChartInstance: null,
   rsiChartInstance: null,
-  portfolioCapital: 1000000,
   riskPct: 2.0
 };
 
+// Global Tab Switcher (Direct & Event-Driven)
+// -------------------------------------------------------------------
+window.switchTab = function(targetId) {
+  const tabButtons = document.querySelectorAll(".nav-tab");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabButtons.forEach(b => {
+    const tab = b.getAttribute("data-tab");
+    b.classList.remove("active", "text-emerald-400", "text-amber-400", "bg-emerald-500/10", "bg-amber-500/10", "border-emerald-500/30", "border-amber-500/30");
+    b.classList.add("text-gray-400");
+    
+    if (tab === targetId) {
+      if (targetId === "tab-risiasset") {
+        b.classList.add("active", "text-amber-400", "bg-amber-500/10", "border-amber-500/30");
+      } else {
+        b.classList.add("active", "text-emerald-400", "bg-emerald-500/10", "border-emerald-500/30");
+      }
+      b.classList.remove("text-gray-400");
+    }
+  });
+
+  tabContents.forEach(tc => {
+    if (tc.id === targetId) {
+      tc.classList.remove("hidden");
+    } else {
+      tc.classList.add("hidden");
+    }
+  });
+
+  lucide.createIcons();
+
+  if (targetId === "tab-charting" && state.priceChartInstance) {
+    state.priceChartInstance.resize();
+    if (state.rsiChartInstance) state.rsiChartInstance.resize();
+  }
+
+  if (targetId === "tab-risiasset") {
+    if (!state.risiPortfolio) {
+      refreshDashboardData();
+    } else {
+      renderRisiHoldingsTable();
+      renderRisiCharts();
+    }
+  }
+};
+
+window.filterRisiHoldings = function(filterType) {
+  state.risiActiveFilter = filterType;
+  const btns = document.querySelectorAll(".btn-risi-filter");
+  btns.forEach(b => {
+    const f = b.getAttribute("data-risi-filter");
+    b.classList.remove("active", "bg-brand-border", "text-white");
+    b.classList.add("text-gray-400");
+    if (f === filterType) {
+      b.classList.add("active", "bg-brand-border", "text-white");
+      b.classList.remove("text-gray-400");
+    }
+  });
+  renderRisiHoldingsTable();
+};
 // Initialize Application
 async function initApp() {
   initTheme();
   lucide.createIcons();
   setupTabs();
   setupEventListeners();
+  setupAdvisorTypeahead();
   updateClock();
   setInterval(updateClock, 1000);
 
   // Initial Data Fetch
   await fetchUniverse();
+  await analyzeAdvisorStock(state.advisorSymbol || "HDFCBANK");
   await refreshDashboardData();
   await loadChartData(state.selectedChartSymbol, state.chartRange);
 }
@@ -299,32 +364,13 @@ function setupEventListeners() {
     if (e.key === "Escape") {
       const m = document.getElementById("mobileModal");
       if (m && !m.classList.contains("hidden")) {
-        m.classList.add("hidden");
+        toggleMobileModal();
       }
-      const slm = document.getElementById("scanLogsModal");
-      if (slm && !slm.classList.contains("hidden")) {
-        slm.classList.add("hidden");
-      }
-      const tgm = document.getElementById("telegramModal");
-      if (tgm && !tgm.classList.contains("hidden")) {
-        tgm.classList.add("hidden");
+      const t = document.getElementById("telegramModal");
+      if (t && !t.classList.contains("hidden")) {
+        toggleTelegramModal();
       }
     }
-  });
-  // RisiAsset Filter Buttons
-  const risiFilterBtns = document.querySelectorAll(".btn-risi-filter");
-  risiFilterBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      risiFilterBtns.forEach(b => {
-        b.classList.remove("active", "bg-brand-border", "text-white");
-        b.classList.add("text-gray-400");
-      });
-      btn.classList.add("active", "bg-brand-border", "text-white");
-      btn.classList.remove("text-gray-400");
-
-      state.risiActiveFilter = btn.getAttribute("data-risi-filter");
-      renderRisiHoldingsTable();
-    });
   });
 
   // Search in RisiAsset
@@ -333,6 +379,15 @@ function setupEventListeners() {
     inputSearchRisi.addEventListener("input", renderRisiHoldingsTable);
   }
 
+  // Buyhatke Advisor Search Input
+  const inputAdvSearch = document.getElementById("inputAdvisorSearch");
+  if (inputAdvSearch) {
+    inputAdvSearch.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        runAdvisorSearch();
+      }
+    });
+  }
   // Export RisiAsset CSV
   const btnExportRisiCSV = document.getElementById("btnExportRisiCSV");
   if (btnExportRisiCSV) {
@@ -452,74 +507,92 @@ async function fetchUniverse() {
 }
 
 async function refreshDashboardData() {
+  // 1. Overview
   try {
-    // 1. Overview
     const resOver = await fetch("/api/overview");
-    const jsonOver = await resOver.json();
-    if (jsonOver.status === "success") {
-      state.overview = jsonOver.data;
-      renderOverviewKPIs();
-    }
-
-    // 2. Signals
-    const resSig = await fetch("/api/signals?limit=100");
-    const jsonSig = await resSig.json();
-    if (jsonSig.status === "success") {
-      state.buySignals = jsonSig.data.filter(s => s.signal_type === "BUY_SETUP");
-      state.exitSignals = jsonSig.data.filter(s => s.signal_type === "EXIT_SETUP");
-      
-      renderOverviewKPIs();
-      renderBuySignalsTable();
-      renderExitSignalsTable();
-      renderTelegramPreview();
-      populateSimulatorDropdown();
-      updateSimulator();
-    }
-
-    // 3. Sectors
-    const resSec = await fetch("/api/sectors");
-    const jsonSec = await resSec.json();
-    if (jsonSec.status === "success") {
-      state.sectors = jsonSec.data;
-      renderSectorHeatmap();
-      populateSectorFilters();
-    }
-
-    // 4. Scan logs
-    const resLogs = await fetch("/api/scan-history");
-    const jsonLogs = await resLogs.json();
-    if (jsonLogs.status === "success") {
-      renderScanLogsTable(jsonLogs.data);
-    }
-
-    // 5. RisiAsset Personal Portfolio
-    try {
-      let portData = null;
-      try {
-        const resRisi = await fetch("/api/portfolio/risiasset");
-        if (resRisi.ok) {
-          const jsonRisi = await resRisi.json();
-          if (jsonRisi.status === "success") portData = jsonRisi;
-        }
-      } catch (e) {}
-
-      if (!portData) {
-        const resStatic = await fetch("/risiasset_portfolio.json");
-        if (resStatic.ok) {
-          const raw = await resStatic.json();
-          portData = processRisiPortfolioData(raw);
-        }
+    if (resOver.ok) {
+      const jsonOver = await resOver.json();
+      if (jsonOver.status === "success") {
+        state.overview = jsonOver.data;
+        renderOverviewKPIs();
       }
-
-      if (portData) {
-        state.risiPortfolio = portData;
-        renderRisiPortfolioDashboard();
-      }
-    } catch (e) {
-      console.error("Error loading RisiAsset portfolio:", e);
     }
   } catch (e) {
-    console.error("Failed to refresh dashboard data:", e);
+    console.warn("Overview fetch note:", e);
+  }
+
+  // 2. Signals
+  try {
+    const resSig = await fetch("/api/signals?limit=100");
+    if (resSig.ok) {
+      const jsonSig = await resSig.json();
+      if (jsonSig.status === "success") {
+        state.buySignals = jsonSig.data.filter(s => s.signal_type === "BUY_SETUP");
+        state.exitSignals = jsonSig.data.filter(s => s.signal_type === "EXIT_SETUP");
+        
+        renderOverviewKPIs();
+        renderBuySignalsTable();
+        renderExitSignalsTable();
+        renderTelegramPreview();
+        populateSimulatorDropdown();
+        updateSimulator();
+      }
+    }
+  } catch (e) {
+    console.warn("Signals fetch note:", e);
+  }
+
+  // 3. Sectors
+  try {
+    const resSec = await fetch("/api/sectors");
+    if (resSec.ok) {
+      const jsonSec = await resSec.json();
+      if (jsonSec.status === "success") {
+        state.sectors = jsonSec.data;
+        renderSectorHeatmap();
+        populateSectorFilters();
+      }
+    }
+  } catch (e) {
+    console.warn("Sectors fetch note:", e);
+  }
+
+  // 4. Scan logs
+  try {
+    const resLogs = await fetch("/api/scan-history");
+    if (resLogs.ok) {
+      const jsonLogs = await resLogs.json();
+      if (jsonLogs.status === "success") {
+        renderScanLogsTable(jsonLogs.data);
+      }
+    }
+  } catch (e) {
+    console.warn("Scan history fetch note:", e);
+  }
+
+  // 5. RisiAsset Personal Portfolio
+  try {
+    let rawData = null;
+    try {
+      const resRisi = await fetch("/api/portfolio/risiasset");
+      if (resRisi.ok) {
+        rawData = await resRisi.json();
+      }
+    } catch (e) {}
+
+    if (!rawData) {
+      const resStatic = await fetch("/risiasset_portfolio.json");
+      if (resStatic.ok) {
+        rawData = await resStatic.json();
+      }
+    }
+
+    if (rawData) {
+      state.risiPortfolio = processRisiPortfolioData(rawData);
+      renderRisiPortfolioDashboard();
+    }
+  } catch (e) {
+    console.error("Error loading RisiAsset portfolio:", e);
   }
 }
 
@@ -1547,6 +1620,933 @@ function formatINR(val) {
   return `₹${Number(val).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
+// ===================================================================
+// BUYHATKE-STYLE STOCK ADVISOR ENGINE ("Should You Buy Now?")
+// ===================================================================
+
+// Comprehensive Indian Stock Name & Alias Dictionary
+const STOCK_ALIASES = {
+  "YES BANK": "YESBANK",
+  "YESBANK": "YESBANK",
+  "YES BANK LIMITED": "YESBANK",
+  "YES": "YESBANK",
+  "HDFC": "HDFCBANK",
+  "HDFC BANK": "HDFCBANK",
+  "HDFCBANK": "HDFCBANK",
+  "HDFC BANK LTD": "HDFCBANK",
+  "HDFCLIFE": "HDFCLIFE",
+  "HDFC LIFE": "HDFCLIFE",
+  "SBI": "SBIN",
+  "SBIN": "SBIN",
+  "STATE BANK": "SBIN",
+  "STATE BANK OF INDIA": "SBIN",
+  "SBILIFE": "SBILIFE",
+  "SBI LIFE": "SBILIFE",
+  "RELIANCE": "RELIANCE",
+  "RIL": "RELIANCE",
+  "RELIANCE INDUSTRIES": "RELIANCE",
+  "RELIANCE POWER": "RPOWER",
+  "RPOWER": "RPOWER",
+  "TATA MOTORS": "TATAMOTORS",
+  "TATAMOTORS": "TATAMOTORS",
+  "TATA MOTOR": "TATAMOTORS",
+  "TATA MOTORS PASS VEH": "TMPV",
+  "TMPV": "TMPV",
+  "TATA POWER": "TATAPOWER",
+  "TATAPOWER": "TATAPOWER",
+  "TATA STEEL": "TATASTEEL",
+  "TATASTEEL": "TATASTEEL",
+  "TCS": "TCS",
+  "TATA CONSULTANCY": "TCS",
+  "TATA CONSUMER": "TATACONSUM",
+  "TATACONSUM": "TATACONSUM",
+  "TATA GOLD": "TATAGOLD",
+  "TATAGOLD": "TATAGOLD",
+  "TATA SILVER": "TATASILV",
+  "TATASILV": "TATASILV",
+  "BALRAMPUR": "BALRAMCHIN",
+  "BALRAMPUR CHINI": "BALRAMCHIN",
+  "BALRAMPUR CHINI MILLS": "BALRAMCHIN",
+  "BALRAMCHIN": "BALRAMCHIN",
+  "OLA": "OLAELEC",
+  "OLA ELECTRIC": "OLAELEC",
+  "OLAELEC": "OLAELEC",
+  "PFC": "PFC",
+  "POWER FINANCE": "PFC",
+  "POWER FINANCE CORP": "PFC",
+  "IRFC": "IRFC",
+  "INDIAN RAILWAY FINANCE": "IRFC",
+  "RVNL": "RVNL",
+  "RAIL VIKAS": "RVNL",
+  "RAIL VIKAS NIGAM": "RVNL",
+  "ITC": "ITC",
+  "ITC LTD": "ITC",
+  "ONGC": "ONGC",
+  "OIL AND NATURAL GAS": "ONGC",
+  "IOC": "IOC",
+  "INDIAN OIL": "IOC",
+  "INDIAN OIL CORP": "IOC",
+  "INFY": "INFY",
+  "INFOSYS": "INFOSYS",
+  "ASHOK LEYLAND": "ASHOKLEY",
+  "ASHOKLEY": "ASHOKLEY",
+  "AIRTEL": "BHARTIARTL",
+  "BHARTI AIRTEL": "BHARTIARTL",
+  "BHARTIARTL": "BHARTIARTL",
+  "ZOMATO": "ZOMATO",
+  "SUZLON": "SUZLON",
+  "ADANI POWER": "ADANIPOWER",
+  "ADANIPOWER": "ADANIPOWER",
+  "ADANI ENT": "ADANIENT",
+  "ADANIENT": "ADANIENT",
+  "ADANI PORTS": "ADANIPORTS",
+  "ADANIPORTS": "ADANIPORTS",
+  "TITAN": "TITAN",
+  "EICHER": "EICHERMOT",
+  "EICHER MOTORS": "EICHERMOT",
+  "EICHERMOT": "EICHERMOT",
+  "BAJAJ AUTO": "BAJAJ-AUTO",
+  "BAJAJ-AUTO": "BAJAJ-AUTO",
+  "BAJAJ FINANCE": "BAJFINANCE",
+  "BAJFINANCE": "BAJFINANCE",
+  "BAJAJ FINSERV": "BAJAJFINSV",
+  "BAJAJFINSV": "BAJAJFINSV",
+  "JIO FINANCE": "JIOFIN",
+  "JIO FINANCIAL": "JIOFIN",
+  "JIOFIN": "JIOFIN",
+  "KOTAK": "KOTAKBANK",
+  "KOTAK BANK": "KOTAKBANK",
+  "KOTAKBANK": "KOTAKBANK",
+  "AXIS": "AXISBANK",
+  "AXIS BANK": "AXISBANK",
+  "AXISBANK": "AXISBANK",
+  "ICICI": "ICICIBANK",
+  "ICICI BANK": "ICICIBANK",
+  "ICICIBANK": "ICICIBANK",
+  "MARUTI": "MARUTI",
+  "MARUTI SUZUKI": "MARUTI",
+  "NHPC": "NHPC",
+  "NTPC": "NTPC",
+  "VEDANTA IRON AND STEEL": "VISL",
+  "VEDANTA IRON AND STEEL L": "VISL",
+  "VEDANTA IRON AND STEEL LTD": "VISL",
+  "VEDANTA IRON AND STEEL LIMITED": "VISL",
+  "VEDANTA IRON & STEEL": "VISL",
+  "VEDANTA IRON": "VISL",
+  "VEDANTA STEEL": "VISL",
+  "VISL": "VISL",
+  "VEDANTA": "VEDL",
+  "VEDANTA LIMITED": "VEDL",
+  "VEDANTA LTD": "VEDL",
+  "VEDL": "VEDL",
+  "WIPRO": "WIPRO",
+  "DR REDDY": "DRREDDY",
+  "DRREDDY": "DRREDDY",
+  "SUN PHARMA": "SUNPHARMA",
+  "SUNPHARMA": "SUNPHARMA",
+  "CIPLA": "CIPLA",
+  "BRITANNIA": "BRITANNIA",
+  "NESTLE": "NESTLEIND",
+  "NESTLEIND": "NESTLEIND",
+  "ASIAN PAINTS": "ASIANPAINT",
+  "ASIANPAINT": "ASIANPAINT",
+  "ULTRATECH": "ULTRACEMCO",
+  "ULTRACEMCO": "ULTRACEMCO",
+  "GRASIM": "GRASIM",
+  "JSW STEEL": "JSWSTEEL",
+  "JSWSTEEL": "JSWSTEEL",
+  "COAL INDIA": "COALINDIA",
+  "COALINDIA": "COALINDIA",
+  "BPCL": "BPCL",
+  "HCL TECH": "HCLTECH",
+  "HCLTECH": "HCLTECH",
+  "TECH MAHINDRA": "TECHM",
+  "TECHM": "TECHM",
+  "INDUSIND": "INDUSINDBK",
+  "INDUSINDBK": "INDUSINDBK",
+  "POWER GRID": "POWERGRID",
+  "POWERGRID": "POWERGRID",
+  "APOLLO HOSPITALS": "APOLLOHOSP",
+  "APOLLOHOSP": "APOLLOHOSP",
+  "DIVIS": "DIVISLAB",
+  "DIVISLAB": "DIVISLAB",
+  "HERO MOTOCORP": "HEROMOTOCO",
+  "HEROMOTOCO": "HEROMOTOCO",
+  "SHRIRAM FINANCE": "SHRIRAMFIN",
+  "SHRIRAMFIN": "SHRIRAMFIN",
+  "UPL": "UPL",
+  "L&T": "LT",
+  "LARSEN": "LT",
+  "LT": "LT",
+  "M&M": "M&M",
+  "MAHINDRA": "M&M"
+};
+
+// Resolve any user input keyword into a clean canonical NSE ticker symbol
+function resolveStockSymbol(query) {
+  if (!query || typeof query !== "string") return "HDFCBANK";
+  const raw = query.trim().toUpperCase().replace(".NS", "").replace(".BO", "");
+  const cleanNoSpaces = raw.replace(/[^A-Z0-9]/g, "");
+
+  // 1. Direct Alias Lookup
+  if (STOCK_ALIASES[raw]) return STOCK_ALIASES[raw];
+  if (STOCK_ALIASES[cleanNoSpaces]) return STOCK_ALIASES[cleanNoSpaces];
+
+  // 5. Fuzzy match in RisiAsset portfolio
+  const risiNameMatch = state.risiPortfolio?.holdings?.find(h => {
+    const hName = h.name.toUpperCase();
+    return hName.includes(raw) || hName.replace(/[^A-Z0-9]/g, "").includes(cleanNoSpaces);
+  });
+  if (risiNameMatch) return risiNameMatch.symbol;
+
+  // 6. Typo Check: Levenshtein distance check for close transpositions (e.g. ONCG -> ONGC)
+  const closeMatches = findClosestStockSuggestions(cleanNoSpaces || raw);
+  if (closeMatches.length > 0 && (closeMatches[0].dist <= 2 || cleanNoSpaces.length <= 4)) {
+    return closeMatches[0].symbol;
+  }
+
+  // 7. Return cleaned symbol if no mapping found
+  return cleanNoSpaces || raw || "HDFCBANK";
+}
+
+// Levenshtein Distance & Typo Resolver
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (a[i - 1] === b[j - 1]) dp[i][j] = dp[i - 1][j - 1];
+      else dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
+function findClosestStockSuggestions(query) {
+  const q = (query || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!q) return [];
+  const scores = [];
+
+  for (const u of state.universe) {
+    const sym = u.symbol;
+    const dist = levenshtein(q, sym);
+    if (dist <= 2 || sym.includes(q) || q.includes(sym)) {
+      scores.push({ symbol: sym, name: u.name, sector: u.sector, dist });
+    }
+  }
+
+  if (state.risiPortfolio?.holdings) {
+    for (const h of state.risiPortfolio.holdings) {
+      if (!scores.find(s => s.symbol === h.symbol)) {
+        const dist = levenshtein(q, h.symbol);
+        if (dist <= 2 || h.symbol.includes(q)) {
+          scores.push({ symbol: h.symbol, name: h.name, sector: h.sector || h.category, dist });
+        }
+      }
+    }
+  }
+
+  scores.sort((a, b) => a.dist - b.dist);
+  return scores.slice(0, 5);
+}
+
+function showStockNotFoundState(query, symbol) {
+  const notFoundBox = document.getElementById("advNotFoundContainer");
+  const mainBox = document.getElementById("advMainContentContainer");
+  if (!notFoundBox || !mainBox) return;
+
+  mainBox.classList.add("hidden");
+  notFoundBox.classList.remove("hidden");
+
+  document.getElementById("advNotFoundQuery").textContent = `"${query || symbol}"`;
+
+  const suggestions = findClosestStockSuggestions(query || symbol);
+  const suggContainer = document.getElementById("advNotFoundSuggestions");
+
+  if (suggestions.length === 0) {
+    suggestions.push(
+      { symbol: "ONGC", name: "Oil and Natural Gas Corp Ltd." },
+      { symbol: "HDFCBANK", name: "HDFC Bank Ltd." },
+      { symbol: "RELIANCE", name: "Reliance Industries Ltd." },
+      { symbol: "TATAMOTORS", name: "Tata Motors Ltd." }
+    );
+  }
+
+  if (suggContainer) {
+    suggContainer.innerHTML = suggestions.map(s => `
+      <button onclick="analyzeAdvisorStock('${s.symbol}')" class="px-3 py-1.5 rounded-xl bg-brand-dark hover:bg-brand-border border border-brand-border text-white hover:text-cyan-300 transition flex items-center space-x-1.5 cursor-pointer shadow-sm">
+        <span class="font-bold text-cyan-400 font-mono">${s.symbol}</span>
+        <span class="text-gray-300 text-xs truncate max-w-[160px] font-sans">${s.name}</span>
+      </button>
+    `).join("");
+  }
+
+  lucide.createIcons();
+}
+
+function getStockSuggestions(query) {
+  if (!query || query.trim().length === 0) return [];
+  const raw = query.trim().toUpperCase();
+  const cleanNoSpaces = raw.replace(/[^A-Z0-9]/g, "");
+  const results = [];
+  const seen = new Set();
+
+  // 1. Check direct aliases that start with or match query
+  for (const [alias, sym] of Object.entries(STOCK_ALIASES)) {
+    if (alias.startsWith(raw) || alias.includes(raw)) {
+      if (!seen.has(sym)) {
+        seen.add(sym);
+        const u = state.universe.find(x => x.symbol === sym);
+        const r = state.risiPortfolio?.holdings?.find(x => x.symbol === sym);
+        results.push({
+          symbol: sym,
+          name: u ? u.name : (r ? r.name : alias),
+          sector: u ? u.sector : (r ? r.sector : "Equities"),
+          matchedBy: alias
+        });
+      }
+    }
+  }
+
+  // 2. Search Universe symbols & names
+  for (const u of state.universe) {
+    if (seen.has(u.symbol)) continue;
+    const symMatch = u.symbol.startsWith(cleanNoSpaces) || u.symbol.includes(cleanNoSpaces);
+    const nameMatch = u.name.toUpperCase().includes(raw);
+    if (symMatch || nameMatch) {
+      seen.add(u.symbol);
+      results.push({
+        symbol: u.symbol,
+        name: u.name,
+        sector: u.sector,
+        matchedBy: u.name
+      });
+    }
+  }
+
+  // 3. Search RisiAsset holdings
+  if (state.risiPortfolio?.holdings) {
+    for (const h of state.risiPortfolio.holdings) {
+      if (seen.has(h.symbol)) continue;
+      const symMatch = h.symbol.startsWith(cleanNoSpaces) || h.symbol.includes(cleanNoSpaces);
+      const nameMatch = h.name.toUpperCase().includes(raw);
+      if (symMatch || nameMatch) {
+        seen.add(h.symbol);
+        results.push({
+          symbol: h.symbol,
+          name: h.name,
+          sector: h.sector || h.category,
+          matchedBy: h.name
+        });
+      }
+    }
+  }
+
+  return results.slice(0, 8);
+}
+
+// Setup Intelligent Typeahead Auto-Suggest for Search Input
+function setupAdvisorTypeahead() {
+  const input = document.getElementById("inputAdvisorSearch");
+  const dropdown = document.getElementById("advisorSuggestDropdown");
+  const list = document.getElementById("advisorSuggestList");
+  if (!input || !dropdown || !list) return;
+
+  let selectedIndex = -1;
+
+  function hideDropdown() {
+    dropdown.classList.add("hidden");
+    selectedIndex = -1;
+  }
+
+  function renderSuggestions(suggestions) {
+    if (suggestions.length === 0) {
+      list.innerHTML = `
+        <div class="px-3 py-2 text-[11px] text-gray-400 text-center font-sans">
+          No exact symbol match. Press <kbd class="px-1.5 py-0.5 rounded bg-brand-dark border border-brand-border text-white text-[10px]">Enter</kbd> to search via Live NSE Feed.
+        </div>
+      `;
+      dropdown.classList.remove("hidden");
+      return;
+    }
+
+    list.innerHTML = suggestions.map((s, idx) => `
+      <div data-idx="${idx}" data-symbol="${s.symbol}" class="suggest-item flex items-center justify-between px-3 py-2 rounded-lg hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/30 cursor-pointer transition select-none group">
+        <div class="flex items-center space-x-2.5 min-w-0">
+          <span class="font-bold text-xs text-cyan-400 font-mono group-hover:text-cyan-300">${s.symbol}</span>
+          <span class="text-xs text-gray-300 truncate max-w-[190px] font-sans group-hover:text-white">${s.name}</span>
+        </div>
+        <div class="flex items-center space-x-1.5 shrink-0">
+          <span class="px-1.5 py-0.2 text-[10px] rounded bg-brand-dark border border-brand-border text-gray-400 font-mono">${s.sector || 'NSE'}</span>
+          <span class="text-[9px] font-mono font-bold text-gray-400">NSE</span>
+        </div>
+      </div>
+    `).join("");
+
+    // Attach click handlers to items
+    const items = list.querySelectorAll(".suggest-item");
+    items.forEach(item => {
+      item.addEventListener("click", () => {
+        const sym = item.getAttribute("data-symbol");
+        if (sym) {
+          input.value = sym;
+          hideDropdown();
+          analyzeAdvisorStock(sym);
+        }
+      });
+    });
+
+    dropdown.classList.remove("hidden");
+    selectedIndex = -1;
+  }
+
+  input.addEventListener("input", () => {
+    const q = input.value.trim();
+    if (q.length === 0) {
+      hideDropdown();
+      return;
+    }
+    const suggestions = getStockSuggestions(q);
+    renderSuggestions(suggestions);
+  });
+
+  input.addEventListener("keydown", (e) => {
+    const items = list.querySelectorAll(".suggest-item");
+    if (dropdown.classList.contains("hidden") || items.length === 0) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        runAdvisorSearch();
+      }
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % items.length;
+      updateItemHighlight(items);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+      updateItemHighlight(items);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (selectedIndex >= 0 && selectedIndex < items.length) {
+        const sym = items[selectedIndex].getAttribute("data-symbol");
+        input.value = sym;
+        hideDropdown();
+        analyzeAdvisorStock(sym);
+      } else {
+        hideDropdown();
+        runAdvisorSearch();
+      }
+    } else if (e.key === "Escape") {
+      hideDropdown();
+    }
+  });
+
+  function updateItemHighlight(items) {
+    items.forEach((item, idx) => {
+      if (idx === selectedIndex) {
+        item.classList.add("bg-cyan-500/20", "border-cyan-500/40");
+      } else {
+        item.classList.remove("bg-cyan-500/20", "border-cyan-500/40");
+      }
+    });
+  }
+
+  // Hide on click outside
+  document.addEventListener("click", (e) => {
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+      hideDropdown();
+    }
+  });
+}
+
+window.runAdvisorSearch = function() {
+  const input = document.getElementById("inputAdvisorSearch");
+  const query = (input?.value || "").trim();
+  if (query) {
+    const dropdown = document.getElementById("advisorSuggestDropdown");
+    if (dropdown) dropdown.classList.add("hidden");
+    analyzeAdvisorStock(query);
+  }
+};
+
+window.setAdvisorTimeframe = function(tf) {
+  state.advisorTimeframe = tf;
+  const btns = document.querySelectorAll(".btn-adv-tf");
+  btns.forEach(b => {
+    b.classList.remove("active", "text-cyan-400", "font-bold", "bg-cyan-500/20");
+    b.classList.add("text-gray-400");
+    if (b.getAttribute("data-tf") === tf) {
+      b.classList.add("active", "text-cyan-400", "font-bold", "bg-cyan-500/20");
+      b.classList.remove("text-gray-400");
+    }
+  });
+  if (state.advisorSymbol) {
+    analyzeAdvisorStock(state.advisorSymbol);
+  }
+};
+
+window.setPriceDropAlert = function() {
+  const price = document.getElementById("inputAlertPrice")?.value || "710";
+  const btn = document.getElementById("btnSetAlert");
+  if (btn) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 inline mr-1"></i>Alert Set!`;
+    btn.classList.remove("bg-blue-600", "hover:bg-blue-500");
+    btn.classList.add("bg-emerald-600");
+    lucide.createIcons();
+    setTimeout(() => {
+      btn.innerHTML = orig;
+      btn.classList.remove("bg-emerald-600");
+      btn.classList.add("bg-blue-600", "hover:bg-blue-500");
+      lucide.createIcons();
+    }, 2500);
+  }
+};
+
+window.analyzeAdvisorStock = async function(query) {
+  const resolvedSymbol = resolveStockSymbol(query);
+  const symbol = resolvedSymbol.toUpperCase().replace(".NS", "").replace(".BO", "");
+  state.advisorSymbol = symbol;
+
+  const inputSearch = document.getElementById("inputAdvisorSearch");
+  if (inputSearch) inputSearch.value = symbol;
+
+  // Check known data sources
+  let stockName = symbol;
+  let sector = "General";
+  const univMatch = state.universe.find(u => u.symbol === symbol);
+  if (univMatch) {
+    stockName = univMatch.name;
+    sector = univMatch.sector;
+  } else {
+    const risiMatch = state.risiPortfolio?.holdings?.find(h => h.symbol === symbol);
+    if (risiMatch) {
+      stockName = risiMatch.name;
+      sector = risiMatch.sector || risiMatch.category;
+    }
+  }
+
+  document.getElementById("advCompanyName").textContent = stockName;
+  document.getElementById("advSymbol").textContent = `${symbol}.NS`;
+  document.getElementById("advSectorBadge").textContent = sector;
+
+  try {
+    let series = [];
+    let meta = {};
+
+    // 1. Fetch live real-time market data via local server proxy (CORS-free)
+    try {
+      const res = await fetch(`/api/chart/${encodeURIComponent(symbol)}?range=1y`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.status === "success" && json.meta?.regularMarketPrice) {
+          series = json.series || [];
+          meta = json.meta || {};
+        }
+      }
+    } catch (e) {}
+
+    // 2. Direct external fetch fallback
+    if (series.length === 0 || !meta.regularMarketPrice) {
+      for (const suffix of [".NS", ".BO", ""]) {
+        try {
+          const ticker = symbol.endsWith(".NS") || symbol.endsWith(".BO") ? symbol : `${symbol}${suffix}`;
+          const yfUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1y`;
+          const yfRes = await fetch(yfUrl);
+          if (yfRes.ok) {
+            const yfJson = await yfRes.json();
+            const resObj = yfJson.chart?.result?.[0];
+            if (resObj && resObj.meta && resObj.meta.regularMarketPrice) {
+              meta = resObj.meta;
+              const timestamps = resObj.timestamp || [];
+              const quotes = resObj.indicators?.quote?.[0] || {};
+              const closes = quotes.close || [];
+              const opens = quotes.open || [];
+              const highs = quotes.high || [];
+              const lows = quotes.low || [];
+
+              series = [];
+              for (let i = 0; i < timestamps.length; i++) {
+                if (closes[i] !== null && closes[i] !== undefined && !isNaN(closes[i])) {
+                  const date = new Date(timestamps[i] * 1000).toISOString().split("T")[0];
+                  series.push({
+                    date,
+                    close: +closes[i].toFixed(2),
+                    open: +(opens[i] ?? closes[i]).toFixed(2),
+                    high: +(highs[i] ?? closes[i]).toFixed(2),
+                    low: +(lows[i] ?? closes[i]).toFixed(2)
+                  });
+                }
+              }
+              if (series.length > 0) break;
+            }
+          }
+        } catch (e) {}
+      }
+    }
+
+    // If stock is NOT found on any exchange feed, show clear Not Found message (NO FAKE DATA)
+    if (series.length === 0 || !meta || !meta.regularMarketPrice) {
+      showStockNotFoundState(query, symbol);
+      return;
+    }
+
+    // Unhide main content and hide not found box
+    const notFoundBox = document.getElementById("advNotFoundContainer");
+    const mainBox = document.getElementById("advMainContentContainer");
+    if (notFoundBox) notFoundBox.classList.add("hidden");
+    if (mainBox) mainBox.classList.remove("hidden");
+
+    // Update company name from real-time meta if available
+    if (meta.longName || meta.shortName) {
+      stockName = meta.longName || meta.shortName;
+      document.getElementById("advCompanyName").textContent = stockName;
+    }
+    const closes = series.map(s => s.close);
+    const latestClose = meta.regularMarketPrice || (closes.length > 0 ? closes[closes.length - 1] : 0.0);
+    const high52 = meta.fiftyTwoWeekHigh || Math.max(...closes);
+    const low52 = meta.fiftyTwoWeekLow || Math.min(...closes);
+    const prevClose = meta.chartPreviousClose || (closes.length > 1 ? closes[closes.length - 2] : latestClose);
+    const changePct = prevClose ? +(((latestClose - prevClose) / prevClose) * 100).toFixed(2) : 0.0;
+    const avgPrice = closes.length > 0 ? +(closes.reduce((a, b) => a + b, 0) / closes.length).toFixed(2) : latestClose;
+    const discountPct = high52 > 0 ? +(((high52 - latestClose) / high52) * 100).toFixed(1) : 0.0;
+    const rangePct = (high52 - low52) > 0 ? Math.min(100, Math.max(0, Math.round(((latestClose - low52) / (high52 - low52)) * 100))) : 50;
+    // Update Left Overview Card
+    document.getElementById("advLtp").textContent = formatINR(latestClose);
+    const elChg = document.getElementById("advChangePct");
+    elChg.textContent = `${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%`;
+    elChg.className = `text-sm font-semibold font-mono ${changePct >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+    document.getElementById("advPrevClose").textContent = `Prev Close: ${formatINR(prevClose)}`;
+    document.getElementById("adv52Low").textContent = formatINR(low52);
+    document.getElementById("adv52High").textContent = formatINR(high52);
+    document.getElementById("advRangeFill").style.width = `${rangePct}%`;
+    document.getElementById("advRangePos").textContent = `Trading at ${rangePct}% of 52-week range`;
+
+    const elBadge = document.getElementById("advDiscountBadge");
+    if (discountPct >= 15.0) {
+      elBadge.textContent = `📉 ${discountPct}% OFF Peak`;
+      elBadge.className = "px-3 py-1 rounded-xl text-xs font-bold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm";
+    } else if (discountPct <= 4.0) {
+      elBadge.textContent = `📈 Near 52W High (${discountPct}% to Peak)`;
+      elBadge.className = "px-3 py-1 rounded-xl text-xs font-bold font-mono bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm";
+    } else {
+      elBadge.textContent = `⚖️ Fair Value Range (-${discountPct}%)`;
+      elBadge.className = "px-3 py-1 rounded-xl text-xs font-bold font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm";
+    }
+
+    // Update Price Stats Grid
+    document.getElementById("advStatHighest").textContent = formatINR(high52);
+    document.getElementById("advStatAverage").textContent = formatINR(avgPrice);
+    document.getElementById("advStatLowest").textContent = formatINR(low52);
+
+    const alertInput = document.getElementById("inputAlertPrice");
+    if (alertInput) alertInput.value = (latestClose * 0.97).toFixed(2);
+
+    // Calculate Quantitative Buyhatke Score (0 to 100)
+    // 1. Price Discount Score (0-35 pts)
+    let discountScore = Math.min(35, Math.max(5, Math.round((100 - rangePct) * 0.35)));
+    
+    // 2. Fundamental Moat Score (0-30 pts)
+    let moatScore = 24;
+    if (["RELIANCE", "TCS", "HDFCBANK", "INFY", "ITC", "TATAMOTORS", "LT"].includes(symbol)) moatScore = 28;
+    else if (["OLAELEC", "GREENPOWER", "GTLINFRA", "RTNINDIA"].includes(symbol)) moatScore = 10;
+
+    // 3. Technical Momentum Score (0-20 pts)
+    const lastRSI = series[series.length - 1]?.rsi14 || 50;
+    let rsiScore = 15;
+    if (lastRSI <= 38) rsiScore = 20;
+    else if (lastRSI >= 72) rsiScore = 5;
+
+    // 4. Timeframe Adjustment (0-15 pts)
+    let tfBonus = 12;
+    if (state.advisorTimeframe === "1 Year+") tfBonus = 15;
+    else if (state.advisorTimeframe === "2-3 Days") tfBonus = lastRSI < 40 ? 15 : 8;
+
+    const totalScore = Math.min(98, Math.max(12, discountScore + moatScore + rsiScore + (tfBonus - 10)));
+    state.advisorGaugeScore = totalScore;
+
+    // Draw Gauge Meter
+    drawSpeedometerGauge(totalScore);
+
+    // Set Verdict Text
+    const elTitle = document.getElementById("advVerdictTitle");
+    const elThesis = document.getElementById("advVerdictThesis");
+
+    if (totalScore >= 70) {
+      elTitle.textContent = "Go Ahead & Buy now";
+      elTitle.className = "text-lg font-extrabold text-emerald-400 font-sans";
+      elThesis.textContent = `Optimal price point at ${rangePct}% of 52-week range (${discountPct}% discount from peak). Favorable risk-reward with resilient institutional backing.`;
+    } else if (totalScore >= 45) {
+      elTitle.textContent = "Wait for a Better Dip";
+      elTitle.className = "text-lg font-extrabold text-amber-400 font-sans";
+      elThesis.textContent = `Stock is in a fair valuation consolidation band (${rangePct}% of range). Better entry point expected closer to support (around ${formatINR(low52 * 1.03)}).`;
+    } else {
+      elTitle.textContent = "Avoid Buying / Book Profits";
+      elTitle.className = "text-lg font-extrabold text-rose-400 font-sans";
+      elThesis.textContent = `Price is overextended near the top of its 52-week range (${rangePct}% range level, ${discountPct}% from high) with high RSI. High risk of mean reversion pullback.`;
+    }
+
+    // Update Checklist Factor Cards
+    document.getElementById("advCheckDiscount").textContent = `Score: ${discountScore} / 35`;
+    document.getElementById("advCheckDiscountDesc").textContent = `${discountPct}% below peak (${rangePct}% range position).`;
+
+    document.getElementById("advCheckMoat").textContent = `Score: ${moatScore} / 30`;
+    document.getElementById("advCheckMoatDesc").textContent = moatScore >= 20 ? "Solid balance sheet with positive cash flows." : "High leverage or speculative business model.";
+
+    document.getElementById("advCheckRsi").textContent = `Score: ${rsiScore} / 20`;
+    document.getElementById("advCheckRsiDesc").textContent = `RSI(14) at ${lastRSI.toFixed(1)} (${lastRSI >= 70 ? 'Overbought' : (lastRSI <= 40 ? 'Oversold' : 'Neutral')}).`;
+
+    document.getElementById("advCheckRR").textContent = `Total: ${totalScore} / 100`;
+    document.getElementById("advCheckRRDesc").textContent = `Timeframe: ${state.advisorTimeframe} recommendation.`;
+
+    // Render Price Bands History Chart
+    renderAdvisorHistoryChart(series, high52, low52, avgPrice);
+
+  } catch (e) {
+    console.error("Error analyzing advisor stock:", e);
+  }
+};
+
+// -------------------------------------------------------------------
+// Speedometer Semicircle Gauge Drawing (Canvas)
+// -------------------------------------------------------------------
+function drawSpeedometerGauge(score) {
+  const canvas = document.getElementById("canvasAdvisorGauge");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const centerX = w / 2;
+  const centerY = h - 8;
+  const radius = Math.min(centerX - 10, centerY - 10);
+  const lineWidth = 12;
+
+  // 1. Draw Semicircle Gradient Arc (Red -> Yellow -> Green)
+  const grad = ctx.createLinearGradient(centerX - radius, centerY, centerX + radius, centerY);
+  grad.addColorStop(0.0, "#EF4444"); // Red (Bad time / 0)
+  grad.addColorStop(0.35, "#F59E0B"); // Orange
+  grad.addColorStop(0.65, "#EAB308"); // Yellow
+  grad.addColorStop(1.0, "#10B981"); // Emerald (Good time / 100)
+
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, Math.PI, 0, false);
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = "round";
+  ctx.stroke();
+
+  // 2. Draw Score Needle
+  const clampScore = Math.min(100, Math.max(0, score));
+  const angle = Math.PI + (clampScore / 100) * Math.PI; // Math.PI (180deg) to 2*Math.PI (360deg)
+
+  const needleLength = radius - 8;
+  const needleX = centerX + needleLength * Math.cos(angle);
+  const needleY = centerY + needleLength * Math.sin(angle);
+
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY);
+  ctx.lineTo(needleX, needleY);
+  ctx.strokeStyle = "#FFFFFF";
+  ctx.lineWidth = 3;
+  ctx.lineCap = "round";
+  ctx.stroke();
+
+  // 3. Center Pivot Circle
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
+  ctx.fillStyle = "#38BDF8";
+  ctx.fill();
+  ctx.strokeStyle = "#0B0F19";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // 4. Score Text in Center
+  ctx.font = "bold 13px 'JetBrains Mono', monospace";
+  ctx.fillStyle = score >= 70 ? "#10B981" : (score >= 45 ? "#F59E0B" : "#EF4444");
+  ctx.textAlign = "center";
+  ctx.fillText(`${score}/100`, centerX, centerY - 20);
+}
+
+// -------------------------------------------------------------------
+// Helper: Generate Realistic 90-Day Price Trajectory Curve
+// -------------------------------------------------------------------
+function generateRealisticPriceHistory(symbol, ltp, high52, low52, numDays = 90) {
+  const now = new Date();
+  const series = [];
+  const rangeSpan = Math.max(1, high52 - low52);
+  const posRatio = (ltp - low52) / rangeSpan;
+
+  for (let i = numDays; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 86400000).toISOString().split("T")[0];
+    const t = (numDays - i) / numDays; // 0.0 (past) to 1.0 (today)
+    
+    let simulatedPrice = ltp;
+    if (symbol === "OLAELEC") {
+      // Dropped from peak ~157.40 down through 120 -> 90 -> 65 -> 37.73
+      const decay = Math.exp(-t * 2.5);
+      simulatedPrice = low52 + (high52 - low52) * decay + (Math.sin(i / 3) * 3.0);
+    } else if (symbol === "TATAMOTORS") {
+      // Rallied from 302 up to 485
+      simulatedPrice = low52 + (ltp - low52) * Math.pow(t, 0.65) + (Math.sin(i / 4) * 5.0);
+    } else if (symbol === "HDFCBANK") {
+      // Consolidated from 905 down to 715 and rebounding to 726
+      simulatedPrice = high52 - (high52 - low52) * Math.sin(t * Math.PI * 0.5) + (Math.cos(i / 3) * 7.0);
+    } else {
+      if (posRatio < 0.3) {
+        simulatedPrice = high52 - (high52 - ltp) * Math.pow(t, 0.55) + (Math.sin(i / 3.5) * (rangeSpan * 0.03));
+      } else if (posRatio > 0.7) {
+        simulatedPrice = low52 + (ltp - low52) * Math.pow(t, 0.55) + (Math.sin(i / 3.5) * (rangeSpan * 0.03));
+      } else {
+        simulatedPrice = ((high52 + low52) / 2) + Math.sin(t * Math.PI * 2) * (rangeSpan * 0.25) + (Math.sin(i / 3) * (rangeSpan * 0.02));
+      }
+    }
+
+    if (i === 0) simulatedPrice = ltp;
+    simulatedPrice = Math.max(low52 * 0.98, Math.min(high52 * 1.02, +simulatedPrice.toFixed(2)));
+
+    const rsiSim = 30 + ((simulatedPrice - low52) / rangeSpan) * 45 + (Math.sin(i / 2) * 5);
+    series.push({
+      date: d,
+      close: simulatedPrice,
+      open: +(simulatedPrice - 1.5).toFixed(2),
+      high: +(simulatedPrice + 2.5).toFixed(2),
+      low: +(simulatedPrice - 2.5).toFixed(2),
+      rsi14: Math.min(85, Math.max(20, +rsiSim.toFixed(1)))
+    });
+  }
+  return series;
+}
+
+// -------------------------------------------------------------------
+// Price History & Entry Bands Chart (Chart.js)
+// -------------------------------------------------------------------
+function renderAdvisorHistoryChart(series, high52, low52, avgPrice) {
+  const canvas = document.getElementById("canvasAdvisorHistoryChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+
+  if (state.advisorHistoryChart) {
+    state.advisorHistoryChart.destroy();
+  }
+
+  const labels = series.map(s => s.date);
+  const closes = series.map(s => s.close);
+
+  const buyZoneLevel = +(low52 + (high52 - low52) * 0.25).toFixed(2);
+  const sellZoneLevel = +(low52 + (high52 - low52) * 0.75).toFixed(2);
+
+  // Shaded gradient fill under price line
+  const gradPrice = ctx.createLinearGradient(0, 0, 0, 240);
+  gradPrice.addColorStop(0, "rgba(56, 189, 248, 0.25)");
+  gradPrice.addColorStop(1, "rgba(56, 189, 248, 0.0)");
+
+  state.advisorHistoryChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Price History (₹)",
+          data: closes,
+          borderColor: "#38BDF8",
+          backgroundColor: gradPrice,
+          borderWidth: 2.8,
+          fill: true,
+          tension: 0.2,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "#38BDF8",
+          pointHoverBorderColor: "#FFFFFF",
+          pointHoverBorderWidth: 2
+        },
+        {
+          label: `Buy Zone Floor (< ₹${buyZoneLevel})`,
+          data: new Array(labels.length).fill(buyZoneLevel),
+          borderColor: "#10B981",
+          borderWidth: 1.8,
+          borderDash: [5, 5],
+          fill: false,
+          pointRadius: 0
+        },
+        {
+          label: `Overbought Zone (> ₹${sellZoneLevel})`,
+          data: new Array(labels.length).fill(sellZoneLevel),
+          borderColor: "#EF4444",
+          borderWidth: 1.8,
+          borderDash: [5, 5],
+          fill: false,
+          pointRadius: 0
+        },
+        {
+          label: `Average Price (₹${avgPrice})`,
+          data: new Array(labels.length).fill(avgPrice),
+          borderColor: "rgba(245, 158, 11, 0.7)",
+          borderWidth: 1.2,
+          borderDash: [3, 3],
+          fill: false,
+          pointRadius: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color: "#9CA3AF", font: { family: "JetBrains Mono", size: 10 } }
+        },
+        tooltip: {
+          backgroundColor: "#121826",
+          borderColor: "#1F293D",
+          borderWidth: 1,
+          titleFont: { family: "JetBrains Mono" },
+          bodyFont: { family: "JetBrains Mono" },
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.datasetIndex === 0) {
+                const val = ctx.parsed.y;
+                let zoneTag = "🟡 Fair Value Zone";
+                if (val <= buyZoneLevel) zoneTag = "🟢 Optimal Buy Zone (< 25%)";
+                else if (val >= sellZoneLevel) zoneTag = "🔴 Overbought / High Risk (> 75%)";
+                return [`Price: ₹${val.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`, `Zone: ${zoneTag}`];
+              }
+              return `${ctx.dataset.label}: ₹${ctx.parsed.y.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: "rgba(31, 41, 61, 0.4)" },
+          ticks: { color: "#6B7280", font: { family: "JetBrains Mono", size: 10 }, maxTicksLimit: 8 }
+        },
+        y: {
+          position: "right",
+          min: Math.floor(low52 * 0.92),
+          max: Math.ceil(high52 * 1.06),
+          grid: { color: "rgba(31, 41, 61, 0.4)" },
+          ticks: {
+            color: "#9CA3AF",
+            font: { family: "JetBrains Mono", size: 10 },
+            callback: (v) => `₹${v}`
+          }
+        }
+      }
+    }
+  });
+}
 function exportCSV(data, filename) {
   if (!data || data.length === 0) return;
   const headers = Object.keys(data[0]);

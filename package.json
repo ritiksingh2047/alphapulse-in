@@ -1,0 +1,23 @@
+{
+  "name": "alphapulse-in",
+  "version": "1.0.2",
+  "description": "Institutional Indian Equities Quant & Fundamental Intelligence Engine with RisiAsset Portfolio & Buyhatke Advisor",
+  "main": "web/server.js",
+  "scripts": {
+    "start": "bun run web/server.js",
+    "scan": "python -m alphapulse scan",
+    "dashboard": "streamlit run alphapulse/dashboard.py",
+    "test": "python -m unittest discover tests"
+  },
+  "keywords": [
+    "quantitative-finance",
+    "indian-equities",
+    "nse",
+    "bse",
+    "tradingview",
+    "portfolio-analytics",
+    "buyhatke-advisor"
+  ],
+  "author": "AlphaPulse-IN Quantitative Research",
+  "license": "MIT"
+}

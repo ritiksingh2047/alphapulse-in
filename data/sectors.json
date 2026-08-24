@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "data": [
+    {"sector": "Power", "total_signals": 6, "buy_signals": 4, "exit_signals": 2, "avg_pe": 18.5, "avg_roe": 16.2},
+    {"sector": "Auto", "total_signals": 5, "buy_signals": 1, "exit_signals": 4, "avg_pe": 26.4, "avg_roe": 22.0},
+    {"sector": "FMCG", "total_signals": 4, "buy_signals": 4, "exit_signals": 0, "avg_pe": 28.1, "avg_roe": 24.5},
+    {"sector": "Oil & Gas", "total_signals": 3, "buy_signals": 3, "exit_signals": 0, "avg_pe": 14.2, "avg_roe": 19.1},
+    {"sector": "Banking", "total_signals": 3, "buy_signals": 2, "exit_signals": 1, "avg_pe": 15.0, "avg_roe": 16.8}
+  ]
+}

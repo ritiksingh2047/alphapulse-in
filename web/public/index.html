@@ -154,7 +154,7 @@
           <div class="min-w-0">
             <div class="flex items-center space-x-1 sm:space-x-2">
               <span class="font-black text-sm sm:text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent whitespace-nowrap">ALPHAPULSE-IN</span>
-              <span class="hidden xs:inline-block sm:inline-block px-1.5 py-0.5 text-[9px] sm:text-[10px] font-mono font-bold tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded uppercase shrink-0">v1.1</span>
+              <span class="hidden xs:inline-block sm:inline-block px-1.5 py-0.5 text-[9px] sm:text-[10px] font-mono font-bold tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded uppercase shrink-0">v1.02</span>
             </div>
             <p class="text-[11px] text-gray-400 font-medium whitespace-nowrap hidden sm:block">Institutional Indian Equities Intelligence (NSE / BSE)</p>
           </div>
@@ -283,38 +283,38 @@
       <nav class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 sm:gap-2 w-full" aria-label="Tabs">
         
         <!-- Tab 1: RisiAsset Portfolio -->
-        <button data-tab="tab-risiasset" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition whitespace-nowrap cursor-pointer w-full text-center">
+        <button data-tab="tab-risiasset" onclick="switchTab('tab-risiasset')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition whitespace-nowrap cursor-pointer w-full text-center">
           <i data-lucide="briefcase" class="w-4 h-4 text-amber-400 shrink-0"></i>
-          <span>RisiAsset</span>
-          <span id="badgeRisiCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300 font-mono">30</span>
+          <span class="font-bold">RisiAsset</span>
+          <span id="badgeRisiCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold">30</span>
         </button>
 
         <!-- Tab 2: 52W Lows Value Accumulation -->
-        <button data-tab="tab-buy-setups" class="nav-tab active flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border border-transparent transition text-emerald-400 bg-emerald-500/10 border-emerald-500/30 whitespace-nowrap cursor-pointer w-full text-center">
+        <button data-tab="tab-buy-setups" onclick="switchTab('tab-buy-setups')" class="nav-tab active flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border border-transparent transition text-emerald-400 bg-emerald-500/10 border-emerald-500/30 whitespace-nowrap cursor-pointer w-full text-center">
           <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i>
           <span>52W Lows</span>
-          <span id="badgeBuyCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300">60</span>
+          <span id="badgeBuyCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300 font-mono">12</span>
         </button>
 
         <!-- Tab 3: 52W Highs Profit Booking -->
-        <button data-tab="tab-exit-setups" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
+        <button data-tab="tab-exit-setups" onclick="switchTab('tab-exit-setups')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
           <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
           <span>52W Highs</span>
-          <span id="badgeExitCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300">40</span>
+          <span id="badgeExitCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300 font-mono">8</span>
         </button>
 
         <!-- Tab 4: Technical Charting -->
-        <button data-tab="tab-charting" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
+        <button data-tab="tab-charting" onclick="switchTab('tab-charting')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
           <i data-lucide="candlestick-chart" class="w-4 h-4 shrink-0"></i>
           <span>Charting</span>
         </button>
 
-        <!-- Tab 5: Risk & Position Sizing -->
-        <button data-tab="tab-risk-simulator" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center col-span-2 sm:col-span-1">
-          <i data-lucide="calculator" class="w-4 h-4 shrink-0"></i>
-          <span>Risk Sizing</span>
+        <!-- Tab 5: Buy / Sell Advisor (Buyhatke Style) -->
+        <button data-tab="tab-buy-advisor" onclick="switchTab('tab-buy-advisor')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center col-span-2 sm:col-span-1">
+          <i data-lucide="help-circle" class="w-4 h-4 shrink-0 text-cyan-400"></i>
+          <span>Should You Buy?</span>
+          <span class="ml-1 px-1.5 py-0.2 text-[10px] rounded bg-cyan-500/20 text-cyan-300 font-bold font-mono">NEW</span>
         </button>
-
       </nav>
     </div>
 
@@ -396,26 +396,26 @@
       <!-- Radar Filter Buttons & Category Switcher -->
       <div class="bg-brand-card p-4 rounded-xl border border-brand-border flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex flex-wrap items-center gap-2">
-          <button data-risi-filter="ALL" class="btn-risi-filter active px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-border text-white border border-brand-border transition">
+          <button data-risi-filter="ALL" onclick="filterRisiHoldings('ALL')" class="btn-risi-filter active px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-border text-white border border-brand-border transition cursor-pointer">
             All Holdings (30)
           </button>
           
-          <button data-risi-filter="ATH" class="btn-risi-filter px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 transition flex items-center space-x-1">
+          <button data-risi-filter="ATH" onclick="filterRisiHoldings('ATH')" class="btn-risi-filter px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/30 hover:bg-rose-500/20 transition flex items-center space-x-1 cursor-pointer">
             <i data-lucide="alert-circle" class="w-3 h-3"></i>
             <span>Near ATH / Profit Radar (6)</span>
           </button>
           
-          <button data-risi-filter="ATL_VALUE" class="btn-risi-filter px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 transition flex items-center space-x-1">
+          <button data-risi-filter="ATL_VALUE" onclick="filterRisiHoldings('ATL_VALUE')" class="btn-risi-filter px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 transition flex items-center space-x-1 cursor-pointer">
             <i data-lucide="trending-up" class="w-3 h-3"></i>
             <span>Near ATL / Value Accumulate (4)</span>
           </button>
 
-          <button data-risi-filter="ATL_RISK" class="btn-risi-filter px-3 py-1.5 rounded-lg text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 transition flex items-center space-x-1">
+          <button data-risi-filter="ATL_RISK" onclick="filterRisiHoldings('ATL_RISK')" class="btn-risi-filter px-3 py-1.5 rounded-lg text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 transition flex items-center space-x-1 cursor-pointer">
             <i data-lucide="shield-alert" class="w-3 h-3"></i>
             <span>Near ATL / Speculative Risk (4)</span>
           </button>
 
-          <button data-risi-filter="BALANCED" class="btn-risi-filter px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-400 bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20 transition">
+          <button data-risi-filter="BALANCED" onclick="filterRisiHoldings('BALANCED')" class="btn-risi-filter px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-400 bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20 transition cursor-pointer">
             Balanced Zone (16)
           </button>
         </div>
@@ -723,123 +723,299 @@
 
 
     <!-- ============================================================= -->
-    <!-- TAB 5: POSITION SIZING & RISK SIMULATOR -->
+    <!-- TAB 5: BUYHATKE-STYLE STOCK ADVISOR (SHOULD YOU BUY NOW?)   -->
     <!-- ============================================================= -->
-    <section id="tab-risk-simulator" class="tab-content hidden space-y-4">
+    <section id="tab-buy-advisor" class="tab-content hidden space-y-5">
       
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Controls (1 col) -->
-        <div class="bg-brand-card p-6 rounded-xl border border-brand-border space-y-5">
-          <h2 class="text-base font-bold text-white tracking-tight flex items-center space-x-2">
-            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
-            <span>Institutional Risk Model</span>
-          </h2>
-          <p class="text-xs text-gray-400">Enforce strict 2.0% - 3.0% maximum portfolio risk per single trade setup.</p>
-
-          <!-- Input: Total Portfolio Size -->
-          <div class="space-y-1.5">
-            <label class="text-xs font-semibold text-gray-300">Total Portfolio Capital (₹)</label>
-            <input type="number" id="inputPortfolioSize" value="1000000" step="50000" class="w-full bg-brand-dark border border-brand-border rounded-lg px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-emerald-500">
-          </div>
-
-          <!-- Input: Risk Percentage -->
-          <div class="space-y-1.5">
-            <div class="flex justify-between text-xs">
-              <span class="font-semibold text-gray-300">Risk Model Per Trade (%)</span>
-              <span id="valRiskPct" class="font-mono text-emerald-400 font-bold">2.0%</span>
+      <!-- Search & Quick Selection Header -->
+      <div class="bg-gradient-to-r from-brand-card via-[#121c2d] to-brand-card p-5 rounded-2xl border border-cyan-500/30 shadow-xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold">
+                <i data-lucide="help-circle" class="w-5 h-5"></i>
+              </div>
+              <h2 class="text-lg font-bold text-white font-sans">Should You Buy Now? | Stock Price & Valuation Advisor</h2>
             </div>
-            <input type="range" id="rangeRiskPct" min="1.0" max="5.0" step="0.5" value="2.0" class="w-full accent-emerald-500">
+            <p class="text-xs text-gray-400 mt-1">Instant institutional verdict: Buy, Wait for Dip, or Avoid based on price history, valuation multiples, and technical momentum.</p>
           </div>
 
-          <!-- Input: Select Stock Setup -->
-          <div class="space-y-1.5">
-            <label class="text-xs font-semibold text-gray-300">Select Qualified Accumulation Setup</label>
-            <select id="selectSimStock" class="w-full bg-brand-dark border border-brand-border rounded-lg px-3.5 py-2 text-xs text-white font-mono focus:outline-none focus:border-emerald-500">
-              <!-- Populated via JS -->
-            </select>
-          </div>
-
-          <!-- Input: Custom Entry & SL -->
-          <div class="grid grid-cols-2 gap-3">
-            <div class="space-y-1">
-              <label class="text-[11px] text-gray-400">Entry Price (₹)</label>
-              <input type="number" id="inputSimEntry" step="0.05" class="w-full bg-brand-dark border border-brand-border rounded-lg px-2.5 py-1.5 text-xs text-white font-mono">
+          <!-- Search Form with Intelligent Auto-Suggest -->
+          <div class="relative flex items-center space-x-2 w-full md:w-auto">
+            <div class="relative flex-1 md:w-80">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-cyan-400 z-10"></i>
+              <input type="text" id="inputAdvisorSearch" autocomplete="off" placeholder="Search stock or name (e.g. YES BANK, HDFC)..." class="w-full bg-brand-dark border border-brand-border rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 font-mono transition">
+              
+              <!-- Floating Auto-Suggest Dropdown Menu -->
+              <div id="advisorSuggestDropdown" class="absolute left-0 right-0 top-full mt-1.5 bg-brand-card/95 backdrop-blur-md border border-brand-border rounded-xl shadow-2xl z-50 max-h-72 overflow-y-auto custom-scrollbar hidden">
+                <div class="p-1.5 space-y-0.5" id="advisorSuggestList">
+                  <!-- Populated dynamically via JS -->
+                </div>
+              </div>
             </div>
-            <div class="space-y-1">
-              <label class="text-[11px] text-gray-400">Stop Loss (₹)</label>
-              <input type="number" id="inputSimSL" step="0.05" class="w-full bg-brand-dark border border-brand-border rounded-lg px-2.5 py-1.5 text-xs text-rose-400 font-mono">
-            </div>
+            <button onclick="runAdvisorSearch()" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-semibold rounded-xl shadow-md transition cursor-pointer shrink-0">
+              Check
+            </button>
           </div>
 
+        <!-- Quick-Pick Stock Tags -->
+        <div class="flex items-center space-x-2 overflow-x-auto pt-1 custom-scrollbar text-xs font-mono">
+          <span class="text-gray-400 text-[11px] font-sans font-medium shrink-0">Quick Check:</span>
+          <button onclick="analyzeAdvisorStock('HDFCBANK')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">HDFCBANK</button>
+          <button onclick="analyzeAdvisorStock('RELIANCE')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">RELIANCE</button>
+          <button onclick="analyzeAdvisorStock('TCS')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">TCS</button>
+          <button onclick="analyzeAdvisorStock('TATAMOTORS')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">TATAMOTORS</button>
+          <button onclick="analyzeAdvisorStock('PFC')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">PFC</button>
+          <button onclick="analyzeAdvisorStock('ITC')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">ITC</button>
+          <button onclick="analyzeAdvisorStock('ONGC')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">ONGC</button>
+          <button onclick="analyzeAdvisorStock('OLAELEC')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">OLAELEC</button>
+          <button onclick="analyzeAdvisorStock('ASHOKLEY')" class="px-2.5 py-1 rounded-lg bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 hover:text-white transition shrink-0 cursor-pointer">ASHOKLEY</button>
+        </div>
+      </div>
+      <!-- Stock Not Found / Invalid Ticker Message Container (NO FAKE DATA) -->
+      <div id="advNotFoundContainer" class="hidden bg-brand-card p-8 rounded-2xl border border-rose-500/40 shadow-2xl space-y-5 text-center max-w-2xl mx-auto my-4">
+        <div class="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 mx-auto shadow-lg shadow-rose-950/40">
+          <i data-lucide="alert-octagon" class="w-7 h-7"></i>
         </div>
 
-        <!-- Calculated Output Dashboard (2 cols) -->
-        <div class="lg:col-span-2 bg-brand-card p-6 rounded-xl border border-brand-border space-y-6">
-          <h2 class="text-base font-bold text-white tracking-tight">Position Sizing & Profit Projections</h2>
+        <div class="space-y-2">
+          <h3 class="text-lg font-bold text-white font-sans" id="advNotFoundTitle">Stock Symbol Not Found on NSE / BSE</h3>
+          <p class="text-xs text-gray-300 font-sans leading-relaxed" id="advNotFoundDesc">
+            No live trading quote or historical data exists for <code class="px-2 py-0.5 rounded bg-brand-dark border border-brand-border text-rose-300 font-mono font-bold" id="advNotFoundQuery">"ONCG"</code>.
+          </p>
+          <p class="text-[11px] text-gray-400 font-sans">AlphaPulse-IN strictly provides verified real-time institutional exchange data and never displays placeholder or dummy estimates.</p>
+        </div>
 
-          <!-- Output Metric Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- Did You Mean / Typo Suggestions -->
+        <div class="pt-3 border-t border-brand-border/60 space-y-2.5">
+          <span class="text-xs font-semibold text-gray-300 font-sans flex items-center justify-center space-x-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Did you mean one of these listed equities?</span>
+          </span>
+          <div class="flex flex-wrap items-center justify-center gap-2 pt-1 font-mono text-xs" id="advNotFoundSuggestions">
+            <!-- Dynamically populated clickable pills -->
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CONTENT CONTAINER (Hidden when symbol is invalid) -->
+      <div id="advMainContentContainer" class="space-y-5">
+      
+      <!-- HERO SECTION (Buyhatke Style Layout from Screenshot) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Left Card: Stock Overview & Price Range (5 cols) -->
+        <div class="lg:col-span-5 bg-brand-card p-5 rounded-2xl border border-brand-border flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-start justify-between">
+              <div>
+                <span class="px-2 py-0.5 text-[10px] rounded bg-brand-dark border border-brand-border text-cyan-300 font-mono font-semibold" id="advSectorBadge">Banking</span>
+                <h3 class="text-xl font-bold text-white mt-1 font-sans" id="advCompanyName">HDFC Bank Ltd.</h3>
+                <span class="text-xs text-gray-400 font-mono" id="advSymbol">HDFCBANK.NS</span>
+              </div>
+              <!-- Discount / Status Badge -->
+              <span id="advDiscountBadge" class="px-3 py-1 rounded-xl text-xs font-bold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm">
+                📉 19.7% OFF Peak
+              </span>
+            </div>
+
+            <!-- Price Display -->
+            <div class="bg-brand-dark/80 p-4 rounded-xl border border-brand-border space-y-1">
+              <div class="flex items-baseline space-x-2">
+                <span class="text-3xl font-extrabold font-mono text-white" id="advLtp">₹726.95</span>
+                <span class="text-sm font-semibold font-mono text-emerald-400" id="advChangePct">+1.25%</span>
+              </div>
+              <p class="text-[11px] text-gray-400 font-mono" id="advPrevClose">Prev Close: ₹717.95</p>
+            </div>
+
+            <!-- 52W Range Bar -->
+            <div class="space-y-1.5 pt-1 font-mono text-xs">
+              <div class="flex justify-between text-gray-400 text-[11px]">
+                <span>52W Low: <strong class="text-white" id="adv52Low">₹715.05</strong></span>
+                <span>52W High: <strong class="text-white" id="adv52High">₹905.00</strong></span>
+              </div>
+              <div class="w-full bg-brand-dark h-2 rounded-full overflow-hidden relative border border-brand-border">
+                <div id="advRangeFill" class="bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500 h-full rounded-full" style="width: 15%;"></div>
+              </div>
+              <div class="text-[10px] text-gray-500 text-right" id="advRangePos">Trading at 6.2% of 52-week range</div>
+            </div>
+          </div>
+
+          <!-- Quick Action -->
+          <div class="pt-2 border-t border-brand-border/60 flex items-center justify-between">
+            <button onclick="analyzeStock(state.advisorSymbol || 'HDFCBANK')" class="w-full py-2 bg-brand-dark hover:bg-brand-border border border-brand-border text-cyan-300 hover:text-white rounded-xl text-xs font-semibold transition flex items-center justify-center space-x-2 cursor-pointer">
+              <i data-lucide="candlestick-chart" class="w-4 h-4 text-cyan-400"></i>
+              <span>Open in Multi-Indicator Chart Studio</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Card: Should You Buy Now? & Speedometer (7 cols) -->
+        <div class="lg:col-span-7 bg-brand-card p-5 rounded-2xl border border-brand-border space-y-5">
+          
+          <!-- Time Horizon Tabs -->
+          <div class="flex items-center justify-between border-b border-brand-border/60 pb-3">
+            <h3 class="text-base font-bold text-white font-sans flex items-center space-x-2">
+              <span>Should you buy now?</span>
+              <i data-lucide="info" class="w-3.5 h-3.5 text-gray-400 cursor-pointer" title="Quantitative verdict based on price position, valuation, and technical signals."></i>
+            </h3>
+
+            <div class="flex items-center space-x-1 bg-brand-dark p-1 rounded-lg border border-brand-border text-xs font-mono">
+              <button onclick="setAdvisorTimeframe('2-3 Days')" class="btn-adv-tf px-2 py-0.5 rounded text-gray-400 hover:text-white cursor-pointer" data-tf="2-3 Days">2-3 Days</button>
+              <button onclick="setAdvisorTimeframe('1-4 Weeks')" class="btn-adv-tf active px-2 py-0.5 rounded text-cyan-400 font-bold bg-cyan-500/20 cursor-pointer" data-tf="1-4 Weeks">1-4 Weeks</button>
+              <button onclick="setAdvisorTimeframe('3-6 Months')" class="btn-adv-tf px-2 py-0.5 rounded text-gray-400 hover:text-white cursor-pointer" data-tf="3-6 Months">3-6 Months</button>
+              <button onclick="setAdvisorTimeframe('1 Year+')" class="btn-adv-tf px-2 py-0.5 rounded text-gray-400 hover:text-white cursor-pointer" data-tf="1 Year+">1 Year+</button>
+            </div>
+          </div>
+
+          <!-- Speedometer Gauge & Verdict Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center bg-brand-dark/70 p-4 rounded-xl border border-brand-border">
             
-            <div class="bg-brand-dark p-4 rounded-xl border border-brand-border">
-              <p class="text-xs text-gray-400">Max Allowed Risk (₹)</p>
-              <h3 id="simMaxRiskRupees" class="text-xl font-bold font-mono text-rose-400 mt-1">₹20,000.00</h3>
-              <p class="text-[11px] text-gray-500 mt-0.5">2.0% of portfolio</p>
+            <!-- Canvas Gauge (5 cols) -->
+            <div class="sm:col-span-5 flex flex-col items-center justify-center">
+              <div class="relative w-44 h-24 flex items-center justify-center">
+                <canvas id="canvasAdvisorGauge" width="180" height="95"></canvas>
+              </div>
+              <div class="flex justify-between w-40 text-[10px] font-mono text-gray-400 mt-1">
+                <span class="text-rose-400 font-semibold">■ Bad Time</span>
+                <span class="text-emerald-400 font-semibold">■ Good Time</span>
+              </div>
             </div>
 
-            <div class="bg-brand-dark p-4 rounded-xl border border-brand-border">
-              <p class="text-xs text-gray-400">Calculated Position Size</p>
-              <h3 id="simShareQuantity" class="text-xl font-bold font-mono text-emerald-400 mt-1">193 Shares</h3>
-              <p class="text-[11px] text-gray-500 mt-0.5" id="simCapitalAllocation">₹2,54,000 Capital (25.4%)</p>
-            </div>
-
-            <div class="bg-brand-dark p-4 rounded-xl border border-brand-border">
-              <p class="text-xs text-gray-400">Risk : Reward Ratio</p>
-              <h3 id="simRRRatio" class="text-xl font-bold font-mono text-blue-400 mt-1">1 : 3.8</h3>
-              <p class="text-[11px] text-gray-500 mt-0.5">Target 1 projection</p>
+            <!-- Verdict & Thesis Text (7 cols) -->
+            <div class="sm:col-span-7 space-y-1.5 pl-0 sm:pl-2">
+              <span class="text-[11px] text-gray-400 uppercase tracking-wider font-mono font-medium">Our Institutional Recommendation</span>
+              <h4 class="text-lg font-extrabold text-emerald-400 font-sans" id="advVerdictTitle">Go Ahead & Buy now</h4>
+              <p class="text-xs text-gray-300 font-sans leading-relaxed" id="advVerdictThesis">Optimal price point near 52-week low pivot. Strong fundamental balance sheet with high institutional quality.</p>
             </div>
 
           </div>
 
-          <!-- P&L Scenario Matrix -->
-          <div class="bg-brand-dark rounded-xl border border-brand-border overflow-hidden">
-            <table class="w-full text-left text-xs font-mono">
-              <thead class="bg-brand-border/40 text-gray-400">
-                <tr>
-                  <th class="py-2.5 px-4">Trade Milestone</th>
-                  <th class="py-2.5 px-4">Price Level</th>
-                  <th class="py-2.5 px-4">Move %</th>
-                  <th class="py-2.5 px-4 text-right">Projected P&L (₹)</th>
-                  <th class="py-2.5 px-4 text-right">Portfolio Impact</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-brand-border/40">
-                <tr class="bg-rose-500/5">
-                  <td class="py-2.5 px-4 text-rose-400 font-semibold flex items-center"><i data-lucide="shield-alert" class="w-3.5 h-3.5 mr-1.5"></i> Stop Loss Trigger</td>
-                  <td class="py-2.5 px-4 text-white" id="scenSLPrice">₹1,212.31</td>
-                  <td class="py-2.5 px-4 text-rose-400">-7.88%</td>
-                  <td class="py-2.5 px-4 text-right font-bold text-rose-400" id="scenSLPnl">-₹20,000.00</td>
-                  <td class="py-2.5 px-4 text-right text-rose-400">-2.00%</td>
-                </tr>
-                <tr class="bg-emerald-500/5">
-                  <td class="py-2.5 px-4 text-emerald-400 font-semibold flex items-center"><i data-lucide="target" class="w-3.5 h-3.5 mr-1.5"></i> Target 1 (+15%)</td>
-                  <td class="py-2.5 px-4 text-white" id="scenT1Price">₹1,513.40</td>
-                  <td class="py-2.5 px-4 text-emerald-400">+15.00%</td>
-                  <td class="py-2.5 px-4 text-right font-bold text-emerald-400" id="scenT1Pnl">+₹38,100.00</td>
-                  <td class="py-2.5 px-4 text-right text-emerald-400">+3.81%</td>
-                </tr>
-                <tr class="bg-emerald-500/10">
-                  <td class="py-2.5 px-4 text-emerald-300 font-semibold flex items-center"><i data-lucide="award" class="w-3.5 h-3.5 mr-1.5"></i> Target 2 (+30%)</td>
-                  <td class="py-2.5 px-4 text-white" id="scenT2Price">₹1,710.80</td>
-                  <td class="py-2.5 px-4 text-emerald-300">+30.00%</td>
-                  <td class="py-2.5 px-4 text-right font-bold text-emerald-300" id="scenT2Pnl">+₹76,200.00</td>
-                  <td class="py-2.5 px-4 text-right text-emerald-300">+7.62%</td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Price Stats Grid (3-Box Layout from Screenshot) -->
+          <div>
+            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 font-mono">Price Stats</h4>
+            <div class="grid grid-cols-3 gap-3 font-mono text-center">
+              
+              <!-- Highest Price -->
+              <div class="bg-brand-dark p-3 rounded-xl border border-brand-border/80">
+                <span class="text-[10px] text-gray-400 uppercase font-sans flex items-center justify-center">
+                  Highest Price <i data-lucide="arrow-up" class="w-3 h-3 text-rose-400 ml-0.5"></i>
+                </span>
+                <div class="text-sm sm:text-base font-bold text-white mt-1" id="advStatHighest">₹905.00</div>
+              </div>
+
+              <!-- Average Price -->
+              <div class="bg-brand-dark p-3 rounded-xl border border-brand-border/80">
+                <span class="text-[10px] text-gray-400 uppercase font-sans flex items-center justify-center">
+                  Average Price <i data-lucide="arrow-up-down" class="w-3 h-3 text-amber-400 ml-0.5"></i>
+                </span>
+                <div class="text-sm sm:text-base font-bold text-white mt-1" id="advStatAverage">₹810.02</div>
+              </div>
+
+              <!-- Lowest Price -->
+              <div class="bg-brand-dark p-3 rounded-xl border border-brand-border/80">
+                <span class="text-[10px] text-gray-400 uppercase font-sans flex items-center justify-center">
+                  Lowest Price <i data-lucide="arrow-down" class="w-3 h-3 text-emerald-400 ml-0.5"></i>
+                </span>
+                <div class="text-sm sm:text-base font-bold text-white mt-1" id="advStatLowest">₹715.05</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Price Drop Alert Box (From Screenshot) -->
+          <div class="bg-brand-dark/90 p-3.5 rounded-xl border border-brand-border flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+                <i data-lucide="bell" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h5 class="text-xs font-bold text-white">Set price drop alert to buy later</h5>
+                <p class="text-[11px] text-gray-400">Get notified when stock reaches your target entry level</p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2 w-full sm:w-auto font-mono text-xs">
+              <div class="relative flex-1 sm:w-28">
+                <span class="absolute left-2.5 top-1.5 text-gray-400">₹</span>
+                <input type="number" id="inputAlertPrice" value="710.00" step="0.5" class="w-full bg-brand-card border border-brand-border rounded-lg pl-6 pr-2 py-1.5 text-white focus:outline-none focus:border-blue-500">
+              </div>
+              <button onclick="setPriceDropAlert()" id="btnSetAlert" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition cursor-pointer shrink-0">
+                Set Alert
+              </button>
+            </div>
           </div>
 
         </div>
+
+      </div>
+
+      <!-- Historical Price Trend with Shaded Buy / Fair / Sell Zones -->
+      <div class="bg-brand-card p-5 rounded-2xl border border-brand-border space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border/60 pb-3">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center space-x-1.5 font-sans">
+              <i data-lucide="line-chart" class="w-4 h-4 text-cyan-400"></i>
+              <span>Price History & Valuation Entry Bands</span>
+            </h3>
+            <p class="text-[11px] text-gray-400">Optimal Accumulation Band (Green), Fair Value Band (Yellow), and Exhaustion / Overbought Band (Red)</p>
+          </div>
+
+          <div class="flex items-center space-x-3 text-[11px] font-mono text-gray-400">
+            <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span><span>Buy Zone (&lt; 25%)</span></span>
+            <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span>Fair Value</span></span>
+            <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span><span>Overbought (&gt; 75%)</span></span>
+          </div>
+        </div>
+
+        <!-- Canvas Chart -->
+        <div class="h-64 w-full relative">
+          <canvas id="canvasAdvisorHistoryChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Multi-Factor Quantitative Checklist Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+        
+        <!-- Factor 1 -->
+        <div class="bg-brand-card p-4 rounded-xl border border-brand-border space-y-2">
+          <div class="flex justify-between items-center text-gray-400">
+            <span class="font-sans font-semibold">1. Price Discount</span>
+            <i data-lucide="tag" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="text-base font-bold text-white" id="advCheckDiscount">Score: 28 / 30</div>
+          <p class="text-[11px] text-gray-400 font-sans" id="advCheckDiscountDesc">Trading within 1.6% of 52W low pivot.</p>
+        </div>
+
+        <!-- Factor 2 -->
+        <div class="bg-brand-card p-4 rounded-xl border border-brand-border space-y-2">
+          <div class="flex justify-between items-center text-gray-400">
+            <span class="font-sans font-semibold">2. Fundamental Moat</span>
+            <i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="text-base font-bold text-white" id="advCheckMoat">Score: 26 / 30</div>
+          <p class="text-[11px] text-gray-400 font-sans" id="advCheckMoatDesc">ROE 15.5%, ROCE 16.0%, Solid Cash Flows.</p>
+        </div>
+
+        <!-- Factor 3 -->
+        <div class="bg-brand-card p-4 rounded-xl border border-brand-border space-y-2">
+          <div class="flex justify-between items-center text-gray-400">
+            <span class="font-sans font-semibold">3. Technical Oscillator</span>
+            <i data-lucide="activity" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <div class="text-base font-bold text-white" id="advCheckRsi">Score: 16 / 20</div>
+          <p class="text-[11px] text-gray-400 font-sans" id="advCheckRsiDesc">RSI at 38.5 (Approaching Oversold zone).</p>
+        </div>
+
+        <!-- Factor 4 -->
+        <div class="bg-brand-card p-4 rounded-xl border border-brand-border space-y-2">
+          <div class="flex justify-between items-center text-gray-400">
+            <span class="font-sans font-semibold">4. Risk / Reward</span>
+            <i data-lucide="scale" class="w-4 h-4 text-cyan-400"></i>
+          </div>
+          <div class="text-base font-bold text-white" id="advCheckRR">Score: 18 / 20</div>
+          <p class="text-[11px] text-gray-400 font-sans" id="advCheckRRDesc">Upside target +15% with 3% structural SL.</p>
+        </div>
+      </div>
 
       </div>
 
@@ -882,14 +1058,14 @@
 
       <!-- QR Code Container -->
       <div class="bg-white p-4 rounded-xl flex items-center justify-center mx-auto w-48 h-48 shadow-lg">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://192.168.0.104:3000" alt="Mobile Dashboard QR Code" class="w-full h-full object-contain">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://192.168.0.102:3000" alt="Mobile Dashboard QR Code" class="w-full h-full object-contain">
       </div>
 
       <!-- URL Copy Box -->
       <div class="space-y-1.5">
         <label class="text-xs font-semibold text-gray-300">Direct Mobile URL (Tap to Copy):</label>
         <div class="flex items-center space-x-2 bg-brand-dark p-2 rounded-lg border border-brand-border font-mono text-xs text-blue-400">
-          <input type="text" id="mobileUrlInput" readonly value="http://192.168.0.104:3000" class="bg-transparent flex-1 focus:outline-none text-white font-bold">
+          <input type="text" id="mobileUrlInput" readonly value="http://192.168.0.102:3000" class="bg-transparent flex-1 focus:outline-none text-white font-bold">
           <button id="btnCopyMobileUrl" class="px-2.5 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded text-xs font-sans transition flex items-center space-x-1 cursor-pointer">
             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
             <span id="copyMobileText">Copy</span>

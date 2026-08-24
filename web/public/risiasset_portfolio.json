@@ -432,18 +432,18 @@
     },
     {
       "name": "VEDANTA IRON AND STEEL LTD",
-      "symbol": "VEDL",
-      "ticker": "VEDL.NS",
+      "symbol": "VISL",
+      "ticker": "VISL.NS",
       "isin": "INE1CLE01013",
       "category": "Equities",
       "sector": "Metals",
       "quantity": 31,
       "avg_buy_price": 35.16,
       "buy_value": 1089.96,
-      "closing_price": 36.74,
-      "closing_value": 1138.94,
-      "unrealised_pnl": 48.98,
-      "pnl_pct": 4.49
+      "closing_price": 37.34,
+      "closing_value": 1157.54,
+      "unrealised_pnl": 67.58,
+      "pnl_pct": 6.20
     },
     {
       "name": "YES BANK LIMITED",

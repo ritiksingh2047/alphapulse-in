@@ -10,7 +10,7 @@ from alphapulse.technical import TechnicalAnalyzer
 from alphapulse.telegram_bot import TelegramNotifier
 from alphapulse.universe import NSE_UNIVERSE, NIFTY_50_SYMBOLS, get_all_tickers, get_by_sector
 
-__version__ = "1.0.0"
+__version__ = "1.0.2"
 __author__ = "AlphaPulse-IN Quantitative Research"
 
 __all__ = [
