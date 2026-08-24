@@ -738,7 +738,7 @@ function renderRisiHoldingsTable() {
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="10" class="py-8 text-center text-gray-500 font-sans">
+        <td colspan="9" class="py-8 text-center text-gray-500 font-sans">
           <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-gray-600"></i>
           No holdings matching current radar filter.
         </td>
@@ -769,13 +769,13 @@ function renderRisiHoldingsTable() {
 
     return `
       <tr class="hover:bg-brand-border/30 transition">
-        <td class="py-3.5 px-4 font-sans">
+        <td class="py-3.5 px-4 font-sans cursor-pointer group" onclick="analyzeStock('${h.symbol}')" title="Click to view chart for ${h.symbol}">
           <div class="flex items-center space-x-1.5 flex-wrap">
-            <span class="font-bold text-white font-mono">${h.symbol}</span>
+            <span class="font-bold text-white group-hover:text-amber-400 transition font-mono">${h.symbol}</span>
             <span class="text-[10px] text-gray-500 font-mono">.NS</span>
             ${sectorBadge}
           </div>
-          <div class="text-[11px] text-gray-400 truncate max-w-[190px] mt-0.5" title="${h.name}">${h.name}</div>
+          <div class="text-[11px] text-gray-400 group-hover:text-amber-300 transition truncate max-w-[190px] mt-0.5">${h.name}</div>
         </td>
         <td class="py-3.5 px-4 text-right font-bold text-white">${h.quantity}</td>
         <td class="py-3.5 px-4 text-right text-gray-300">${formatINR(h.avg_buy_price)}</td>
@@ -795,12 +795,6 @@ function renderRisiHoldingsTable() {
           </span>
           ${h.trailing_sl ? `<div class="text-[10px] text-gray-400 mt-1 font-mono">Trail SL: <strong class="text-rose-400">${formatINR(h.trailing_sl)}</strong></div>` : ''}
           ${h.target_price ? `<div class="text-[10px] text-gray-400 mt-1 font-mono">Target: <strong class="text-emerald-400">${formatINR(h.target_price)}</strong></div>` : ''}
-        </td>
-        <td class="py-3.5 px-4 text-center">
-          <button onclick="analyzeStock('${h.symbol}')" class="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded text-xs font-sans font-medium transition flex items-center space-x-1 mx-auto">
-            <i data-lucide="candlestick-chart" class="w-3.5 h-3.5"></i>
-            <span>Chart</span>
-          </button>
         </td>
       </tr>
     `;
