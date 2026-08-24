@@ -738,7 +738,7 @@ function renderRisiHoldingsTable() {
   if (filtered.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="9" class="py-8 text-center text-gray-500 font-sans">
+        <td colspan="8" class="py-8 text-center text-gray-500 font-sans">
           <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-gray-600"></i>
           No holdings matching current radar filter.
         </td>
@@ -772,12 +772,11 @@ function renderRisiHoldingsTable() {
         <td class="py-3.5 px-4 font-sans cursor-pointer group" onclick="analyzeStock('${h.symbol}')" title="Click to view chart for ${h.symbol}">
           <div class="flex items-center space-x-1.5 flex-wrap">
             <span class="font-bold text-white group-hover:text-amber-400 transition font-mono">${h.symbol}</span>
-            <span class="text-[10px] text-gray-500 font-mono">.NS</span>
+            <span class="px-1.5 py-0.5 text-[10px] rounded bg-gray-500/20 text-gray-300 border border-gray-500/30 font-mono font-bold">${h.quantity} Qty</span>
             ${sectorBadge}
           </div>
           <div class="text-[11px] text-gray-400 group-hover:text-amber-300 transition truncate max-w-[190px] mt-0.5">${h.name}</div>
         </td>
-        <td class="py-3.5 px-4 text-right font-bold text-white">${h.quantity}</td>
         <td class="py-3.5 px-4 text-right text-gray-300">${formatINR(h.avg_buy_price)}</td>
         <td class="py-3.5 px-4 text-right font-bold text-white">${formatINR(h.closing_price)}</td>
         <td class="py-3.5 px-4 text-right text-gray-400">${formatINR(h.buy_value)}</td>
