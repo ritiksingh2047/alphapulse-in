@@ -1,10 +1,22 @@
 import os
 
 
+def _secret(env_key: str, st_key: str, default: str = "") -> str:
+    """Read from env var first, then st.secrets (Streamlit Cloud), else default."""
+    val = os.getenv(env_key, "")
+    if val:
+        return val
+    try:
+        import streamlit as st
+        return st.secrets.get(st_key, default)
+    except Exception:
+        return default
+
+
 class Config:
     # Telegram
-    TELEGRAM_BOT_TOKEN = os.getenv('ALPHAPULSE_TG_TOKEN', '')
-    TELEGRAM_CHAT_ID = os.getenv('ALPHAPULSE_TG_CHAT_ID', '')
+    TELEGRAM_BOT_TOKEN = _secret('ALPHAPULSE_TG_TOKEN', 'ALPHAPULSE_TG_TOKEN')
+    TELEGRAM_CHAT_ID = _secret('ALPHAPULSE_TG_CHAT_ID', 'ALPHAPULSE_TG_CHAT_ID')
 
     # Database
     DB_PATH = os.getenv('ALPHAPULSE_DB_PATH', 'data/alphapulse.db')
