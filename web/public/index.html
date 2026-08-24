@@ -179,6 +179,27 @@
     html.light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #94A3B8;
     }
+    html.light .dark-banner {
+      background: linear-gradient(to right, #FFFFFF, #F1F5F9, #FFFFFF) !important;
+      border-color: #E2E8F0 !important;
+    }
+    html.light .dark-banner .text-white,
+    html.light .dark-banner .text-gray-400,
+    html.light .dark-banner .text-gray-500 {
+      color: #334155 !important;
+    }
+    html.light .dark-banner .text-amber-400,
+    html.light .dark-banner .text-amber-300 {
+      color: #D97706 !important;
+    }
+    html.light .dark-banner .text-cyan-400,
+    html.light .dark-banner .text-cyan-300 {
+      color: #0284C7 !important;
+    }
+    html.light .dark-banner .border-brand-border\/60,
+    html.light .dark-banner .border-brand-border {
+      border-color: #E2E8F0 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col custom-scrollbar overflow-x-hidden">
@@ -371,7 +392,7 @@
     <section id="tab-risiasset" class="tab-content hidden space-y-5">
       
       <!-- Client Profile & Executive Summary Banner -->
-      <div class="bg-gradient-to-r from-brand-card via-[#161f30] to-brand-card p-5 rounded-2xl border border-amber-500/30 shadow-xl space-y-4">
+      <div class="dark-banner bg-gradient-to-r from-brand-card via-[#161f30] to-brand-card p-5 rounded-2xl border border-amber-500/30 shadow-xl space-y-4">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-brand-border/60 pb-3.5">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold">
@@ -784,7 +805,7 @@
     <section id="tab-buy-advisor" class="tab-content hidden space-y-5">
       
       <!-- Search & Quick Selection Header -->
-      <div class="bg-gradient-to-r from-brand-card via-[#121c2d] to-brand-card p-5 rounded-2xl border border-cyan-500/30 shadow-xl space-y-4">
+      <div class="dark-banner bg-gradient-to-r from-brand-card via-[#121c2d] to-brand-card p-5 rounded-2xl border border-cyan-500/30 shadow-xl space-y-4">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div class="flex items-center space-x-2">
