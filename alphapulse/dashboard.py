@@ -569,17 +569,15 @@ with tab_risi:
             hdf = hdf.rename(columns={
                 "symbol": "Symbol",
                 "quantity": "Qty",
-                "buy_avg": "Buy Avg",
-                "ltp": "LTP",
-                "invested": "Invested (₹)",
-                "current_value": "Current Value (₹)",
-                "pnl": "P&L (₹)",
-                "pnl_pct": "P&L %",
-                "day_pnl": "Day P&L (₹)",
-                "day_pnl_pct": "Day %"
+                "avg_buy_price": "Buy Avg",
+                "closing_price": "LTP",
+                "buy_value": "Invested (₹)",
+                "closing_value": "Current Value (₹)",
+                "unrealised_pnl": "P&L (₹)",
+                "pnl_pct": "P&L %"
             })
             st.dataframe(
-                hdf[["Symbol", "Qty", "Buy Avg", "LTP", "Invested (₹)", "Current Value (₹)", "P&L (₹)", "P&L %", "Day %"]],
+                hdf[["Symbol", "Qty", "Buy Avg", "LTP", "Invested (₹)", "Current Value (₹)", "P&L (₹)", "P&L %"]],
                 use_container_width=True,
                 hide_index=True
             )
