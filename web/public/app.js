@@ -72,39 +72,6 @@ window.switchTab = function(targetId) {
   }
 };
 
-window.toggleTheme = function() {
-  const isLight = document.documentElement.classList.contains("light");
-  const next = isLight ? "dark" : "light";
-  if (next === "light") {
-    document.documentElement.classList.remove("dark");
-    document.documentElement.classList.add("light");
-    document.body.classList.remove("dark");
-    document.body.classList.add("light");
-  } else {
-    document.documentElement.classList.remove("light");
-    document.documentElement.classList.add("dark");
-    document.body.classList.remove("light");
-    document.body.classList.add("dark");
-  }
-  localStorage.setItem("alphapulse-theme", next);
-  state.theme = next;
-  const icon = document.getElementById("themeIcon");
-  if (icon) {
-    icon.setAttribute("data-lucide", next === "light" ? "sun" : "moon");
-    icon.parentElement?.setAttribute("title", next === "light" ? "Switch to Dark Mode" : "Switch to Light Mode");
-    lucide.createIcons();
-  }
-  if (state.priceChartInstance && state.selectedChartSymbol) {
-    loadChartData(state.selectedChartSymbol, state.chartRange);
-  }
-  if (state.risiPortfolio) {
-    renderRisiCharts();
-  }
-  if (state.advisorSymbol) {
-    drawSpeedometerGauge(state.advisorGaugeScore || 75);
-  }
-};
-
 window.filterRisiHoldings = function(filterType) {
   state.risiActiveFilter = filterType;
   const btns = document.querySelectorAll(".btn-risi-filter");
@@ -234,7 +201,6 @@ function showCopiedFeedback() {
   }
 }
 
-window.toggleTheme = toggleTheme;
 window.toggleMobileModal = toggleMobileModal;
 window.copyMobileUrl = copyMobileUrl;
 
@@ -329,11 +295,7 @@ function setupEventListeners() {
     btnScan.addEventListener("click", triggerLiveScan);
   }
 
-  // Theme Switcher Button
-  const btnTheme = document.getElementById("btnThemeToggle");
-  if (btnTheme) {
-    btnTheme.addEventListener("click", toggleTheme);
-  }
+
 
   // Mobile Phone Access Button & Modal
   const btnMobile = document.getElementById("btnMobileConnect");
