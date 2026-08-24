@@ -312,6 +312,38 @@ git push -u origin main --tags
 
 ---
 
+### ☁️ Milestone 27: Streamlit Community Cloud Deployment & Python Feature Parity
+* **User Directive:** Deploy the `alphapulse/dashboard.py` app to Streamlit Community Cloud for free public access.
+* **Implementation:**
+  * Updated `requirements.txt`, removed localhost ports from `.streamlit/config.toml`, and created `.streamlit/secrets.toml` templates.
+  * Updated `alphapulse/config.py` to seamlessly fall back to `st.secrets` on the cloud.
+  * **Feature Parity:** Ported the `RisiAsset Portfolio` parser and `Should You Buy?` advisor into the native Python `dashboard.py` code so the cloud version mirrors the local HTML capabilities.
+  * **Anti-Ban Fix:** Fixed `yfinance.exceptions.YFRateLimitError` crashes on the cloud by injecting a custom Windows Chrome `User-Agent` HTTP session into the `yfinance` fetcher.
+
+---
+
+### ✨ Milestone 28: RisiAsset Data Density & UI Streamlining
+* **User Directive:** Clean up the local HTML RisiAsset table to make it cleaner, eliminate horizontal scrolling, and integrate the Buyhatke recommendation.
+* **Implementation:**
+  * **Column Removals:** Completely removed the dedicated `CHART` and `Qty` columns.
+  * **Inline Badges & Links:** Converted the stock symbol into a clickable link (opens chart), and injected the quantity as a sleek `[ 30 Qty ]` pill right next to the ticker.
+  * **Instant Verdict Column:** Created an intelligent mapper that translates existing radar signals (`ATH_PROFIT_RADAR`, `ACCUMULATE_DIP`) into instant Buyhatke badges (`Wait for Dip`, `Go Ahead & Buy`, `Avoid`).
+  * **Dual-Interactive Rows:** Made the Verdict badges clickable—clicking the stock symbol opens the chart, while clicking the Verdict badge instantly teleports to the full algorithmic Buy/Sell Advisor tab.
+  * **Sidebar Rating Integration:** Embedded the Instant Verdict score calculation directly into the Chart tab's right-hand Institutional Metrics sidebar.
+  * Reduced table padding (`px-4` to `px-2`) to guarantee a zero-scroll, perfectly fitted responsive layout.
+
+---
+
+### 🐛 Milestone 29: Core Bug Squashing & Version 1.03 Release
+* **User Report:** Screen goes blank on `localhost`, theme button doesn't work, and some text is unreadable in light mode.
+* **Implementation:**
+  * **HTML Fix:** Restored a missing `</style>` closing tag that was causing the entire `<body>` to be parsed as CSS.
+  * **Event Listener Fix:** Removed duplicate JavaScript `onclick` listeners on the Theme button to stop the instantaneous double-firing freeze.
+  * **Light Theme Legibility:** Added `.dark-banner` and `.dark-modal` CSS overrides to ensure the RisiAsset banners and Telegram/Scan Log modals render a clean white background with slate text in Light Mode.
+* **Release:** Saved as **v1.03** across all codebases and pushed to GitHub.
+---
+
+
 ## 3. Quick Runbook & Operations
 
 ### Starting the Web Dashboard:
@@ -329,4 +361,4 @@ bun run web/server.js
 
 ### GitHub Repository:
 * **URL:** `https://github.com/ritiksingh2047/alphapulse-in`
-* **Releases:** `https://github.com/ritiksingh2047/alphapulse-in/releases/tag/v1.02`
+* **Releases:** `https://github.com/ritiksingh2047/alphapulse-in/releases/tag/v1.03`

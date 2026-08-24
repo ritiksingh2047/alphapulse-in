@@ -4,6 +4,31 @@ All notable changes, architectural updates, and feature additions across release
 
 ---
 
+## [v1.03] - 2026-08-24
+
+### 🚀 Key Features & Enhancements
+
+#### 1. Streamlit Community Cloud Deployment & Feature Parity
+* **Cloud-Ready Prep:** Updated `requirements.txt` with all missing dependencies, removed hardcoded localhost ports from `.streamlit/config.toml`, and integrated `st.secrets` fallback in `config.py` for cloud environment variables.
+* **Python Dashboard Feature Parity:** Ported the **RisiAsset Portfolio** and **Should You Buy?** tabs into the native Python `alphapulse/dashboard.py` script so the live Streamlit Cloud app matches the local HTML features.
+* **Cloud Anti-Ban Engine:** Integrated a custom HTTP `requests.Session` with a Windows Chrome `User-Agent` to bypass Yahoo Finance (`yfinance`) IP rate-limiting blocks (`YFRateLimitError`) on shared cloud servers.
+
+#### 2. Local Dashboard UI Streamlining & Data Density
+* **Clickable Stock Symbols:** Removed the standalone `CHART` button column; made the stock symbols native clickable links that instantly open the technical chart.
+* **Quantity Badge Merge:** Removed the standalone `Qty` column and merged the holding quantity into a sleek grey pill badge (e.g., `[ 30 Qty ]`) directly beside the stock symbol to save horizontal space.
+* **Instant Verdict Portfolio Column:** Added a new column to the RisiAsset table mapping quantitative radar signals into an instant Buyhatke equivalent verdict (`Go Ahead & Buy`, `Wait for Dip`, `Avoid`).
+* **Interactive Verdicts:** Made the Instant Verdict badges clickable buttons that instantly teleport the user to the "Should You Buy?" tab for a deep algorithmic breakdown of that specific stock.
+* **Chart Sidebar Integration:** Embedded a "Quick Advisor Rating" box directly into the right-hand Institutional Metrics sidebar on the Charting tab.
+* **Zero-Scroll Padding Optimization:** Shortened column headers and reduced inner padding (`px-4` $\rightarrow$ `px-2`) to ensure all 9 data columns fit perfectly on standard screens without horizontal scrolling.
+
+#### 3. Bug Fixes & Rendering Repairs
+* **Blank Screen Fix:** Restored a missing `</style>` closing tag in `index.html` that was causing Chrome to render a completely blank white screen.
+* **Theme Toggle Unfreeze:** Removed duplicate event listeners in `app.js` that were firing simultaneously (switching Light $\rightarrow$ Dark $\rightarrow$ Light in $<1\text{ms}$), making the button appear frozen.
+* **Light Mode Contrast:** Fixed dark-mode hardcoded gradients in the RisiAsset executive banners, Telegram Console modal, and Scan Logs modal so they render beautifully with readable slate text in Light Mode.
+* **Pandas KeyError Resolution:** Fixed mismatched JSON keys (`unrealised_pnl`, `closing_price`) in the Streamlit Python dashboard to prevent app crashes when loading the portfolio.
+
+---
+
 ## [v1.02] - 2026-08-24
 
 ### 🚀 Key Features & Enhancements
