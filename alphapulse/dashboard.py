@@ -317,8 +317,8 @@ exit_df = signals_df[signals_df["signal_type"] == "EXIT_SETUP"] if not signals_d
 # TABS
 # ---------------------------------------------------------------------------
 
-tab_overview, tab_buy, tab_exit, tab_history, tab_analytics = st.tabs(
-    ["📈 Market Overview", "🟢 Buy Setups", "🔴 Exit Setups", "📋 Scan History", "📊 Analytics"]
+tab_overview, tab_buy, tab_exit, tab_risi, tab_advisor, tab_history, tab_analytics = st.tabs(
+    ["📈 Market Overview", "🟢 Buy Setups", "🔴 Exit Setups", "💼 RisiAsset Portfolio", "🤖 Should You Buy?", "📋 Scan History", "📊 Analytics"]
 )
 
 # ============================= TAB 1: MARKET OVERVIEW =====================
@@ -540,7 +540,136 @@ with tab_exit:
             mime="text/csv",
         )
 
-# ============================= TAB 4: SCAN HISTORY =======================
+
+# ============================= TAB: RISIASSET ============================
+
+with tab_risi:
+    st.subheader("💼 RisiAsset Portfolio Dashboard")
+    import json
+    portfolio_file = _PROJECT_ROOT / "data" / "risiasset_portfolio.json"
+    if portfolio_file.exists():
+        with open(portfolio_file, "r") as f:
+            pdata = json.load(f)
+        
+        st.markdown(f"**Client:** {pdata.get('client_name', 'Unknown')} | **Code:** {pdata.get('client_code', '')} | **Date:** {pdata.get('statement_date', '')}")
+        
+        s = pdata.get("summary", {})
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Total Investment", f"₹{s.get('invested_value', 0):,.2f}")
+        c2.metric("Current Value", f"₹{s.get('closing_value', 0):,.2f}")
+        pnl = s.get('unrealised_pnl', 0)
+        pct = s.get('unrealised_pnl_pct', 0)
+        c3.metric("Total P&L", f"₹{pnl:,.2f}", f"{pct}%")
+        c4.metric("Holdings", s.get('total_holdings', 0))
+        
+        holdings = pdata.get("holdings", [])
+        if holdings:
+            hdf = pd.DataFrame(holdings)
+            # Rename columns for display
+            hdf = hdf.rename(columns={
+                "symbol": "Symbol",
+                "quantity": "Qty",
+                "buy_avg": "Buy Avg",
+                "ltp": "LTP",
+                "invested": "Invested (₹)",
+                "current_value": "Current Value (₹)",
+                "pnl": "P&L (₹)",
+                "pnl_pct": "P&L %",
+                "day_pnl": "Day P&L (₹)",
+                "day_pnl_pct": "Day %"
+            })
+            st.dataframe(
+                hdf[["Symbol", "Qty", "Buy Avg", "LTP", "Invested (₹)", "Current Value (₹)", "P&L (₹)", "P&L %", "Day %"]],
+                use_container_width=True,
+                hide_index=True
+            )
+    else:
+        st.info("No RisiAsset portfolio data found.")
+
+# ============================= TAB: ADVISOR ==============================
+
+with tab_advisor:
+    st.subheader("🤖 AlphaPulse Buy Advisor")
+    st.markdown("Enter an NSE ticker symbol to get an instant institutional buy/hold/sell rating.")
+    
+    advisor_ticker = st.text_input("NSE Ticker (e.g., BALRAMCHIN, RELIANCE, TCS)", "").upper()
+    if st.button("Analyze Stock"):
+        if not advisor_ticker:
+            st.warning("Please enter a ticker symbol.")
+        else:
+            with st.spinner(f"Analyzing {advisor_ticker}.NS..."):
+                import yfinance as yf
+                ticker_str = advisor_ticker if advisor_ticker.endswith(".NS") else f"{advisor_ticker}.NS"
+                tkr = yf.Ticker(ticker_str)
+                info = tkr.info
+                
+                if "currentPrice" not in info:
+                    st.error(f"Could not fetch data for {ticker_str}. Please check the symbol.")
+                else:
+                    ltp = info.get("currentPrice", 0)
+                    low_52 = info.get("fiftyTwoWeekLow", 1)
+                    high_52 = info.get("fiftyTwoWeekHigh", 1)
+                    pe = info.get("trailingPE", 0)
+                    roe = info.get("returnOnEquity", 0) * 100
+                    de = info.get("debtToEquity", 0)
+                    
+                    # Calculate Score (0-100)
+                    score = 50
+                    
+                    # Distance from 52w low (closer is better)
+                    pct_from_low = ((ltp - low_52) / low_52) * 100
+                    if pct_from_low <= 15: score += 20
+                    elif pct_from_low <= 30: score += 10
+                    elif pct_from_low >= 80: score -= 20
+                    
+                    # Valuation
+                    if 5 < pe < 25: score += 15
+                    elif pe > 50: score -= 15
+                    
+                    # Fundamentals
+                    if roe > 15: score += 10
+                    if de < 50: score += 5  # yfinance D/E is often in % (e.g. 15 = 0.15)
+                    
+                    score = max(0, min(100, score))
+                    
+                    if score >= 75:
+                        verdict = "STRONG BUY"
+                        v_color = "green"
+                    elif score >= 60:
+                        verdict = "ACCUMULATE"
+                        v_color = "lightgreen"
+                    elif score >= 40:
+                        verdict = "HOLD"
+                        v_color = "orange"
+                    else:
+                        verdict = "AVOID / SELL"
+                        v_color = "red"
+                        
+                    sc1, sc2 = st.columns([1, 2])
+                    with sc1:
+                        st.metric("LTP", f"₹{ltp:,.2f}")
+                        st.metric("52W Range", f"₹{low_52} - ₹{high_52}")
+                        st.markdown(f"### Verdict: :{v_color}[{verdict}]")
+                        
+                    with sc2:
+                        import plotly.graph_objects as go
+                        fig = go.Figure(go.Indicator(
+                            mode="gauge+number",
+                            value=score,
+                            title={'text': "AlphaPulse Rating"},
+                            gauge={
+                                'axis': {'range': [0, 100]},
+                                'bar': {'color': "darkblue"},
+                                'steps': [
+                                    {'range': [0, 40], 'color': "lightcoral"},
+                                    {'range': [40, 60], 'color': "lemonchiffon"},
+                                    {'range': [60, 100], 'color': "lightgreen"}
+                                ]
+                            }
+                        ))
+                        fig.update_layout(height=250, margin=dict(l=20, r=20, t=30, b=20))
+                        st.plotly_chart(fig, use_container_width=True)
+                    
 
 with tab_history:
     st.subheader("📋 Recent Scan History")
