@@ -200,6 +200,37 @@
     html.light .dark-banner .border-brand-border {
       border-color: #E2E8F0 !important;
     }
+    html.light .dark-modal {
+      background-color: #FFFFFF !important;
+      border-color: #E2E8F0 !important;
+    }
+    html.light .dark-modal .text-white {
+      color: #1E293B !important;
+    }
+    html.light .dark-modal .text-gray-400,
+    html.light .dark-modal .text-gray-300,
+    html.light .dark-modal .text-gray-100 {
+      color: #475569 !important;
+    }
+    html.light .dark-modal .border-brand-border\/60,
+    html.light .dark-modal .border-brand-border {
+      border-color: #E2E8F0 !important;
+    }
+    html.light .dark-modal .bg-brand-dark,
+    html.light .dark-modal .bg-brand-border\/40 {
+      background-color: #F8FAFC !important;
+    }
+    html.light .dark-modal .telegram-bubble {
+      background-color: #F1F5F9 !important;
+      border-color: #CBD5E1 !important;
+      color: #1E293B !important;
+    }
+    html.light .dark-modal .bg-brand-dark.hover\:bg-brand-border,
+    html.light .dark-modal button.bg-brand-dark {
+      background-color: #F1F5F9 !important;
+      border-color: #CBD5E1 !important;
+      color: #334155 !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col custom-scrollbar overflow-x-hidden">
@@ -1155,7 +1186,7 @@
   <!-- TELEGRAM BROADCAST CONSOLE MODAL -->
   <!-- ================================================================= -->
   <div id="telegramModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
+    <div class="dark-modal bg-brand-card border border-brand-border rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
       
       <button id="btnCloseTelegramModal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition cursor-pointer" title="Close">
         <i data-lucide="x" class="w-5 h-5"></i>
@@ -1179,7 +1210,7 @@
       </div>
 
       <!-- Chat Bubble Preview -->
-      <div class="bg-[#182533] p-5 rounded-xl border border-brand-border/60 shadow-inner font-mono text-xs text-gray-100 whitespace-pre-wrap leading-relaxed overflow-y-auto custom-scrollbar flex-1" id="telegramPreviewBox">
+      <div class="telegram-bubble bg-[#182533] p-5 rounded-xl border border-brand-border/60 shadow-inner font-mono text-xs text-gray-100 whitespace-pre-wrap leading-relaxed overflow-y-auto custom-scrollbar flex-1" id="telegramPreviewBox">
         <!-- Rendered via JS -->
       </div>
 
@@ -1190,7 +1221,7 @@
   <!-- MARKET SCAN LOGS & TELEMETRY MODAL -->
   <!-- ================================================================= -->
   <div id="scanLogsModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-brand-card border border-brand-border rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
+    <div class="dark-modal bg-brand-card border border-brand-border rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
       
       <button id="btnCloseScanLogsModal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition cursor-pointer" title="Close">
         <i data-lucide="x" class="w-5 h-5"></i>
