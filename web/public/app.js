@@ -766,11 +766,11 @@ function renderRisiHoldingsTable() {
     
     let buyhatkeVerdict = "";
     if (h.radar_type === "ATH_PROFIT_RADAR" || h.action_code === "SPECULATIVE_RISK") {
-      buyhatkeVerdict = `<span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Avoid / Book Profits</span>`;
+      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-rose-500/10 hover:bg-rose-500/20 transition cursor-pointer text-rose-400 border border-rose-500/20" title="View Full Buyhatke Analysis">Avoid / Book Profits</button>`;
     } else if (h.action_code === "ACCUMULATE_DIP") {
-      buyhatkeVerdict = `<span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Go Ahead & Buy</span>`;
+      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/10 hover:bg-emerald-500/20 transition cursor-pointer text-emerald-400 border border-emerald-500/20" title="View Full Buyhatke Analysis">Go Ahead & Buy</button>`;
     } else {
-      buyhatkeVerdict = `<span class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Wait for Dip</span>`;
+      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-500/10 hover:bg-amber-500/20 transition cursor-pointer text-amber-400 border border-amber-500/20" title="View Full Buyhatke Analysis">Wait for Dip</button>`;
     }
     const sectorTag = h.sector ? `(${h.sector})` : (h.category ? `(${h.category})` : '');
     const sectorBadge = sectorTag ? `<span class="inline-block whitespace-nowrap px-1.5 py-0.5 text-[10px] rounded bg-brand-dark/90 text-gray-400 border border-brand-border font-sans font-medium">${sectorTag}</span>` : '';
