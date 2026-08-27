@@ -128,7 +128,7 @@ window.filterRisiRecommendation = function(recType) {
 // Initialize Application
 async function initApp() {
   initTheme();
-  lucide.createIcons();
+  setupChartTypeahead();
   setupTabs();
   setupEventListeners();
   setupAdvisorTypeahead();
@@ -2108,7 +2108,122 @@ function getStockSuggestions(query) {
   return results.slice(0, 8);
 }
 
-// Setup Intelligent Typeahead Auto-Suggest for Search Input
+function setupChartTypeahead() {
+  const input = document.getElementById("inputChartSearch");
+  const dropdown = document.getElementById("chartSuggestDropdown");
+  const list = document.getElementById("chartSuggestList");
+  if (!input || !dropdown || !list) return;
+
+  let selectedIndex = -1;
+
+  function hideDropdown() {
+    dropdown.classList.add("hidden");
+    selectedIndex = -1;
+  }
+
+  function renderSuggestions(suggestions) {
+    if (suggestions.length === 0) {
+      list.innerHTML = `
+        <div class="px-3 py-2 text-[11px] text-gray-400 text-center font-sans">
+          No exact symbol match. Press <kbd class="px-1.5 py-0.5 rounded bg-brand-dark border border-brand-border text-white text-[10px]">Enter</kbd> to load.
+        </div>
+      `;
+      dropdown.classList.remove("hidden");
+      return;
+    }
+
+    list.innerHTML = suggestions.map((s, idx) => `
+      <div data-idx="${idx}" data-symbol="${s.symbol}" class="suggest-item flex items-center justify-between px-3 py-2 rounded-lg hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/30 cursor-pointer transition select-none group">
+        <div class="flex items-center space-x-2.5 min-w-0">
+          <span class="font-bold text-xs text-emerald-400 font-mono group-hover:text-emerald-300">${s.symbol}</span>
+          <span class="text-xs text-gray-300 truncate max-w-[190px] font-sans group-hover:text-white">${s.name}</span>
+        </div>
+        <div class="flex items-center space-x-1.5 shrink-0">
+          <span class="px-1.5 py-0.2 text-[10px] rounded bg-brand-dark border border-brand-border text-gray-400 font-mono">${s.sector || 'NSE'}</span>
+          <span class="text-[9px] font-mono font-bold text-gray-400">NSE</span>
+        </div>
+      </div>
+    `).join("");
+
+    const items = list.querySelectorAll(".suggest-item");
+    items.forEach(item => {
+      item.addEventListener("click", () => {
+        const sym = item.getAttribute("data-symbol");
+        if (sym) {
+          input.value = sym;
+          hideDropdown();
+          analyzeStock(sym);
+        }
+      });
+    });
+
+    dropdown.classList.remove("hidden");
+    selectedIndex = -1;
+  }
+
+  input.addEventListener("input", () => {
+    const q = input.value.trim();
+    if (q.length === 0) {
+      hideDropdown();
+      return;
+    }
+    const suggestions = getStockSuggestions(q);
+    renderSuggestions(suggestions);
+  });
+
+  input.addEventListener("keydown", (e) => {
+    const items = list.querySelectorAll(".suggest-item");
+    if (dropdown.classList.contains("hidden") || items.length === 0) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const sym = input.value.trim();
+        if (sym) analyzeStock(sym);
+      }
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % items.length;
+      updateItemHighlight(items);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+      updateItemHighlight(items);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (selectedIndex >= 0 && selectedIndex < items.length) {
+        const sym = items[selectedIndex].getAttribute("data-symbol");
+        input.value = sym;
+        hideDropdown();
+        analyzeStock(sym);
+      } else {
+        const sym = input.value.trim();
+        hideDropdown();
+        if (sym) analyzeStock(sym);
+      }
+    } else if (e.key === "Escape") {
+      hideDropdown();
+    }
+  });
+
+  function updateItemHighlight(items) {
+    items.forEach((item, idx) => {
+      if (idx === selectedIndex) {
+        item.classList.add("bg-emerald-500/20", "border-emerald-500/40");
+      } else {
+        item.classList.remove("bg-emerald-500/20", "border-emerald-500/40");
+      }
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+      hideDropdown();
+    }
+  });
+}
+
 function setupAdvisorTypeahead() {
   const input = document.getElementById("inputAdvisorSearch");
   const dropdown = document.getElementById("advisorSuggestDropdown");
