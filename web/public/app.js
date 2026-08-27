@@ -27,6 +27,25 @@ const state = {
 };
 
 // Global Tab Switcher (Direct & Event-Driven)
+// Universal Date Formatter: YYYY-MM-DD -> DD/MM/YYYY
+function formatDate(dateStr) {
+  if (!dateStr || dateStr === "Just now") return dateStr;
+  try {
+    if (dateStr.includes(" ")) {
+      const [d, t] = dateStr.split(" ");
+      const [y, m, day] = d.split("-");
+      return `${day}/${m}/${y} ${t}`;
+    }
+    if (dateStr.includes("-")) {
+      const [y, m, day] = dateStr.split("-");
+      return `${day}/${m}/${y}`;
+    }
+    return dateStr;
+  } catch (e) {
+    return dateStr;
+  }
+}
+
 // -------------------------------------------------------------------
 window.switchTab = function(targetId) {
   const tabButtons = document.querySelectorAll(".nav-tab");
@@ -1317,7 +1336,7 @@ function renderScanLogsTable(logs) {
 
   tbody.innerHTML = logs.map(l => `
     <tr class="hover:bg-brand-border/30 transition">
-      <td class="py-3 px-4 text-white">${l.created_at || 'Just now'}</td>
+      <td class="py-3 px-4 text-white">${formatDate(l.created_at || 'Just now')}</td>
       <td class="py-3 px-4"><span class="px-2 py-0.5 text-xs rounded bg-brand-dark text-emerald-400 border border-emerald-500/20">${l.scan_type}</span></td>
       <td class="py-3 px-4 text-center font-bold text-gray-300">${l.stocks_scanned}</td>
       <td class="py-3 px-4 text-center font-bold text-emerald-400">${l.signals_generated}</td>
@@ -1439,7 +1458,7 @@ async function loadChartData(symbol, range = "1y") {
       }
     }
     // Build Chart.js Datasets
-    const labels = series.map(s => s.date);
+    const labels = series.map(s => formatDate(s.date));
     const closePrices = series.map(s => s.close);
     const ema20 = series.map(s => s.ema20);
     const ema50 = series.map(s => s.ema50);
@@ -2575,7 +2594,7 @@ function renderAdvisorHistoryChart(series, high52, low52, avgPrice) {
     state.advisorHistoryChart.destroy();
   }
 
-  const labels = series.map(s => s.date);
+  const labels = series.map(s => formatDate(s.date));
   const closes = series.map(s => s.close);
 
   const buyZoneLevel = +(low52 + (high52 - low52) * 0.25).toFixed(2);

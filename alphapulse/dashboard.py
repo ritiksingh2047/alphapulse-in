@@ -144,8 +144,10 @@ def fetch_scan_history(limit: int = 50) -> pd.DataFrame:
     df = pd.read_sql_query(
         "SELECT * FROM scan_log ORDER BY created_at DESC LIMIT ?",
         conn,
-        params=[limit],
+        params=(limit,)
     )
+    if not df.empty and "created_at" in df.columns:
+        df["created_at"] = pd.to_datetime(df["created_at"]).dt.strftime('%d/%m/%Y %H:%M:%S')
     conn.close()
     return df
 
@@ -170,7 +172,16 @@ def fetch_last_scan_time() -> str | None:
     row = cur.fetchone()
     conn.close()
     if row and row[0]:
-        return str(row[0])
+        try:
+            from datetime import datetime
+            # Depending on sqlite output, it might have microseconds
+            raw_dt = str(row[0])
+            # strip microseconds if present
+            if '.' in raw_dt:
+                raw_dt = raw_dt.split('.')[0]
+            return datetime.strptime(raw_dt, '%Y-%m-%d %H:%M:%S').strftime('%d/%m/%Y %H:%M:%S')
+        except Exception:
+            return str(row[0])
     return None
 
 
@@ -551,7 +562,13 @@ with tab_risi:
         with open(portfolio_file, "r") as f:
             pdata = json.load(f)
         
-        st.markdown(f"**Client:** {pdata.get('client_name', 'Unknown')} | **Code:** {pdata.get('client_code', '')} | **Date:** {pdata.get('statement_date', '')}")
+        stmt_date = pdata.get('statement_date', '')
+        try:
+            from datetime import datetime
+            stmt_date = datetime.strptime(stmt_date, '%Y-%m-%d').strftime('%d/%m/%Y')
+        except Exception:
+            pass
+        st.markdown(f"**Client:** {pdata.get('client_name', 'Unknown')} | **Code:** {pdata.get('client_code', '')} | **Date:** {stmt_date}")
         
         s = pdata.get("summary", {})
         c1, c2, c3, c4 = st.columns(4)
