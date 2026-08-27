@@ -583,40 +583,43 @@
                 <th class="py-3 px-2 text-right">Current (₹)</th>
                 <th class="py-3 px-2 text-right">Net P&L</th>
                 <th class="py-3 px-2 text-center relative group">
-                  <div class="flex items-center justify-center space-x-1 cursor-pointer">
-                    <select id="filterRadar" onchange="filterRisiHoldings(this.value)" class="bg-transparent text-gray-400 group-hover:text-cyan-400 font-mono uppercase tracking-wider font-bold cursor-pointer focus:outline-none appearance-none text-center transition-colors">
-                      <option value="ALL" class="bg-brand-dark text-gray-300">Radar (All)</option>
-                      <option value="ATH" class="bg-brand-dark text-rose-400">🔴 ATH Radar</option>
-                      <option value="ATL_VALUE" class="bg-brand-dark text-emerald-400">🟢 ATL Value</option>
-                      <option value="ATL_RISK" class="bg-brand-dark text-red-400">⚠️ ATL Caution</option>
-                      <option value="BALANCED" class="bg-brand-dark text-blue-300">⚖️ Balanced</option>
-                    </select>
-                    <i data-lucide="filter" class="w-3 h-3 text-gray-500 group-hover:text-cyan-400 pointer-events-none"></i>
+                  <div class="flex items-center justify-center space-x-1">
+                    <span class="text-gray-400 group-hover:text-cyan-400 font-mono uppercase font-bold transition-colors" id="labelFilterRadar">ATH / ATL Radar</span>
+                    <i data-lucide="filter" class="w-3 h-3 text-gray-500 group-hover:text-cyan-400"></i>
                   </div>
+                  <select id="filterRadar" onchange="filterRisiHoldings(this.value); document.getElementById('labelFilterRadar').textContent = this.options[this.selectedIndex].text.replace('🔴 ', '').replace('🟢 ', '').replace('⚠️ ', '').replace('⚖️ ', '')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <option value="ALL">Radar (All)</option>
+                    <option value="ATH">🔴 ATH Radar</option>
+                    <option value="ATL_VALUE">🟢 ATL Value</option>
+                    <option value="ATL_RISK">⚠️ ATL Caution</option>
+                    <option value="BALANCED">⚖️ Balanced</option>
+                  </select>
                 </th>
                 <th class="py-3 px-2 relative group">
-                  <div class="flex items-center space-x-1 cursor-pointer">
-                    <select id="filterRecommendation" onchange="filterRisiRecommendation(this.value)" class="bg-transparent text-gray-400 group-hover:text-cyan-400 font-mono uppercase tracking-wider font-bold cursor-pointer focus:outline-none appearance-none transition-colors">
-                      <option value="ALL" class="bg-brand-dark text-gray-300">Recommendation (All)</option>
-                      <option value="CONSOLIDATION" class="bg-brand-dark text-gray-300">Consolidation / Hold</option>
-                      <option value="TRAIL_SL" class="bg-brand-dark text-yellow-400">Protect Gains / Trail SL</option>
-                      <option value="LOCK_PROFIT" class="bg-brand-dark text-rose-400">Lock Profit (Near ATH)</option>
-                      <option value="ACCUMULATE" class="bg-brand-dark text-emerald-400">Accumulate / Avg Down</option>
-                      <option value="SPECULATIVE" class="bg-brand-dark text-red-400">Hold & Monitor / Caution</option>
-                    </select>
-                    <i data-lucide="filter" class="w-3 h-3 text-gray-500 group-hover:text-cyan-400 pointer-events-none"></i>
+                  <div class="flex items-center space-x-1">
+                    <span class="text-gray-400 group-hover:text-cyan-400 font-mono uppercase font-bold transition-colors" id="labelFilterRec">Recommendation</span>
+                    <i data-lucide="filter" class="w-3 h-3 text-gray-500 group-hover:text-cyan-400"></i>
                   </div>
+                  <select id="filterRecommendation" onchange="filterRisiRecommendation(this.value); document.getElementById('labelFilterRec').textContent = this.options[this.selectedIndex].text" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <option value="ALL">Recommendation (All)</option>
+                    <option value="CONSOLIDATION">Consolidation / Hold</option>
+                    <option value="TRAIL_SL">Protect Gains / Trail SL</option>
+                    <option value="LOCK_PROFIT">Lock Profit (Near ATH)</option>
+                    <option value="ACCUMULATE">Accumulate / Avg Down</option>
+                    <option value="SPECULATIVE">Hold & Monitor / Caution</option>
+                  </select>
                 </th>
-                <th class="py-3 px-2 text-center relative group">
-                  <div class="flex items-center justify-center space-x-1 cursor-pointer">
-                    <select id="filterVerdict" onchange="filterRisiVerdict(this.value)" class="bg-transparent text-gray-400 group-hover:text-cyan-400 font-mono uppercase tracking-wider font-bold cursor-pointer focus:outline-none appearance-none text-center transition-colors">
-                      <option value="ALL" class="bg-brand-dark text-gray-300">Instant Verdict (All)</option>
-                      <option value="BUY" class="bg-brand-dark text-emerald-400">🟢 Go Ahead & Buy</option>
-                      <option value="WAIT" class="bg-brand-dark text-amber-400">🟡 Wait for Dip</option>
-                      <option value="AVOID" class="bg-brand-dark text-rose-400">🔴 Avoid / Book Profits</option>
-                    </select>
-                    <i data-lucide="filter" class="w-3 h-3 text-gray-500 group-hover:text-cyan-400 pointer-events-none"></i>
+                <th class="py-3 px-4 text-center relative group">
+                  <div class="flex items-center justify-center space-x-1">
+                    <span class="text-gray-400 group-hover:text-cyan-400 font-mono uppercase font-bold transition-colors" id="labelFilterVerdict">Instant Verdict</span>
+                    <i data-lucide="filter" class="w-3 h-3 text-gray-500 group-hover:text-cyan-400"></i>
                   </div>
+                  <select id="filterVerdict" onchange="filterRisiVerdict(this.value); document.getElementById('labelFilterVerdict').textContent = this.options[this.selectedIndex].text.replace('🔴 ', '').replace('🟢 ', '').replace('🟡 ', '')" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <option value="ALL">Instant Verdict (All)</option>
+                    <option value="BUY">🟢 Go Ahead & Buy</option>
+                    <option value="WAIT">🟡 Wait for Dip</option>
+                    <option value="AVOID">🔴 Avoid / Book Profits</option>
+                  </select>
                 </th>
               </tr>
             </thead>
