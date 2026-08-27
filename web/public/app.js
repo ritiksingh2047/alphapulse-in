@@ -80,6 +80,8 @@ window.filterRisiVerdict = function(verdictType) {
 
 window.filterRisiHoldings = function(filterType) {
   state.risiActiveFilter = filterType;
+  
+  // Sync the pill buttons
   const btns = document.querySelectorAll(".btn-risi-filter");
   btns.forEach(b => {
     const f = b.getAttribute("data-risi-filter");
@@ -90,6 +92,18 @@ window.filterRisiHoldings = function(filterType) {
       b.classList.remove("text-gray-400");
     }
   });
+
+  // Sync the table header dropdown
+  const selRadar = document.getElementById("filterRadar");
+  if (selRadar && selRadar.value !== filterType) {
+    selRadar.value = filterType;
+  }
+
+  renderRisiHoldingsTable();
+};
+
+window.filterRisiRecommendation = function(recType) {
+  state.risiRecFilter = recType;
   renderRisiHoldingsTable();
 };
 // Initialize Application
@@ -726,6 +740,7 @@ function renderRisiHoldingsTable() {
   const search = (document.getElementById("inputSearchRisi")?.value || "").toLowerCase();
   const activeFilter = state.risiActiveFilter || "ALL";
   const verdictFilter = state.risiVerdictFilter || "ALL";
+  const recFilter = state.risiRecFilter || "ALL";
 
   let filtered = holdings;
   if (activeFilter === "ATH") {
@@ -748,6 +763,19 @@ function renderRisiHoldingsTable() {
         verdict = "BUY";
       }
       return verdict === verdictFilter;
+    });
+  }
+
+  // Apply the Recommendation Filter
+  if (recFilter !== "ALL") {
+    filtered = filtered.filter(h => {
+      const lbl = h.action_label || "";
+      if (recFilter === "CONSOLIDATION") return lbl.includes("Consolidation");
+      if (recFilter === "TRAIL_SL") return lbl.includes("Trail SL") || lbl.includes("Protect");
+      if (recFilter === "LOCK_PROFIT") return lbl.includes("Lock");
+      if (recFilter === "ACCUMULATE") return lbl.includes("Accumulate");
+      if (recFilter === "SPECULATIVE") return lbl.includes("Monitor") || lbl.includes("Caution");
+      return true;
     });
   }
 
