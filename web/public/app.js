@@ -68,6 +68,7 @@ window.switchTab = function(targetId) {
     } else {
       renderRisiHoldingsTable();
       renderRisiCharts();
+      syncLivePrices();
     }
   }
 };
@@ -548,6 +549,7 @@ async function refreshDashboardData() {
     updateSimulator();
     if (state.risiPortfolio) {
       renderRisiPortfolioDashboard();
+      syncLivePrices();
     }
   } catch (e) {
     console.warn("Fast refresh warning:", e);
@@ -786,10 +788,10 @@ function renderRisiHoldingsTable() {
           <div class="text-[11px] text-gray-400 group-hover:text-amber-300 transition truncate max-w-[190px] mt-0.5">${h.name}</div>
         </td>
         <td class="py-3.5 px-2 text-right text-gray-300">${formatINR(h.avg_buy_price)}</td>
-        <td class="py-3.5 px-2 text-right font-bold text-white">${formatINR(h.closing_price)}</td>
+        <td class="py-3.5 px-2 text-right font-bold text-white transition-colors duration-300" id="risi_ltp_${h.symbol}">${formatINR(h.closing_price)}</td>
         <td class="py-3.5 px-2 text-right text-gray-400">${formatINR(h.buy_value)}</td>
-        <td class="py-3.5 px-2 text-right font-bold text-white">${formatINR(h.closing_value)}</td>
-        <td class="py-3.5 px-2 text-right">
+        <td class="py-3.5 px-2 text-right font-bold text-white transition-colors duration-300" id="risi_curval_${h.symbol}">${formatINR(h.closing_value)}</td>
+        <td class="py-3.5 px-2 text-right transition-colors duration-300" id="risi_pnl_${h.symbol}">
           <div class="font-bold ${pnlClass}">${pnlSign}${formatINR(h.unrealised_pnl)}</div>
           <div class="text-[11px] ${pnlClass}">(${pnlSign}${h.pnl_pct.toFixed(2)}%)</div>
         </td>
@@ -812,6 +814,70 @@ function renderRisiHoldingsTable() {
 
   lucide.createIcons();
 }
+
+window.syncLivePrices = async function() {
+  if (!state.risiPortfolio || !state.risiPortfolio.holdings) return;
+  const holdings = state.risiPortfolio.holdings;
+  
+  // Set UI to loading state
+  holdings.forEach(h => {
+    const el = document.getElementById(`risi_ltp_${h.symbol}`);
+    if (el) el.innerHTML = `<span class="animate-pulse text-amber-400">...</span>`;
+  });
+  
+  const batchSize = 6;
+  for (let i = 0; i < holdings.length; i += batchSize) {
+    const batch = holdings.slice(i, i + batchSize);
+    await Promise.all(batch.map(async h => {
+      try {
+        const res = await fetch(`/api/chart/${encodeURIComponent(h.symbol)}?range=1d`);
+        const json = await res.json();
+        if (json.status === "success" && json.meta?.regularMarketPrice) {
+          const livePrice = json.meta.regularMarketPrice;
+          h.closing_price = livePrice;
+          h.closing_value = h.quantity * livePrice;
+          h.unrealised_pnl = h.closing_value - h.buy_value;
+          h.pnl_pct = (h.buy_value > 0) ? (h.unrealised_pnl / h.buy_value) * 100 : 0;
+          
+          const ltpEl = document.getElementById(`risi_ltp_${h.symbol}`);
+          const curValEl = document.getElementById(`risi_curval_${h.symbol}`);
+          const pnlEl = document.getElementById(`risi_pnl_${h.symbol}`);
+          
+          if (ltpEl) {
+             ltpEl.textContent = formatINR(livePrice);
+             ltpEl.classList.add("text-cyan-400");
+             setTimeout(() => ltpEl.classList.remove("text-cyan-400"), 1500);
+          }
+          if (curValEl) curValEl.textContent = formatINR(h.closing_value);
+          if (pnlEl) {
+             const isGain = h.unrealised_pnl >= 0;
+             const pClass = isGain ? "text-emerald-400" : "text-rose-400";
+             const pSign = isGain ? "+" : "";
+             pnlEl.innerHTML = `
+               <div class="font-bold ${pClass}">${pSign}${formatINR(h.unrealised_pnl)}</div>
+               <div class="text-[11px] ${pClass}">(${pSign}${h.pnl_pct.toFixed(2)}%)</div>
+             `;
+          }
+        }
+      } catch(e) {}
+    }));
+  }
+  
+  // Recalculate Portfolio Totals
+  let totalInvested = 0;
+  let totalCurrent = 0;
+  holdings.forEach(h => {
+    totalInvested += h.buy_value;
+    totalCurrent += h.closing_value;
+  });
+  
+  state.risiPortfolio.summary.closing_value = totalCurrent;
+  state.risiPortfolio.summary.unrealised_pnl = totalCurrent - totalInvested;
+  state.risiPortfolio.summary.unrealised_pnl_pct = (totalInvested > 0) ? ((totalCurrent - totalInvested) / totalInvested) * 100 : 0;
+  
+  // Re-render Summary Dashboard Header
+  renderRisiPortfolioDashboard();
+};
 
 function renderRisiCharts() {
   if (!state.risiPortfolio) return;
