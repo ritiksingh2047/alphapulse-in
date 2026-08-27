@@ -819,24 +819,24 @@ function renderRisiHoldingsTable() {
     
     let buyhatkeVerdict = "";
     if (h.radar_type === "ATH_PROFIT_RADAR" || h.action_code === "SPECULATIVE_RISK") {
-      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-rose-500/10 hover:bg-rose-500/20 transition cursor-pointer text-rose-400 border border-rose-500/20" title="View Full Buyhatke Analysis">Avoid / Book Profits</button>`;
+      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-1.5 py-0.5 rounded-lg text-[10.5px] font-bold bg-rose-500/10 hover:bg-rose-500/20 transition cursor-pointer text-rose-400 border border-rose-500/20" title="View Full Buyhatke Analysis">Avoid / Book Profits</button>`;
     } else if (h.action_code === "ACCUMULATE_DIP") {
-      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/10 hover:bg-emerald-500/20 transition cursor-pointer text-emerald-400 border border-emerald-500/20" title="View Full Buyhatke Analysis">Go Ahead & Buy</button>`;
+      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-1.5 py-0.5 rounded-lg text-[10.5px] font-bold bg-emerald-500/10 hover:bg-emerald-500/20 transition cursor-pointer text-emerald-400 border border-emerald-500/20" title="View Full Buyhatke Analysis">Go Ahead & Buy</button>`;
     } else {
-      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-500/10 hover:bg-amber-500/20 transition cursor-pointer text-amber-400 border border-amber-500/20" title="View Full Buyhatke Analysis">Wait for Dip</button>`;
+      buyhatkeVerdict = `<button onclick="switchTab('tab-buy-advisor'); analyzeAdvisorStock('${h.symbol}')" class="inline-block whitespace-nowrap px-1.5 py-0.5 rounded-lg text-[10.5px] font-bold bg-amber-500/10 hover:bg-amber-500/20 transition cursor-pointer text-amber-400 border border-amber-500/20" title="View Full Buyhatke Analysis">Wait for Dip</button>`;
     }
     const sectorTag = h.sector ? `(${h.sector})` : (h.category ? `(${h.category})` : '');
     const sectorBadge = sectorTag ? `<span class="inline-block whitespace-nowrap px-1.5 py-0.5 text-[10px] rounded bg-brand-dark/90 text-gray-400 border border-brand-border font-sans font-medium">${sectorTag}</span>` : '';
 
     return `
       <tr class="hover:bg-brand-border/30 transition">
-        <td class="py-3.5 px-4 font-sans cursor-pointer group" onclick="analyzeStock('${h.symbol}')" title="Click to view chart for ${h.symbol}">
+        <td class="py-3.5 px-2 font-sans cursor-pointer group" onclick="analyzeStock('${h.symbol}')" title="Click to view chart for ${h.symbol}">
           <div class="flex items-center space-x-1.5 flex-wrap">
             <span class="font-bold text-white group-hover:text-amber-400 transition font-mono">${h.symbol}</span>
             <span class="px-1.5 py-0.5 text-[10px] rounded bg-gray-500/20 text-gray-300 border border-gray-500/30 font-mono font-bold">${h.quantity} Qty</span>
             ${sectorBadge}
           </div>
-          <div class="text-[11px] text-gray-400 group-hover:text-amber-300 transition truncate max-w-[190px] mt-0.5">${h.name}</div>
+          <div class="text-[11px] text-gray-400 group-hover:text-amber-300 transition truncate max-w-[170px] mt-0.5">${h.name}</div>
         </td>
         <td class="py-3.5 px-2 text-right text-gray-300">${formatINR(h.avg_buy_price)}</td>
         <td class="py-3.5 px-2 text-right font-bold text-white transition-colors duration-300" id="risi_ltp_${h.symbol}">${formatINR(h.closing_price)}</td>
@@ -850,13 +850,13 @@ function renderRisiHoldingsTable() {
           ${radarBadge}
         </td>
         <td class="py-3.5 px-2">
-          <span class="inline-block whitespace-nowrap px-2.5 py-1 rounded text-xs border ${h.action_badge}">
+          <span class="inline-block whitespace-nowrap px-1.5 py-0.5 rounded text-[11px] border ${h.action_badge}">
             ${h.action_label}
           </span>
           ${h.trailing_sl ? `<div class="text-[10px] text-gray-400 mt-1 font-mono">Trail SL: <strong class="text-rose-400">${formatINR(h.trailing_sl)}</strong></div>` : ''}
           ${h.target_price ? `<div class="text-[10px] text-gray-400 mt-1 font-mono">Target: <strong class="text-emerald-400">${formatINR(h.target_price)}</strong></div>` : ''}
         </td>
-        <td class="py-3.5 px-4 text-center font-sans">
+        <td class="py-3.5 px-2 text-center font-sans">
           ${buyhatkeVerdict}
         </td>
       </tr>
