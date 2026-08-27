@@ -73,6 +73,11 @@ window.switchTab = function(targetId) {
   }
 };
 
+window.filterRisiVerdict = function(verdictType) {
+  state.risiVerdictFilter = verdictType;
+  renderRisiHoldingsTable();
+};
+
 window.filterRisiHoldings = function(filterType) {
   state.risiActiveFilter = filterType;
   const btns = document.querySelectorAll(".btn-risi-filter");
@@ -719,20 +724,38 @@ function renderRisiHoldingsTable() {
 
   const holdings = state.risiPortfolio.holdings || [];
   const search = (document.getElementById("inputSearchRisi")?.value || "").toLowerCase();
-  const filter = state.risiActiveFilter || "ALL";
+  const activeFilter = state.risiActiveFilter || "ALL";
+  const verdictFilter = state.risiVerdictFilter || "ALL";
 
-  const filtered = holdings.filter(h => {
-    // Filter matching
-    let matchFilter = true;
-    if (filter === "ATH") matchFilter = h.radar_type === "ATH_PROFIT_RADAR";
-    else if (filter === "ATL_VALUE") matchFilter = h.action_code === "ACCUMULATE_DIP";
-    else if (filter === "ATL_RISK") matchFilter = h.action_code === "SPECULATIVE_RISK";
-    else if (filter === "BALANCED") matchFilter = h.radar_type === "BALANCED";
+  let filtered = holdings;
+  if (activeFilter === "ATH") {
+    filtered = filtered.filter(h => h.radar_type === "ATH_PROFIT_RADAR");
+  } else if (activeFilter === "ATL_VALUE") {
+    filtered = filtered.filter(h => h.action_code === "ACCUMULATE_DIP");
+  } else if (activeFilter === "ATL_RISK") {
+    filtered = filtered.filter(h => h.action_code === "SPECULATIVE_RISK");
+  } else if (activeFilter === "BALANCED") {
+    filtered = filtered.filter(h => !h.radar_type && !["ACCUMULATE_DIP", "SPECULATIVE_RISK"].includes(h.action_code));
+  }
+  
+  // Apply the secondary Instant Verdict Filter
+  if (verdictFilter !== "ALL") {
+    filtered = filtered.filter(h => {
+      let verdict = "WAIT";
+      if (h.radar_type === "ATH_PROFIT_RADAR" || h.action_code === "SPECULATIVE_RISK") {
+        verdict = "AVOID";
+      } else if (h.action_code === "ACCUMULATE_DIP") {
+        verdict = "BUY";
+      }
+      return verdict === verdictFilter;
+    });
+  }
 
-    // Search matching
-    const matchSearch = h.name.toLowerCase().includes(search) || h.symbol.toLowerCase().includes(search) || (h.sector || "").toLowerCase().includes(search);
-    return matchFilter && matchSearch;
-  });
+  if (search) {
+    filtered = filtered.filter(h => {
+      return h.name.toLowerCase().includes(search) || h.symbol.toLowerCase().includes(search) || (h.sector || "").toLowerCase().includes(search);
+    });
+  }
 
   const countEl = document.getElementById("risiVisibleCount");
   if (countEl) countEl.textContent = filtered.length;
