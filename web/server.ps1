@@ -197,12 +197,18 @@ while ($true) {
         # -------------------------------------------------------------
         elseif ($path.StartsWith("/api/chart/")) {
             $symbol = $path.Replace("/api/chart/", "").Trim().ToUpper()
+            
+            $range = "1y"
+            if ($rawPath -match "range=([^&]+)") {
+                $range = $matches[1]
+            }
+
             $chartPayloadJson = $null
 
             foreach ($suffix in @(".NS", ".BO", "")) {
                 try {
                     $ticker = if ($symbol.EndsWith(".NS") -or $symbol.EndsWith(".BO")) { $symbol } else { "$symbol$suffix" }
-                    $yfUrl = "https://query1.finance.yahoo.com/v8/finance/chart/" + [System.Uri]::EscapeDataString($ticker) + "?interval=1d&range=1y"
+                    $yfUrl = "https://query1.finance.yahoo.com/v8/finance/chart/" + [System.Uri]::EscapeDataString($ticker) + "?interval=1d&range=$range"
                     $yfRes = Invoke-RestMethod -Uri $yfUrl -Headers @{ "User-Agent" = "Mozilla/5.0" } -TimeoutSec 4
                     $resObj = $yfRes.chart.result[0]
                     if ($null -ne $resObj -and $null -ne $resObj.meta -and $null -ne $resObj.meta.regularMarketPrice) {
