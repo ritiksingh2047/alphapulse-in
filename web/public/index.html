@@ -378,31 +378,31 @@
     <div class="w-full bg-brand-card border border-brand-border rounded-xl p-1.5 shadow-sm">
       <nav class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 sm:gap-2 w-full" aria-label="Tabs">
         
-        <!-- Tab 1: RisiAsset Portfolio -->
-        <button data-tab="tab-risiasset" onclick="switchTab('tab-risiasset')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition whitespace-nowrap cursor-pointer w-full text-center">
-          <i data-lucide="briefcase" class="w-4 h-4 text-amber-400 shrink-0"></i>
-          <span class="font-bold">RisiAsset</span>
-          <span id="badgeRisiCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold">30</span>
+        <!-- Tab 1: 52W Highs Profit Booking -->
+        <button data-tab="tab-exit-setups" onclick="switchTab('tab-exit-setups')" class="nav-tab active flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border border-transparent transition text-rose-400 bg-rose-500/10 border-rose-500/30 whitespace-nowrap cursor-pointer w-full text-center">
+          <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
+          <span>52W Highs</span>
+          <span id="badgeExitCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300 font-mono">8</span>
         </button>
-
+        
         <!-- Tab 2: 52W Lows Value Accumulation -->
-        <button data-tab="tab-buy-setups" onclick="switchTab('tab-buy-setups')" class="nav-tab active flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border border-transparent transition text-emerald-400 bg-emerald-500/10 border-emerald-500/30 whitespace-nowrap cursor-pointer w-full text-center">
+        <button data-tab="tab-buy-setups" onclick="switchTab('tab-buy-setups')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
           <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i>
           <span>52W Lows</span>
           <span id="badgeBuyCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300 font-mono">12</span>
         </button>
 
-        <!-- Tab 3: 52W Highs Profit Booking -->
-        <button data-tab="tab-exit-setups" onclick="switchTab('tab-exit-setups')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
-          <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
-          <span>52W Highs</span>
-          <span id="badgeExitCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300 font-mono">8</span>
-        </button>
-
-        <!-- Tab 4: Technical Charting -->
+        <!-- Tab 3: Technical Charting -->
         <button data-tab="tab-charting" onclick="switchTab('tab-charting')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
           <i data-lucide="candlestick-chart" class="w-4 h-4 shrink-0"></i>
           <span>Charting</span>
+        </button>
+
+        <!-- Tab 4: RisiAsset Portfolio -->
+        <button data-tab="tab-risiasset" onclick="switchTab('tab-risiasset')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
+          <i data-lucide="briefcase" class="w-4 h-4 shrink-0"></i>
+          <span class="font-bold">RisiAsset</span>
+          <span id="badgeRisiCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold">30</span>
         </button>
 
         <!-- Tab 5: Buy / Sell Advisor (Buyhatke Style) -->
@@ -631,7 +631,7 @@
       </div>
 
     </section>
-    <section id="tab-buy-setups" class="tab-content space-y-4">
+    <section id="tab-buy-setups" class="tab-content hidden space-y-4">
       
       <!-- Filter Bar -->
       <div class="bg-brand-card p-4 rounded-xl border border-brand-border flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -697,7 +697,7 @@
     <!-- ============================================================= -->
     <!-- TAB 2: PROFIT BOOKING & EXHAUSTION SETUPS (52W HIGHS) -->
     <!-- ============================================================= -->
-    <section id="tab-exit-setups" class="tab-content hidden space-y-4">
+    <section id="tab-exit-setups" class="tab-content space-y-4">
       
       <!-- Filter Bar -->
       <div class="bg-brand-card p-4 rounded-xl border border-brand-border flex flex-col md:flex-row md:items-center justify-between gap-4">

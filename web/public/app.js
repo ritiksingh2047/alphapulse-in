@@ -286,16 +286,21 @@ function setupTabs() {
       
       // Update button styling
       tabButtons.forEach(b => {
-        b.classList.remove("active", "text-emerald-400", "text-amber-400", "bg-emerald-500/10", "bg-amber-500/10", "border-emerald-500/30", "border-amber-500/30");
+        b.classList.remove("active", "text-emerald-400", "text-amber-400", "text-rose-400", "text-cyan-400", "bg-emerald-500/10", "bg-amber-500/10", "bg-rose-500/10", "bg-cyan-500/10", "border-emerald-500/30", "border-amber-500/30", "border-rose-500/30", "border-cyan-500/30");
         b.classList.add("text-gray-400");
       });
       
-      if (targetId === "tab-risiasset") {
-        btn.classList.add("active", "text-amber-400", "bg-amber-500/10", "border-amber-500/30");
-      } else {
-        btn.classList.add("active", "text-emerald-400", "bg-emerald-500/10", "border-emerald-500/30");
-      }
       btn.classList.remove("text-gray-400");
+      btn.classList.add("active");
+      if (targetId === "tab-risiasset") {
+        btn.classList.add("text-amber-400", "bg-amber-500/10", "border-amber-500/30");
+      } else if (targetId === "tab-exit-setups") {
+        btn.classList.add("text-rose-400", "bg-rose-500/10", "border-rose-500/30");
+      } else if (targetId === "tab-buy-advisor") {
+        btn.classList.add("text-cyan-400", "bg-cyan-500/10", "border-cyan-500/30");
+      } else {
+        btn.classList.add("text-emerald-400", "bg-emerald-500/10", "border-emerald-500/30");
+      }
 
       // Update visible container
       tabContents.forEach(tc => {
