@@ -295,6 +295,8 @@ function setupTabs() {
       if (targetId === "tab-risiasset") {
         btn.classList.add("text-amber-400", "bg-amber-500/10", "border-amber-500/30");
       } else if (targetId === "tab-exit-setups") {
+        btn.classList.add("text-emerald-400", "bg-emerald-500/10", "border-emerald-500/30");
+      } else if (targetId === "tab-buy-setups") {
         btn.classList.add("text-rose-400", "bg-rose-500/10", "border-rose-500/30");
       } else if (targetId === "tab-buy-advisor") {
         btn.classList.add("text-cyan-400", "bg-cyan-500/10", "border-cyan-500/30");
@@ -1186,7 +1188,7 @@ function renderBuySignalsTable() {
         <td class="py-3.5 px-4 text-right font-bold text-white">${formatINR(s.ltp)}</td>
         <td class="py-3.5 px-4 text-right text-gray-400">${formatINR(s.week52_low)}</td>
         <td class="py-3.5 px-4 text-right">
-          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
             +${(s.pct_from_low || 0).toFixed(2)}%
           </span>
         </td>
@@ -1202,7 +1204,7 @@ function renderBuySignalsTable() {
           <div class="text-gray-400"><span class="text-emerald-400 font-semibold">T1:</span> ${t1} | <span class="text-emerald-300 font-semibold">T2:</span> ${t2}</div>
         </td>
         <td class="py-3.5 px-4 text-center">
-          <button onclick="analyzeStock('${s.symbol}')" class="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded text-xs font-sans font-medium transition flex items-center space-x-1 mx-auto">
+          <button onclick="analyzeStock('${s.symbol}')" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded text-xs font-sans font-medium transition flex items-center space-x-1 mx-auto">
             <i data-lucide="candlestick-chart" class="w-3.5 h-3.5"></i>
             <span>Chart</span>
           </button>
@@ -1265,7 +1267,7 @@ function renderExitSignalsTable() {
         <td class="py-3.5 px-4 text-right font-bold text-white">${formatINR(s.ltp)}</td>
         <td class="py-3.5 px-4 text-right text-gray-400">${formatINR(s.week52_high)}</td>
         <td class="py-3.5 px-4 text-right">
-          <span class="px-2 py-0.5 rounded text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             -${(s.pct_from_high || 0).toFixed(2)}%
           </span>
         </td>
@@ -1276,9 +1278,9 @@ function renderExitSignalsTable() {
         <td class="py-3.5 px-4 text-[11px] text-gray-300 max-w-[220px]">
           <div class="truncate">${s.thesis || "Overextended momentum near 52W high"}</div>
         </td>
-        <td class="py-3.5 px-4 font-bold text-rose-400 text-xs">${tsl}</td>
+        <td class="py-3.5 px-4 font-bold text-emerald-400 text-xs">${tsl}</td>
         <td class="py-3.5 px-4 text-center">
-          <button onclick="analyzeStock('${s.symbol}')" class="px-2.5 py-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded text-xs font-sans font-medium transition flex items-center space-x-1 mx-auto">
+          <button onclick="analyzeStock('${s.symbol}')" class="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded text-xs font-sans font-medium transition flex items-center space-x-1 mx-auto">
             <i data-lucide="candlestick-chart" class="w-3.5 h-3.5"></i>
             <span>Chart</span>
           </button>

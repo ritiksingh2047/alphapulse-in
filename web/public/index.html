@@ -360,8 +360,8 @@
         <div>
           <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Active Radar Setups</p>
           <div class="flex items-baseline space-x-3 mt-1">
-            <span class="text-2xl font-bold font-mono text-emerald-400" id="cardBuySignalsCount">12 Buys</span>
-            <span class="text-2xl font-bold font-mono text-rose-400" id="cardExitSignalsCount">8 Exits</span>
+            <span class="text-2xl font-bold font-mono text-emerald-400" id="cardExitSignalsCount">48 Highs</span>
+            <span class="text-2xl font-bold font-mono text-rose-400" id="cardBuySignalsCount">50 Lows</span>
           </div>
           <p class="text-xs text-gray-400 mt-1 font-mono" id="cardScanTime">Scan: 09:15 AM IST</p>
         </div>
@@ -379,19 +379,18 @@
       <nav class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 sm:gap-2 w-full" aria-label="Tabs">
         
         <!-- Tab 1: 52W Highs Profit Booking -->
-        <button data-tab="tab-exit-setups" onclick="switchTab('tab-exit-setups')" class="nav-tab active flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border border-transparent transition text-rose-400 bg-rose-500/10 border-rose-500/30 whitespace-nowrap cursor-pointer w-full text-center">
-          <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
+        <button data-tab="tab-exit-setups" onclick="switchTab('tab-exit-setups')" class="nav-tab active flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border border-transparent transition text-emerald-400 bg-emerald-500/10 border-emerald-500/30 whitespace-nowrap cursor-pointer w-full text-center">
+          <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i>
           <span>52W Highs</span>
-          <span id="badgeExitCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300 font-mono">8</span>
+          <span id="badgeExitCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300 font-mono">48</span>
         </button>
         
         <!-- Tab 2: 52W Lows Value Accumulation -->
         <button data-tab="tab-buy-setups" onclick="switchTab('tab-buy-setups')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
-          <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i>
+          <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
           <span>52W Lows</span>
-          <span id="badgeBuyCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300 font-mono">12</span>
+          <span id="badgeBuyCount" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-rose-500/20 text-rose-300 font-mono">50</span>
         </button>
-
         <!-- Tab 3: Technical Charting -->
         <button data-tab="tab-charting" onclick="switchTab('tab-charting')" class="nav-tab flex items-center justify-center space-x-1.5 px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-gray-400 hover:text-gray-200 border border-transparent transition whitespace-nowrap cursor-pointer w-full text-center">
           <i data-lucide="candlestick-chart" class="w-4 h-4 shrink-0"></i>
@@ -636,7 +635,7 @@
       <!-- Filter Bar -->
       <div class="bg-brand-card p-4 rounded-xl border border-brand-border flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center space-x-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
           <h2 class="text-base font-bold text-white tracking-tight">Institutional Value Accumulation Pipeline (≤ 7.0% from 52W Low)</h2>
         </div>
         
@@ -644,10 +643,10 @@
           <!-- Search -->
           <div class="relative">
             <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400"></i>
-            <input type="text" id="inputSearchBuys" placeholder="Search symbol or name..." class="bg-brand-dark border border-brand-border rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500">
+            <input type="text" id="inputSearchBuys" placeholder="Search symbol or name..." class="bg-brand-dark border border-brand-border rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-rose-500">
           </div>
           <!-- Market Cap Segment Filter -->
-          <select id="selectCapBuys" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
+          <select id="selectCapBuys" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-rose-500 cursor-pointer">
             <option value="ALL">All Market Caps</option>
             <option value="Largecap">Large Cap (Nifty 100)</option>
             <option value="Midcap">Mid Cap (Midcap 150)</option>
@@ -655,7 +654,7 @@
           </select>
           
           <!-- Sector Filter -->
-          <select id="selectSectorBuys" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
+          <select id="selectSectorBuys" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-rose-500 cursor-pointer">
             <option value="ALL">All Sectors</option>
           </select>
           <!-- Export CSV -->
@@ -702,24 +701,23 @@
       <!-- Filter Bar -->
       <div class="bg-brand-card p-4 rounded-xl border border-brand-border flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex items-center space-x-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
           <h2 class="text-base font-bold text-white tracking-tight">Exhaustion & Profit-Taking Radar (≤ 3.0% from 52W High)</h2>
         </div>
         
         <div class="flex flex-wrap items-center gap-3">
           <div class="relative">
             <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400"></i>
-            <input type="text" id="inputSearchExits" placeholder="Search symbol or name..." class="bg-brand-dark border border-brand-border rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-rose-500">
+            <input type="text" id="inputSearchExits" placeholder="Search symbol or name..." class="bg-brand-dark border border-brand-border rounded-lg pl-9 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500">
           </div>
           <!-- Market Cap Segment Filter -->
-          <select id="selectCapExits" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-rose-500 cursor-pointer">
-            <option value="ALL">All Market Caps</option>
+          <select id="selectCapExits" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
             <option value="Largecap">Large Cap (Nifty 100)</option>
             <option value="Midcap">Mid Cap (Midcap 150)</option>
             <option value="Smallcap">Small Cap (Smallcap 250)</option>
           </select>
           
-          <select id="selectSectorExits" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-rose-500 cursor-pointer">
+          <select id="selectSectorExits" class="bg-brand-dark border border-brand-border rounded-lg px-3 py-1.5 text-xs text-gray-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
             <option value="ALL">All Sectors</option>
           </select>
           <button id="btnExportExits" class="flex items-center space-x-1.5 bg-brand-dark hover:bg-brand-border border border-brand-border text-gray-300 px-3 py-1.5 rounded-lg text-xs font-medium transition">
