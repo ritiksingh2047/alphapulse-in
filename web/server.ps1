@@ -196,7 +196,22 @@ while ($true) {
         # Route 8: /api/chart/{symbol}
         # -------------------------------------------------------------
         elseif ($path.StartsWith("/api/chart/")) {
-            $symbol = $path.Replace("/api/chart/", "").Trim().ToUpper()
+            $rawSymbol = $path.Replace("/api/chart/", "").Trim().ToUpper()
+            
+            # Map common ticker alias variations (e.g. Tata Motors demerger, ETFs)
+            $aliasMap = @{
+                "TATAMOTORS" = "TMPV";
+                "TATAMOTOR"  = "TMPV";
+                "TAMO"       = "TMPV";
+                "TMC"        = "TMPV";
+                "KOTAKGOLD"  = "GOLD1";
+                "TATASILV"   = "SILVER1";
+                "TATAGOLD"   = "GOLD1";
+                "GROWWDEFNC" = "DEFENCE";
+                "BSLSLVETF"  = "SILVER1"
+            }
+            
+            $symbol = if ($aliasMap.ContainsKey($rawSymbol)) { $aliasMap[$rawSymbol] } else { $rawSymbol }
             
             $range = "1y"
             if ($rawPath -match "range=([^&]+)") {
@@ -204,12 +219,16 @@ while ($true) {
             }
 
             $chartPayloadJson = $null
+            $uaHeaders = @{ 
+                "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+                "Accept" = "application/json"
+            }
 
             foreach ($suffix in @(".NS", ".BO", "")) {
                 try {
                     $ticker = if ($symbol.EndsWith(".NS") -or $symbol.EndsWith(".BO")) { $symbol } else { "$symbol$suffix" }
                     $yfUrl = "https://query1.finance.yahoo.com/v8/finance/chart/" + [System.Uri]::EscapeDataString($ticker) + "?interval=1d&range=$range"
-                    $yfRes = Invoke-RestMethod -Uri $yfUrl -Headers @{ "User-Agent" = "Mozilla/5.0" } -TimeoutSec 4
+                    $yfRes = Invoke-RestMethod -Uri $yfUrl -Headers $uaHeaders -TimeoutSec 4
                     $resObj = $yfRes.chart.result[0]
                     if ($null -ne $resObj -and $null -ne $resObj.meta -and $null -ne $resObj.meta.regularMarketPrice) {
                         $metaObj = $resObj.meta
