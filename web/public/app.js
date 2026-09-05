@@ -543,9 +543,10 @@ async function fetchUniverse() {
   try {
     const res = await fetch("/api/universe");
     const json = await res.json();
-    if (json.status === "success") {
+    if (Array.isArray(json)) {
+      state.universe = json;
+    } else if (json && json.status === "success" && Array.isArray(json.data)) {
       state.universe = json.data;
-      populateUniverseDropdowns();
     }
   } catch (e) {
     console.error("Failed to fetch universe:", e);
@@ -2080,18 +2081,21 @@ function getStockSuggestions(query) {
     }
   }
 
-  // 2. Search Universe symbols & names
+  // 2. Search Universe symbols, names & BSE scrip codes
   for (const u of state.universe) {
     if (seen.has(u.symbol)) continue;
     const symMatch = u.symbol.startsWith(cleanNoSpaces) || u.symbol.includes(cleanNoSpaces);
     const nameMatch = u.name.toUpperCase().includes(raw);
-    if (symMatch || nameMatch) {
+    const bseMatch = u.bse_code && u.bse_code.startsWith(cleanNoSpaces);
+    if (symMatch || nameMatch || bseMatch) {
       seen.add(u.symbol);
       results.push({
         symbol: u.symbol,
         name: u.name,
         sector: u.sector,
-        matchedBy: u.name
+        exchange: u.exchange || "NSE",
+        bse_code: u.bse_code || "",
+        matchedBy: bseMatch ? `BSE: ${u.bse_code}` : u.name
       });
     }
   }
@@ -2148,8 +2152,8 @@ function setupChartTypeahead() {
           <span class="text-xs text-gray-300 truncate max-w-[190px] font-sans group-hover:text-white">${s.name}</span>
         </div>
         <div class="flex items-center space-x-1.5 shrink-0">
-          <span class="px-1.5 py-0.2 text-[10px] rounded bg-brand-dark border border-brand-border text-gray-400 font-mono">${s.sector || 'NSE'}</span>
-          <span class="text-[9px] font-mono font-bold text-gray-400">NSE</span>
+          <span class="px-1.5 py-0.2 text-[10px] rounded bg-brand-dark border border-brand-border text-gray-400 font-mono">${s.sector || 'Equities'}</span>
+          <span class="text-[9px] font-mono font-bold text-gray-400">${s.exchange || 'NSE'}</span>
         </div>
       </div>
     `).join("");
@@ -2264,8 +2268,8 @@ function setupAdvisorTypeahead() {
           <span class="text-xs text-gray-300 truncate max-w-[190px] font-sans group-hover:text-white">${s.name}</span>
         </div>
         <div class="flex items-center space-x-1.5 shrink-0">
-          <span class="px-1.5 py-0.2 text-[10px] rounded bg-brand-dark border border-brand-border text-gray-400 font-mono">${s.sector || 'NSE'}</span>
-          <span class="text-[9px] font-mono font-bold text-gray-400">NSE</span>
+          <span class="px-1.5 py-0.2 text-[10px] rounded bg-brand-dark border border-brand-border text-gray-400 font-mono">${s.sector || 'Equities'}</span>
+          <span class="text-[9px] font-mono font-bold text-cyan-400">${s.exchange || 'NSE'}</span>
         </div>
       </div>
     `).join("");
